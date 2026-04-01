@@ -1,4 +1,23 @@
 
+
+:root{
+    --spacing-sm: 4rem;
+    --spacing-md: 10rem;
+    --spacing-lg: 20rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+
+    padding: var(--spacing-sm);
+
+}
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -7,4 +26,8 @@ body {
 
 h1{
     color: blue;
+}
+
+nav{
+    background-color: darkblue;
 }
