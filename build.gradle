@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+
 }
 
 group = 'io.squid'
@@ -30,14 +31,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.7'
 
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	//implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16'
+
+	//developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
