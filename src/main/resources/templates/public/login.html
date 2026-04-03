@@ -6,5 +6,16 @@
 </head>
 <body>
 
+    <main>
+        <form th:action="@{/login}" th:object="${user}" method="post">
+            <input type="text" th:field="*{email}" />
+
+            <input type="password" th:field="*{password}" />
+
+            <button type="submit">S'inscrire</button>
+        </form>
+    </main>
+    </main>
+
 </body>
 </html>

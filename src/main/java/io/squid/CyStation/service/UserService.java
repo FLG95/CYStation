@@ -13,7 +13,7 @@ import java.util.List;
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
@@ -23,7 +23,7 @@ public class UserService {
 
 
     public User save(User user) {
-        user.setPassWord(passwordEncoder.encode(user.getPassWord()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

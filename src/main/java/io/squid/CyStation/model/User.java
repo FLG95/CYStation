@@ -12,19 +12,19 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
-    private String passWord;
+    private String password;
     private String email;
 
     public User(){
 
     }
 
-    public User(Long id, String firstName, String lastName, String passWord, String email){
+    public User(Long id, String firstName, String lastName, String password, String email){
 
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.passWord = passWord;
+        this.password = password;
         this.email = email;
 
     }
@@ -38,10 +38,23 @@ public class User {
     public String getLastName(){ return lastName;}
     public void setLastName(String firstName){ this.lastName = lastName;}
 
-    public String getPassWord(){ return passWord;}
-    public void setPassWord(String passWord){ this.passWord = passWord;}
+    public String getPassword(){ return password;}
+    public void setPassword(String passWord){ this.password = passWord;}
 
     public String getEmail(){ return email;}
     public void setEmail(String email){ this.email = email;}
+
+
+    @Override
+    public boolean equals(Object obj){
+
+        if(obj instanceof User){
+            User user = (User) obj;
+
+            return this.email.equalsIgnoreCase(user.email);
+        }
+        return false;
+    }
+
 
 }

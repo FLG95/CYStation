@@ -22,7 +22,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable());// Faut pas garder
 
         httpSecurity.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/index", "/", "/css/**").permitAll()
+                .requestMatchers("/register", "/login", "/index", "/about","/", "/css/**").permitAll()
                 .anyRequest().authenticated());
 
         httpSecurity.formLogin(form -> form
