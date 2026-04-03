@@ -12,9 +12,18 @@ public class MainController {
         return "public/index";
     }
 
+
     @RequestMapping("/about")
     public String about(){
         return "public/about";
     }
+
+    @RequestMapping("/register")
+    public String register() { return "public/register"; }
+
+    @RequestMapping("/login")
+    public String login() { return "public/login"; }
+
+
 
 }

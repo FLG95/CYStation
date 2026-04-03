@@ -24,8 +24,8 @@ public class CyStationApplication implements CommandLineRunner {
     @Bean
     CommandLineRunner init(UserRepository repo) {
         return args -> {
-            repo.save(new User(null, "Alice", "A"));
-            repo.save(new User(null, "Bob", "B"));
+            repo.save(new User(null, "Alice", "A", "1234", "a@gmail.com" ));
+            repo.save(new User(null, "Bob", "B", "1234", "b@gmail.com"));
 
         };
     }
