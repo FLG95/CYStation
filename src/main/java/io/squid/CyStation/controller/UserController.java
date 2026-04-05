@@ -25,9 +25,11 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
-        if(userRepository.findUserByEmail(user.getEmail()).equals(user)){
-            return "redirect:/login";
-        }else{
+        if(userRepository.findUserByEmail(user.getEmail()) != null) {
+
+            return "redirect:/register?error";
+        }
+        else {
             userService.save(user);
             return "redirect:/userInfo";
         }
@@ -40,24 +42,23 @@ public class UserController {
     }
 
 
-
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("user", new User());
+    public String login() {
+
         return "public/login";
     }
 
+    /*
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("user") User user) {
         userService.login(user);
         return "redirect:/userInfo";
-    }
+    }*/
 
     @GetMapping("/userInfo")
     public String userInfo(Principal principal, Model model){
 
         User user = userRepository.findUserByEmail(principal.getName());
-
         model.addAttribute("user", user);
         return "public/userInfo";
     }

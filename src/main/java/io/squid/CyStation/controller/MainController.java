@@ -10,17 +10,16 @@ import org.springframework.ui.Model;
 public class MainController {
 
 
-    @RequestMapping("/")
+    @RequestMapping({"/" , "/index"})
     public String index(){
         return "public/index";
     }
+
 
 
     @RequestMapping("/about")
     public String about(){
         return "public/about";
     }
-
-
 
 }

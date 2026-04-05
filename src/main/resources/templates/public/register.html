@@ -8,12 +8,19 @@
 
     <main>
         <form th:action="@{/register}" th:object="${user}" method="post">
-            <input type="text" th:field="*{email}" />
-
-            <input type="password" th:field="*{password}" />
-
+            <input type="text" th:field="*{firstName}" placeholder="Prénom" />
+            <input type="text" th:field="*{lastName}" placeholder="Nom" />
+            <input type="email" th:field="*{email}" placeholder="Email" />
+            <input type="password" th:field="*{password}" placeholder="Mot de passe" />
             <button type="submit">S'inscrire</button>
         </form>
+
+        <div th:if="${param.error}">
+            <strong>Erreur :</strong> Cet email est déjà utilisé
+            <br>
+            <a th:href="@{/login}" >veuillez vous connecter ici</a>.
+        </div>
+
     </main>
 
 </body>

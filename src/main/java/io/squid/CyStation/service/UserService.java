@@ -27,20 +27,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(User user){
-
-        List<User> userList = userRepository.findAll();
-
-        for(int i=0; i< userList.size(); i++){
-            if(user != userList.get(i)){
-                return user;
-            }
-        }
-        return null;
-    }
-
-
-
 }
 
 

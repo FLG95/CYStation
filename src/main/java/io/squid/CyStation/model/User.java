@@ -36,7 +36,7 @@ public class User {
     public void setFirstName(String firstName){ this.firstName = firstName;}
 
     public String getLastName(){ return lastName;}
-    public void setLastName(String firstName){ this.lastName = lastName;}
+    public void setLastName(String lastName){ this.lastName = lastName;}
 
     public String getPassword(){ return password;}
     public void setPassword(String passWord){ this.password = passWord;}

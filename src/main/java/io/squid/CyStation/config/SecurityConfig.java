@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.csrf(csrf -> csrf.disable());// Faut pas garder
+        //httpSecurity.csrf(csrf -> csrf.disable());// Faut pas garder
 
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/register", "/login", "/index", "/about","/", "/css/**").permitAll()
@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/index", true)
                 .permitAll());
 
-        httpSecurity.logout(logout -> logout.permitAll());
+        //httpSecurity.logout(logout -> logout.permitAll());
 
         return httpSecurity.build();
 
