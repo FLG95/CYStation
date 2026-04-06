@@ -1,5 +1,6 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,22 +15,23 @@ public class User {
     private String lastName;
     private String password;
     private String email;
-    public enum Role{
-        ADMIN, VISITOR, PASSENGER, SCIENTIST
-    }
+    private String gender;
+    private int experience;
     Role role;
 
     public User(){
 
     }
 
-    public User(Long id, String firstName, String lastName, String password, String email){
+    public User(Long id, String firstName, String lastName, String password, String email, String gender, int experience){
 
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.gender = gender;
+        this.experience = experience;
     }
 
     public Long getID(){ return id;}
@@ -50,6 +52,13 @@ public class User {
     public Role getRole(){ return role;}
     public void setRole(Role role){ this.role = role;}
 
+    public int getExperience() { return experience; }
+    public void setExperience(int experience) { this.experience = experience; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
+
     @Override
     public boolean equals(Object obj){
 
@@ -60,5 +69,6 @@ public class User {
         }
         return false;
     }
+
 
 }

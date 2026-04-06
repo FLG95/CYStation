@@ -1,6 +1,7 @@
 package io.squid.CyStation.service;
 
 import io.squid.CyStation.config.SecurityConfig;
+import io.squid.CyStation.enums.Role;
 import io.squid.CyStation.model.User;
 import io.squid.CyStation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserService {
 
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(User.Role.PASSENGER);
+        user.setRole(Role.VISITOR);
         userRepository.save(user);
     }
 
