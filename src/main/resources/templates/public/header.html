@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +13,12 @@
         <nav>
             <a th:href="@{/}">Accueil</a>
             <a th:href="@{/about}">À propos</a>
+
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}">Se connecter</a>
+                <a th:href="@{/register}">S'inscrire</a>
+            </div>
+
             <a th:href="@{/login}">Connexion</a>
             <a th:href="@{/register}">Inscription</a>
             <a th:href="@{/userInfo}">Mon Compte</a>

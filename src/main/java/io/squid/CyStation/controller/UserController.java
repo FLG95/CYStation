@@ -48,12 +48,6 @@ public class UserController {
         return "public/login";
     }
 
-    /*
-    @PostMapping("/login")
-    public String loginUser(@ModelAttribute("user") User user) {
-        userService.login(user);
-        return "redirect:/userInfo";
-    }*/
 
     @GetMapping("/userInfo")
     public String userInfo(Principal principal, Model model){
@@ -62,6 +56,5 @@ public class UserController {
         model.addAttribute("user", user);
         return "public/userInfo";
     }
-
 
 }

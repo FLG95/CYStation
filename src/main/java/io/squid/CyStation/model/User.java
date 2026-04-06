@@ -14,6 +14,10 @@ public class User {
     private String lastName;
     private String password;
     private String email;
+    public enum Role{
+        ADMIN, VISITOR, PASSENGER, SCIENTIST
+    }
+    Role role;
 
     public User(){
 
@@ -26,7 +30,6 @@ public class User {
         this.lastName = lastName;
         this.password = password;
         this.email = email;
-
     }
 
     public Long getID(){ return id;}
@@ -44,6 +47,8 @@ public class User {
     public String getEmail(){ return email;}
     public void setEmail(String email){ this.email = email;}
 
+    public Role getRole(){ return role;}
+    public void setRole(Role role){ this.role = role;}
 
     @Override
     public boolean equals(Object obj){
@@ -55,6 +60,5 @@ public class User {
         }
         return false;
     }
-
 
 }

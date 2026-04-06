@@ -22,9 +22,10 @@ public class UserService {
     }
 
 
-    public User save(User user) {
+    public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user.setRole(User.Role.PASSENGER);
+        userRepository.save(user);
     }
 
 }
