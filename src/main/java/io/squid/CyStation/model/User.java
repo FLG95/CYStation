@@ -17,7 +17,7 @@ public class User {
     private String email;
     private String gender;
     private int experience;
-    Role role;
+    private Role role;
 
     public User(){
 
