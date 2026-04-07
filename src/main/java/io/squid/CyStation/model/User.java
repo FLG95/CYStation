@@ -3,8 +3,10 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.Gender;
 import io.squid.CyStation.enums.Role;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 public class User {
@@ -18,45 +20,95 @@ public class User {
     private String email;
     private int experience;
     private Role role;
-    private Date birthday;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
 
-    public User(){
+    public User() {
 
     }
 
 
-    public Long getID(){ return id;}
-    public void setId(Long id){ this.id = id;}
+    public Long getID() {
+        return id;
+    }
 
-    public String getFirstName(){ return firstName;}
-    public void setFirstName(String firstName){ this.firstName = firstName;}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getLastName(){ return lastName;}
-    public void setLastName(String lastName){ this.lastName = lastName;}
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public String getPassword(){ return password;}
-    public void setPassword(String passWord){ this.password = passWord;}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    public String getEmail(){ return email;}
-    public void setEmail(String email){ this.email = email;}
+    public String getLastName() {
+        return lastName;
+    }
 
-    public Role getRole(){ return role;}
-    public void setRole(Role role){ this.role = role;}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-    public int getExperience() { return experience; }
-    public void setExperience(int experience) { this.experience = experience; }
+    public String getPassword() {
+        return password;
+    }
 
-    public Gender getGender() { return gender; }
-    public void setGender(Gender gender) { this.gender = gender; }
+    public void setPassword(String passWord) {
+        this.password = passWord;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthday) {
+        this.birthDate = birthday;
+    }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
 
-        if(obj instanceof User){
+        if (obj instanceof User) {
             User user = (User) obj;
 
             return this.email.equalsIgnoreCase(user.email);
@@ -64,8 +116,9 @@ public class User {
         return false;
     }
 
-
-    public Date getBirthday() { return birthday; }
-    public void setBirthday(Date birthday) { this.birthday = birthday; }
+    public boolean isAdult() {
+        if (this.birthDate == null) return false;
+        return Period.between(this.birthDate, LocalDate.now()).getYears() >= 18;
+    }
 
 }

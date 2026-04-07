@@ -24,6 +24,11 @@ public class UserService {
 
 
     public void save(User user) {
+
+        if (!user.isAdult()) {
+            // fait quelque chose
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.PASSENGER);
         userRepository.save(user);

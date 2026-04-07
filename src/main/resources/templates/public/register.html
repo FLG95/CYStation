@@ -20,7 +20,7 @@
                     </option>
                 </select>
             </div>
-            <input type="date" th:field="*{birthday}" placeholder="00/00/00" required/>
+            <input type="date" th:field="*{birthDate}" th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" />
             <input type="email" th:field="*{email}" placeholder="Email" required/>
             <input type="password" th:field="*{password}" placeholder="Mot de passe" required/>
             <button type="submit">S'inscrire</button>
