@@ -1,33 +1,20 @@
-
-
-:root{
-    --spacing-sm: 4rem;
-    --spacing-md: 10rem;
-    --spacing-lg: 20rem;
+/* Définition de ta palette de couleurs */
+:root {
+    --color-1: #000924; /* Fond très sombre */
+    --color-2: #041b38; /* Dégradé sombre */
+    --color-3: #093659;
+    --color-4: #145d87;
+    --color-5: #228399; /* Bordures subtiles */
+    --color-6: #31b0b0;
+    --color-7: #46cfb3; /* Boutons et accents */
+    --color-8: #73f0c6; /* Survol des boutons */
+    --color-9: #abffd1;
+    --color-10: #d9ffe2; /* Texte clair */
 }
 
-* {
+/* Réinitialisation de base */
+body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-main {
-
-    padding: var(--spacing-sm);
-
-}
-
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: darkred;
-}
-
-h1{
-    color: blue;
-}
-
-nav{
-    background-color: lightcyan;
 }

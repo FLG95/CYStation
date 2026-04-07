@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Accueil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
 </head>
 
 <body>
 
-    <header th:fragment="header">
-        <nav>
-            <a th:href="@{/}">Accueil</a>
-            <a th:href="@{/about}">À propos</a>
+<header th:fragment="header" class="custom-header">
+    <nav class="navbar">
+        <div class="nav-left">
+            <a th:href="@{/}" class="logo">CyStation</a>
+            <a th:href="@{/}" class="nav-link">Accueil</a>
+            <a th:href="@{/about}" class="nav-link">À propos</a>
+            <a th:href="@{/userInfo}" class="nav-link">Mon Compte</a>
+        </div>
 
-            <div sec:authorize="isAnonymous()">
-                <a th:href="@{/login}">Se connecter</a>
-                <a th:href="@{/register}">S'inscrire</a>
+        <div class="nav-right">
+            <div sec:authorize="isAnonymous()" class="auth-buttons">
+                <a th:href="@{/login}" class="btn btn-outline">Se connecter</a>
+                <a th:href="@{/register}" class="btn btn-filled">S'inscrire</a>
             </div>
-
-            <a th:href="@{/login}">Connexion</a>
-            <a th:href="@{/register}">Inscription</a>
-            <a th:href="@{/userInfo}">Mon Compte</a>
-        </nav>
-    </header>
-
+        </div>
+    </nav>
+</header>
 
 </body>
 </html>

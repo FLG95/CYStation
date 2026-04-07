@@ -1,19 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Footer ISS</title>
 </head>
-
 <body>
 
-    <header th:fragment="footer">
-        <nav>
-            <a th:href="@{/}">footer</a>
-            <a th:href="@{/about}">À propos</a>
-        </nav>
-    </header>
+<footer th:fragment="footer" class="iss-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Station Spatiale Internationale</h3>
+            <p>En orbite terrestre basse depuis 1998. Faisant avancer la science pour l'humanité grâce à la coopération internationale.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Navigation Spatiale</h3>
+            <ul>
+                <li><a th:href="@{/}">Accueil de la Station</a></li>
+                <li><a th:href="@{/about}">À propos de la Mission</a></li>
+                <li><a th:href="@{/crew}">L'équipage Actuel</a></li>
+                <li><a th:href="@{/tracker}">Radar en temps réel</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Télémétrie & Contact</h3>
+            <p> Orbite : 400 km d'altitude</p>
+            <p> Vitesse : 28 000 km/h</p>
+            <p> Période : 90 minutes / tour</p>
+            <p> mission.control@cyss.space</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 Centre de Contrôle ISS - Tous droits réservés.</p>
+    </div>
+</footer>
 
 </body>
 </html>

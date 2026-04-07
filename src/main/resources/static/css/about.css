@@ -1,0 +1,128 @@
+/* S'assurer que la page prend toute la hauteur pour le footer */
+.space-theme {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #050505; /* Fond très sombre */
+    color: #e0e0e0;
+    font-family: 'Arial', sans-serif;
+}
+
+.about-container {
+    flex: 1; /* Pousse le footer vers le bas */
+}
+
+/* --- HERO SECTION --- */
+.about-hero {
+    /* Image de fond générée depuis Unsplash */
+    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Effet Parallax stylé */
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-overlay {
+    background: rgba(0, 0, 0, 0.6); /* Filtre sombre sur l'image */
+    padding: 40px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.hero-overlay h1 {
+    margin: 0;
+    font-size: 3rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #00d2ff;
+}
+
+.hero-overlay p {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #d0d6f9;
+}
+
+/* --- SECTION CONTENU (CARTES) --- */
+.about-content {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.info-card {
+    display: flex;
+    background-color: #0f1221;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #1a1e36;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 210, 255, 0.15);
+    border-color: rgba(0, 210, 255, 0.4);
+}
+
+/* Inverser le sens de la deuxième carte */
+.info-card.reverse {
+    flex-direction: row-reverse;
+}
+
+.info-card img {
+    width: 50%;
+    object-fit: cover;
+}
+
+.card-text {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-text h2 {
+    color: #00d2ff;
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+.card-text p {
+    line-height: 1.8;
+    color: #b0b5d1;
+    font-size: 1.1rem;
+}
+
+/* Responsivité pour les téléphones */
+@media (max-width: 768px) {
+    .info-card, .info-card.reverse {
+        flex-direction: column;
+    }
+
+    .info-card img, .card-text {
+        width: 100%;
+    }
+
+    .about-hero {
+        height: 300px;
+    }
+
+    .hero-overlay h1 {
+        font-size: 2rem;
+    }
+}

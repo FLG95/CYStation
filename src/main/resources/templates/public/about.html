@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>À propos - ISS</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/about.css}">
 </head>
-<body>
+
+<body class="space-theme">
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="about-container">
+
+    <section class="about-hero">
+        <div class="hero-overlay">
+            <h1>Notre Mission</h1>
+            <p>Découvrez les secrets de l'univers depuis l'orbite terrestre basse.</p>
+        </div>
+    </section>
+
+    <section class="about-content">
+        <div class="info-card">
+            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" alt="La Terre vue de l'espace">
+            <div class="card-text">
+                <h2>Un Laboratoire Unique</h2>
+                <p>La Station Spatiale Internationale n'est pas seulement un satellite, c'est le laboratoire le plus avancé jamais construit par l'humanité, flottant à 400 km au-dessus de nos têtes.</p>
+            </div>
+        </div>
+
+        <div class="info-card reverse">
+            <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=600&q=80" alt="Astronaute en sortie spatiale">
+            <div class="card-text">
+                <h2>Coopération Internationale</h2>
+                <p>Ce projet rassemble les agences spatiales du monde entier (NASA, ESA, Roscosmos, JAXA, CSA) dans un but commun : repousser les frontières de la science.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
 
 </body>
 </html>

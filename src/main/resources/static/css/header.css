@@ -1,0 +1,113 @@
+/* Conteneur principal du header */
+.custom-header {
+    background: linear-gradient(135deg, var(--color-1) 0%, var(--color-2) 100%);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 9, 36, 0.6);
+    border-bottom: 2px solid var(--color-4);
+}
+
+/* Barre de navigation flexbox */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Le Logo */
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-8);
+    text-decoration: none;
+    margin-right: 2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Les liens de navigation */
+.nav-link {
+    color: var(--color-10);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+}
+
+/* Animation de soulignement au survol */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color-7);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-7);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Groupe de boutons d'authentification */
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Style de base des boutons */
+.btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+/* Bouton "Se connecter" (Contours) */
+.btn-outline {
+    background: transparent;
+    color: var(--color-7);
+    border: 1px solid var(--color-6);
+}
+
+.btn-outline:hover {
+    background: rgba(49, 176, 176, 0.15); /* Légère opacité de la couleur 6 */
+    color: var(--color-8);
+    border-color: var(--color-8);
+}
+
+/* Bouton "S'inscrire" (Rempli) */
+.btn-filled {
+    background: linear-gradient(90deg, var(--color-6) 0%, var(--color-7) 100%);
+    color: var(--color-1);
+    border: none;
+    box-shadow: 0 0 10px rgba(70, 207, 179, 0.3);
+}
+
+.btn-filled:hover {
+    background: linear-gradient(90deg, var(--color-7) 0%, var(--color-8) 100%);
+    box-shadow: 0 0 15px rgba(115, 240, 198, 0.6);
+    transform: translateY(-2px);
+}
+
+.custom-header .nav-link,
+.custom-header .logo,
+.custom-header .btn {
+    font-family: inherit;
+}
