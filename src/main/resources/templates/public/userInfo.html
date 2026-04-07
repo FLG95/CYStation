@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-  <main>
+<div th:replace="~{public/header :: header}"></div>
 
-      <p>Nom : <span th:text="${user.lastName}"></span></p>
-      <p>Prénom : <span th:text="${user.firstName}"></span></p>
-      <p>Email : <span th:text="${user.email}"></span></p>
-      <p>Mot de passe : <span>••••••••</span></p>
 
-  </main>
+<main>
+
+    <p>Nom : <span th:text="${user.lastName}"></span></p>
+    <p>Prénom : <span th:text="${user.firstName}"></span></p>
+    <p>Genre : <span th:text="${user.gender}"></span></p>
+    <p>Rôle : <span th:text="${user.role}"></span></p>
+    <p>Expérience : <span th:text="${user.experience}"></span></p>
+    <p>Email : <span th:text="${user.email}"></span></p>
+    <p>Mot de passe : <span>••••••••</span></p>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
 
 </body>
 </html>

@@ -21,12 +21,6 @@ public class CyStationApplication implements CommandLineRunner {
 
     }
 
-    @Bean
-    CommandLineRunner init(UserRepository repo) {
-        return args -> {
 
-
-        };
-    }
 }
 

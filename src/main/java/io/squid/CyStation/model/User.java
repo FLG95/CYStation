@@ -1,9 +1,10 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.Gender;
 import io.squid.CyStation.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Date;
 
 @Entity
 public class User {
@@ -15,24 +16,18 @@ public class User {
     private String lastName;
     private String password;
     private String email;
-    private String gender;
     private int experience;
     private Role role;
+    private Date birthday;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
 
     public User(){
 
     }
 
-    public User(Long id, String firstName, String lastName, String password, String email, String gender, int experience){
-
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.email = email;
-        this.gender = gender;
-        this.experience = experience;
-    }
 
     public Long getID(){ return id;}
     public void setId(Long id){ this.id = id;}
@@ -55,9 +50,8 @@ public class User {
     public int getExperience() { return experience; }
     public void setExperience(int experience) { this.experience = experience; }
 
-    public String getGender() { return gender; }
-    public void setGender(String gender) { this.gender = gender; }
-
+    public Gender getGender() { return gender; }
+    public void setGender(Gender gender) { this.gender = gender; }
 
     @Override
     public boolean equals(Object obj){
@@ -70,5 +64,8 @@ public class User {
         return false;
     }
 
+
+    public Date getBirthday() { return birthday; }
+    public void setBirthday(Date birthday) { this.birthday = birthday; }
 
 }

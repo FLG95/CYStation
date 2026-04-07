@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    BCryptPasswordEncoder passwordEncoder(){
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -22,7 +22,7 @@ public class SecurityConfig {
         //httpSecurity.csrf(csrf -> csrf.disable());// Faut pas garder
 
         httpSecurity.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/index", "/about","/", "/css/**").permitAll()
+                .requestMatchers("/register", "/login", "/index", "/about", "/", "/css/**").permitAll()
                 .anyRequest().authenticated());
 
         httpSecurity.formLogin(form -> form
@@ -31,8 +31,13 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/index", true)
                 .permitAll());
 
-        //httpSecurity.logout(logout -> logout.permitAll());
-
+        httpSecurity.logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll());
         return httpSecurity.build();
 
     }

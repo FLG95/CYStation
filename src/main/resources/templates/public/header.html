@@ -5,8 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
 </head>
 
 <body>
@@ -17,10 +17,20 @@
             <a th:href="@{/}" class="logo">CyStation</a>
             <a th:href="@{/}" class="nav-link">Accueil</a>
             <a th:href="@{/about}" class="nav-link">À propos</a>
-            <a th:href="@{/userInfo}" class="nav-link">Mon Compte</a>
+
         </div>
 
         <div class="nav-right">
+
+            <div sec:authorize="isAuthenticated()" class="auth-buttons">
+                <a th:href="@{/userInfo}" class="nav-link">Mon Compte</a>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">
+                        Se déconnecter
+                    </button>
+                </form>
+            </div>
+
             <div sec:authorize="isAnonymous()" class="auth-buttons">
                 <a th:href="@{/login}" class="btn btn-outline">Se connecter</a>
                 <a th:href="@{/register}" class="btn btn-filled">S'inscrire</a>

@@ -8,20 +8,21 @@
 
     <main>
         <form th:action="@{/register}" th:object="${user}" method="post">
-            <input type="text" th:field="*{firstName}" placeholder="Prénom" />
-            <input type="text" th:field="*{lastName}" placeholder="Nom" />
+            <input type="text" th:field="*{firstName}" placeholder="Prénom" required/>
+            <input type="text" th:field="*{lastName}" placeholder="Nom" required/>
             <div class="form-group">
                 <label for="gender">Genre :</label>
                 <select th:field="*{gender}" id="gender" class="form-control" required>
                     <option value="">-- Choisir un genre --</option>
-                    <option th:each="g : ${T(io.squid.CyStation.model.Gender).values()}"
+                    <option th:each="g : ${T(io.squid.CyStation.enums.Gender).values()}"
                             th:value="${g}"
                             th:text="${g.displayValue}">
                     </option>
                 </select>
             </div>
-            <input type="email" th:field="*{email}" placeholder="Email" />
-            <input type="password" th:field="*{password}" placeholder="Mot de passe" />
+            <input type="date" th:field="*{birthday}" placeholder="00/00/00" required/>
+            <input type="email" th:field="*{email}" placeholder="Email" required/>
+            <input type="password" th:field="*{password}" placeholder="Mot de passe" required/>
             <button type="submit">S'inscrire</button>
         </form>
 
