@@ -16,11 +16,18 @@
 
     <p>Nom : <span th:text="${user.lastName}"></span></p>
     <p>Prénom : <span th:text="${user.firstName}"></span></p>
-    <p>Genre : <span th:text="${user.gender}"></span></p>
-    <p>Rôle : <span th:text="${user.role}"></span></p>
+    <p>Genre : <span th:text="${user.gender.getDisplayValue()}"></span></p>
+    <p>Rôle : <span th:text="${user.role.getDisplayValue()}"></span></p>
     <p>Expérience : <span th:text="${user.experience}"></span></p>
     <p>Email : <span th:text="${user.email}"></span></p>
     <p>Mot de passe : <span>••••••••</span></p>
+    <form th:action="@{/user/update-exp}" method="post">
+        <button name="addExp">Add Exp</button>
+    </form>
+
+    <form th:action="@{/user/reset-exp}" method="post">
+        <button name="resetExp">Reset Exp</button>
+    </form>
 
 </main>
 

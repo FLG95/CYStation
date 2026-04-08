@@ -1,10 +1,8 @@
 package io.squid.CyStation.model;
-
 import io.squid.CyStation.enums.Gender;
 import io.squid.CyStation.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 import java.time.Period;
 
