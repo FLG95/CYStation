@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/reactor.css}">
+</head>
+<body>
+
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main>
+
+    <div class="container">
+        <h3>Cible</h3>
+        <input type="range" id="autoSlider" min="0" max="100" value="0" disabled>
+
+        <h3>Votre Contrôle</h3>
+        <input type="range" id="userSlider" min="0" max="100" value="50">
+
+        <div id="status">Maintenez la position ! <span id="timer">5</span>s</div>
+
+        <button id="submitBtn" style="display: none;">Envoyer</button>
+    </div>
+
+    <script src="script.js"></script>
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+
+</body>
+</html>
+
+<script>
+
+    const autoSlider = document.getElementById('autoSlider');
+    const userSlider = document.getElementById('userSlider');
+    const timerDisplay = document.getElementById('timer');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let timeInside = 0;
+    const tolerance = 10;
+    let targetReached = false;
+
+    function updateAutoSlider() {
+        if (targetReached) return;
+
+        const time = Date.now() / 1000;
+        const value = (Math.sin(time) + 1) * 50;
+        autoSlider.value = value;
+
+        checkCollision();
+        requestAnimationFrame(updateAutoSlider);
+    }
+
+    function checkCollision() {
+        const diff = Math.abs(autoSlider.value - userSlider.value);
+
+        if (diff <= tolerance) {
+            timeInside += 16.6;
+            userSlider.classList.add('active');
+        } else {
+            timeInside = 0;
+            userSlider.classList.remove('active');
+        }
+
+        const remaining = Math.max(0, 5 - (timeInside / 1000)).toFixed(1);
+        timerDisplay.innerText = remaining;
+
+        if (timeInside >= 5000 && !targetReached) {
+            victory();
+        }
+    }
+
+    function victory() {
+        targetReached = true;
+        submitBtn.style.display = "block";
+        document.getElementById('status').innerText = "Bravo ! Prêt à envoyer.";
+    }
+
+    submitBtn.addEventListener('click', () => {
+        fetch('http://localhost:8080/api/data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ success: true, timestamp: Date.now() })
+        })
+            .then(response => alert("Données envoyées au serveur Java !"))
+            .catch(error => console.error("Erreur:", error));
+    });
+
+    updateAutoSlider();
+
+</script>

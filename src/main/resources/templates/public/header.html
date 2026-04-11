@@ -18,11 +18,13 @@
             <a th:href="@{/}" class="nav-link">Accueil</a>
             <a th:href="@{/about}" class="nav-link">À propos</a>
 
+
         </div>
 
         <div class="nav-right">
 
             <div sec:authorize="isAuthenticated()" class="auth-buttons">
+                <a th:href="@{/reactor}" class="nav-link">Accès au quartier scientifique</a>
                 <a th:href="@{/userInfo}" class="nav-link">Mon Compte</a>
                 <form th:action="@{/logout}" method="post">
                     <button type="submit">
