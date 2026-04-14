@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - Analyse Hydroponique</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/hydroponic.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+    <section class="cnes-section hydroponic-section">
+        <div class="section-header hydroponic-section-header">
+            <h2>Ingénierie & Biologie</h2>
+        </div>
+
+        <div class="hydroponic-header-info">
+            <span class="warning-label">Saisie de Commande Requise</span>
+            <h3 class="hydroponic-title">Calibration des Nutriments</h3>
+            <p class="hydroponic-desc">Recopiez exactement la séquence de calibration affichée par le terminal pour valider l'analyse hydroponique du secteur B.</p>
+        </div>
+
+        <div class="hydroponic-container">
+            <div class="machine-console" id="hydroponic-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : EN ATTENTE DE SAISIE</div>
+                    <div class="target-display">SÉQUENCE CIBLE : <br><span id="target-password">CHARGEMENT...</span></div>
+                </div>
+
+                <div class="terminal-input-group">
+                    <label class="engraved-label" for="password-input">ENTRÉE TERMINAL</label>
+                    <input type="text" id="password-input" class="terminal-input" placeholder="Saisissez la séquence ici..." autocomplete="off">
+                </div>
+
+                <button id="submitBtn" class="hardware-btn">TRANSMETTRE LES DONNÉES</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    const targetPasswordDisplay = document.getElementById('target-password');
+    const passwordInput = document.getElementById('password-input');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusText = document.getElementById('status-text');
+    const hydroponicInterface = document.getElementById('hydroponic-interface');
+
+    // Liste de codes aléatoires possibles
+    const sequences = [
+        "H2O-NUTR-88X",
+        "BIO-SYNC-A42",
+        "PH-LEVEL-7.4",
+        "OXYGEN-FLUX-9",
+        "ZETA-PLANT-00"
+    ];
+
+    // Sélectionner une séquence au hasard
+    const targetSequence = sequences[Math.floor(Math.random() * sequences.length)];
+    targetPasswordDisplay.innerText = targetSequence;
+
+    // Vérifier la saisie à chaque lettre tapée
+    passwordInput.addEventListener('input', () => {
+        if (passwordInput.value === targetSequence) {
+            victory();
+        } else if (targetSequence.startsWith(passwordInput.value)) {
+            // Si le début est correct, on laisse en état neutre
+            hydroponicInterface.classList.remove('error');
+        } else {
+            // S'il y a une erreur de frappe
+            hydroponicInterface.classList.add('error');
+        }
+    });
+
+    function victory() {
+        hydroponicInterface.classList.remove('error');
+        hydroponicInterface.classList.add('success');
+
+        passwordInput.disabled = true;
+        submitBtn.style.display = "block";
+        statusText.innerText = "ÉTAT : CALIBRATION RÉUSSIE";
+        statusText.style.color = "#00ff00";
+        statusText.style.textShadow = "0 0 8px #00ff00";
+    }
+
+    submitBtn.addEventListener('click', () => {
+        fetch('/user/update-exp', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Données transmises avec succès. Points d'expérience ajoutés.");
+                    window.location.href = "/userInfo";
+                } else {
+                    alert("Erreur lors de la transmission des données.");
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
+</script>
+
+</body>
+</html>
