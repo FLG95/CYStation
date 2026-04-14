@@ -85,13 +85,23 @@
     }
 
     submitBtn.addEventListener('click', () => {
-        fetch('http://localhost:8080/api/data', {
+
+        fetch('/user/update-exp', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ success: true, timestamp: Date.now() })
+            headers: {
+
+                'Accept': 'application/json'
+            }
         })
-            .then(response => alert("Données envoyées au serveur Java !"))
-            .catch(error => console.error("Erreur:", error));
+            .then(response => {
+                if (response.ok) {
+                    alert("Points d'expérience ajoutés !");
+                    window.location.href = "/userInfo";
+                } else {
+                    alert("Erreur lors de l'ajout d'XP.");
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
     });
 
     updateAutoSlider();

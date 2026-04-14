@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @Controller
 public class UserController {
 
