@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - Télémétrie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/telemetry.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+    <section class="cnes-section telemetry-section">
+        <div class="section-header telemetry-section-header">
+            <h2>Ingénierie & Communications</h2>
+        </div>
+
+        <div class="telemetry-header-info">
+            <span class="warning-label">Configuration Requise</span>
+            <h3 class="telemetry-title">Mise à jour télémétrique</h3>
+            <p class="telemetry-desc">Activez manuellement les 4 relais de transmission principaux pour établir une connexion sécurisée avec l'antenne et déployer le patch.</p>
+        </div>
+
+        <div class="telemetry-container">
+            <div class="machine-console" id="telemetry-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : HORS LIGNE</div>
+                    <div class="progress-display">RELAIS ACTIFS : <span id="relays-count">0</span> / 4</div>
+                </div>
+
+                <div class="relays-grid">
+                    <div class="relay-item">
+                        <label class="engraved-label">RELAIS ALPHA</label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="relay-checkbox">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div class="relay-item">
+                        <label class="engraved-label">RELAIS BETA</label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="relay-checkbox">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div class="relay-item">
+                        <label class="engraved-label">RELAIS GAMMA</label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="relay-checkbox">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div class="relay-item">
+                        <label class="engraved-label">RELAIS DELTA</label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="relay-checkbox">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button id="submitBtn" class="hardware-btn submit-btn">DÉPLOYER LE PATCH</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.relay-checkbox');
+    const relaysCountDisplay = document.getElementById('relays-count');
+    const statusText = document.getElementById('status-text');
+    const submitBtn = document.getElementById('submitBtn');
+    const telemetryInterface = document.getElementById('telemetry-interface');
+
+    // Écouter chaque clic sur un interrupteur
+    checkboxes.forEach(box => {
+        box.addEventListener('change', () => {
+
+            // Compter combien d'interrupteurs sont activés
+            let activeCount = 0;
+            checkboxes.forEach(cb => {
+                if(cb.checked) activeCount++;
+            });
+
+            // Mettre à jour l'écran LCD
+            relaysCountDisplay.innerText = activeCount;
+
+            // Vérifier la victoire
+            if (activeCount === 4) {
+                victory();
+            } else {
+                // Rétablir l'état normal si on décoche un bouton
+                telemetryInterface.classList.remove('success');
+                submitBtn.style.display = "none";
+
+                if(activeCount > 0) {
+                    statusText.innerText = "ÉTAT : DÉMARRAGE PARTIEL...";
+                    statusText.style.color = "#ffaa00";
+                } else {
+                    statusText.innerText = "ÉTAT : HORS LIGNE";
+                    statusText.style.color = "#ff3333";
+                }
+            }
+        });
+    });
+
+    function victory() {
+        telemetryInterface.classList.add('success');
+        statusText.innerText = "ÉTAT : CONNEXION ÉTABLIE";
+        statusText.style.color = "#00ff00";
+        submitBtn.style.display = "block";
+    }
+
+    submitBtn.addEventListener('click', () => {
+        fetch('/user/update-exp', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Patch déployé avec succès. Points d'expérience ajoutés.");
+                    window.location.href = "/userInfo";
+                } else {
+                    alert("Erreur lors de la transmission des données.");
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
+</script>
+
+</body>
+</html>

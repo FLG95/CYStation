@@ -28,6 +28,9 @@ public class MainController {
     @RequestMapping("/hydroponic")
     public String hydroponic(){ return "engineer/hydroponic";}
 
+    @RequestMapping("/telemetry")
+    public String telemetry(){ return "engineer/telemetry";}
+
     @RequestMapping("/mission")
     public String mission() {
         return "public/mission";
