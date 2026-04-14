@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CYStation - Missions</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/mission.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+
+    <section class="cnes-hero mission-hero">
+        <div class="cnes-hero-content">
+            <span class="tag">Tableau des contrats</span>
+            <h1>Missions Disponibles</h1>
+            <p>Sélectionnez une mission pour contribuer au maintien de la station et gagner de l'expérience.</p>
+        </div>
+    </section>
+
+    <section class="cnes-section bg-dark-alt">
+        <div class="section-header">
+            <h2>Contrats ouverts</h2>
+        </div>
+
+        <div class="cnes-grid news-grid">
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=800&q=80" alt="Noyau">
+                </div>
+                <div class="card-content">
+                    <span class="xp-badge">+ 500 XP</span>
+                    <h3>Maintenance du Noyau</h3>
+                    <p>Vérification des condensateurs de flux thermiques du secteur 4. Une intervention manuelle est requise.</p>
+                    <div class="mission-actions">
+                        <a th:href="@{/engineer/reactor}" class="cnes-btn">Accepter</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1527066579998-dbbae57f45ce?auto=format&fit=crop&w=800&q=80" alt="Serre">
+                </div>
+                <div class="card-content">
+                    <span class="xp-badge">+ 250 XP</span>
+                    <h3>Analyse hydroponique</h3>
+                    <p>Récolter les échantillons de la serre B et analyser les niveaux de nutriments dans l'eau.</p>
+                    <div class="mission-actions">
+                        <a href="#" class="cnes-btn">Accepter</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1516849677285-28c2b6d615f5?auto=format&fit=crop&w=800&q=80" alt="Antenne">
+                </div>
+                <div class="card-content">
+                    <span class="xp-badge">+ 150 XP</span>
+                    <h3>Mise à jour télémétrique</h3>
+                    <p>Déployer le patch logiciel v4.2 sur le système de communication de l'antenne principale.</p>
+                    <div class="mission-actions">
+                        <a href="#" class="cnes-btn">Accepter</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1464851707681-f9d5fdaccea8?auto=format&fit=crop&w=800&q=80" alt="Observation">
+                </div>
+                <div class="card-content">
+                    <span class="xp-badge">+ 300 XP</span>
+                    <h3>Relevé d'astrométrie</h3>
+                    <p>Utiliser les instruments de la Cupola pour cartographier le nouveau champ de débris orbital.</p>
+                    <div class="mission-actions">
+                        <a href="#" class="cnes-btn">Accepter</a>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+</body>
+</html>

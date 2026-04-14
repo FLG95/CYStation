@@ -25,4 +25,9 @@ public class MainController {
     @RequestMapping("/reactor")
     public String reactor(){ return "engineer/reactor";}
 
+    @RequestMapping("/mission")
+    public String mission() {
+        return "public/mission";
+    }
+
 }

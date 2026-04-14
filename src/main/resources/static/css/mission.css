@@ -1,0 +1,54 @@
+/* --- BANNIÈRE SECONDAIRE MISSIONS --- */
+.mission-hero {
+    height: 40vh;
+    min-height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
+    background-position: top;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 60px 5%;
+}
+
+.mission-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Dégradé pour assurer la lisibilité du texte sur l'image */
+    background: linear-gradient(to top, var(--color-1) 0%, rgba(0, 9, 36, 0.3) 100%);
+    z-index: 1;
+}
+
+/* --- BADGE XP --- */
+.xp-badge {
+    display: inline-block;
+    color: var(--color-9); /* Utilisation du vert néon défini dans ton style.css */
+    font-weight: 900;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 10px rgba(171, 255, 209, 0.4);
+    border: 1px solid var(--color-9);
+    padding: 4px 10px;
+    border-radius: 3px;
+    background-color: rgba(171, 255, 209, 0.05); /* Fond très léger pour faire ressortir le badge */
+}
+
+/* --- AJUSTEMENTS DES ACTIONS (BOUTONS) --- */
+.mission-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* --- EFFET SURVOL DES CONTRATS --- */
+/* Ajoute une légère lueur verte au survol des cartes de mission pour accentuer l'interaction */
+.news-grid .cnes-card {
+    transition: all 0.3s ease;
+}
+
+.news-grid .cnes-card:hover {
+    box-shadow: 0 0 20px rgba(70, 207, 179, 0.15);
+    border-color: var(--color-5);
+}
