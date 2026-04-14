@@ -36,7 +36,7 @@
                         <p th:text="${user.email}">matricule@cyss.space</p>
                     </div>
                     <div class="detail-item">
-                        <label>Genre / Type</label>
+                        <label>Genre</label>
                         <p th:text="${user.gender != null ? user.gender.displayValue : 'Non spécifié'}">Humain</p>
                     </div>
                     <div class="detail-item">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="detail-item">
                         <label>Rôle</label>
-                        <p th:text="${user.role != null ? user.role : 'Non assigné'}">Rôle</p>
+                        <p th:text="${user.role != null ? user.role.getDisplayValue() : 'Non assigné'}">Rôle</p>
                     </div>
                     <div class="detail-item highlight-item">
                         <label>Expérience</label>

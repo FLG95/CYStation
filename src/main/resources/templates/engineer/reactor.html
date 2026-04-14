@@ -1,48 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - CYStation</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/reactor.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/reactor.css}">
 </head>
 <body>
 
-
 <div th:replace="~{public/header :: header}"></div>
 
-<main>
+<main class="cnes-layout">
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>Ingénierie & Maintenance</h2>
+        </div>
 
-    <div class="container">
-        <h3>Cible</h3>
-        <input type="range" id="autoSlider" min="0" max="100" value="0" disabled>
+        <div class="reactor-container">
+            <article class="cnes-card reactor-card">
+                <div class="card-content">
+                    <span class="card-date">Opération Manuelle Requise</span>
+                    <h3>Synchronisation du Réacteur</h3>
+                    <p>Ajustez le contrôle d'injection manuel pour qu'il corresponde à la fréquence cible générée par l'IA de la station afin de stabiliser le noyau.</p>
 
-        <h3>Votre Contrôle</h3>
-        <input type="range" id="userSlider" min="0" max="100" value="50">
+                    <div class="machine-console" id="reactor-interface">
+                        <div class="screw top-left"></div>
+                        <div class="screw top-right"></div>
+                        <div class="screw bottom-left"></div>
+                        <div class="screw bottom-right"></div>
 
-        <div id="status">Maintenez la position ! <span id="timer">5</span>s</div>
+                        <div class="lcd-screen display-panel">
+                            <div id="status-text">ÉTAT : DÉSYNCHRONISÉ</div>
+                            <div class="timer-display">MAINTIEN REQUIS : <span id="timer">5.0</span>s</div>
+                        </div>
 
-        <button id="submitBtn" style="display: none;">Envoyer</button>
-    </div>
+                        <div class="physical-controls sliders-wrapper">
+                            <div class="slider-group">
+                                <label class="engraved-label">FRÉQUENCE CIBLE (IA)</label>
+                                <div class="slider-track-bg">
+                                    <input type="range" id="autoSlider" min="0" max="100" value="0" disabled>
+                                </div>
+                            </div>
 
-    <script src="script.js"></script>
+                            <div class="slider-group">
+                                <label class="engraved-label">CALIBRAGE MANUEL</label>
+                                <div class="slider-track-bg">
+                                    <input type="range" id="userSlider" min="0" max="100" value="50">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="submitBtn" class="hardware-btn" style="display: none;">DÉCLENCHER LA SYNCHRONISATION</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
 
-
-</body>
-</html>
-
 <script>
-
     const autoSlider = document.getElementById('autoSlider');
     const userSlider = document.getElementById('userSlider');
     const timerDisplay = document.getElementById('timer');
     const submitBtn = document.getElementById('submitBtn');
+    const statusText = document.getElementById('status-text');
+    const reactorInterface = document.getElementById('reactor-interface');
 
     let timeInside = 0;
     const tolerance = 10;
@@ -65,9 +93,13 @@
         if (diff <= tolerance) {
             timeInside += 16.6;
             userSlider.classList.add('active');
+            reactorInterface.classList.add('syncing');
+            statusText.innerText = "ÉTAT : ALIGNEMENT EN COURS...";
         } else {
             timeInside = 0;
             userSlider.classList.remove('active');
+            reactorInterface.classList.remove('syncing');
+            statusText.innerText = "ÉTAT : DÉSYNCHRONISÉ";
         }
 
         const remaining = Math.max(0, 5 - (timeInside / 1000)).toFixed(1);
@@ -80,30 +112,34 @@
 
     function victory() {
         targetReached = true;
+
+        reactorInterface.classList.remove('syncing');
+        reactorInterface.classList.add('success');
+
         submitBtn.style.display = "block";
-        document.getElementById('status').innerText = "Bravo ! Prêt à envoyer.";
+        statusText.innerText = "ÉTAT : RÉACTEUR STABILISÉ";
     }
 
     submitBtn.addEventListener('click', () => {
-
         fetch('/user/update-exp', {
             method: 'POST',
             headers: {
-
                 'Accept': 'application/json'
             }
         })
             .then(response => {
                 if (response.ok) {
-                    alert("Points d'expérience ajoutés !");
+                    alert("Données transmises avec succès. Points d'expérience ajoutés.");
                     window.location.href = "/userInfo";
                 } else {
-                    alert("Erreur lors de l'ajout d'XP.");
+                    alert("Erreur lors de la transmission des données.");
                 }
             })
             .catch(error => console.error('Erreur:', error));
     });
 
     updateAutoSlider();
-
 </script>
+
+</body>
+</html>
