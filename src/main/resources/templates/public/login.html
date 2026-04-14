@@ -1,26 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - CYStation</title>
+    <!-- Inclusion des styles -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
-<body>
+<body class="space-theme">
 
-    <main>
-        <form th:action="@{/login}" method="post">
-            <input type="text" name="username" placeholder="Votre Email" />
-            <input type="password" name="password" placeholder="Votre mot de passe" />
-            <button type="submit">Se connecter</button>
+<!-- Inclusion du Header -->
+<div th:replace="~{public/header :: header}"></div>
 
-            <div th:if="${param.error}">
-                 <strong>Erreur :</strong> Cet email n'est pas reconnu ou le mot de passe est faux.
-                    <br>
-                    Si vous n'avez pas encore de compte, <a th:href="@{/register}" >veuillez vous inscrire ici</a>.
+<main class="login-main-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Terminal d'Accès</h2>
+            <p>Identifiez-vous pour entrer dans la station</p>
+        </div>
+
+        <!-- Formulaire de connexion Spring Security -->
+        <form th:action="@{/login}" method="post" class="login-form">
+
+            <div class="form-group">
+                <label for="username">Matricule (Email)</label>
+                <input type="text" id="username" name="username" placeholder="votre.email@cyss.space" required autofocus/>
             </div>
 
+            <div class="form-group">
+                <label for="password">Code d'accès (Mot de passe)</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required/>
+            </div>
+
+            <button type="submit" class="btn-submit">Autoriser l'accès</button>
 
         </form>
-    </main>
+
+        <!-- Gestion des erreurs -->
+        <div class="error-message" th:if="${param.error}">
+            <strong>Accès refusé :</strong> Identifiants non reconnus ou corrompus.
+        </div>
+
+        <div class="logout-message" th:if="${param.logout}">
+            Déconnexion réussie. À bientôt sur la station.
+        </div>
+
+        <!-- Lien vers l'inscription -->
+        <div class="register-link">
+            Nouveau membre d'équipage ? <a th:href="@{/register}">S'enrôler ici</a>
+        </div>
+    </div>
+</main>
+
+<!-- Inclusion du Footer -->
+<div th:replace="~{public/footer :: footer}"></div>
 
 </body>
 </html>

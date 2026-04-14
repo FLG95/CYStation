@@ -1,0 +1,153 @@
+/* --- CONFIGURATION DU FOND ESPACE --- */
+.space-theme {
+    margin: 0;
+    padding: 0;
+    /* Image de fond spatiale fixe */
+    background: linear-gradient(rgba(0, 9, 36, 0.7), rgba(0, 0, 0, 0.8)),
+    url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.register-main-container {
+    flex: 1; /* Permet au footer de rester en bas si la page est courte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    position: relative;
+}
+
+/* --- CARTE D'INSCRIPTION "GLASSMORPHISME" --- */
+.register-card {
+    background-color: rgba(15, 20, 35, 0.85); /* Semi-transparent */
+    backdrop-filter: blur(10px); /* Flou derrière la carte */
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+.register-card:hover {
+    border-color: rgba(0, 210, 255, 0.5);
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.1);
+}
+
+.register-header h2 {
+    color: #00d2ff;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    margin-bottom: 5px;
+}
+
+.register-header p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* --- ELEMENTS DU FORMULAIRE --- */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.form-group.full-width { margin-bottom: 25px; }
+
+label {
+    color: #abffd1; /* Couleur 9 de ta palette */
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+input, select {
+    background-color: rgba(5, 7, 14, 0.7);
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    color: #ffffff;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #00d2ff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+}
+
+/* --- BOUTON SUBMIT --- */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, #31b0b0, #46cfb3);
+    color: #000924;
+    border: none;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.4);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 25px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.login-link a {
+    color: #00d2ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover { text-decoration: underline; }
+
+/* Message d'erreur spécifique */
+.error-message {
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Adaptation Mobile */
+@media (max-width: 600px) {
+    .form-row { flex-direction: column; gap: 0; }
+    .register-card { padding: 30px 15px; }
+}
