@@ -1,9 +1,54 @@
 /* reactor.css - Refonte "Console Machine" */
 
+/* --- NOUVELLES CLASSES EXTRAITES DU HTML --- */
+.reactor-section {
+    padding-top: 20px;
+}
+
+.reactor-section-header {
+    margin-bottom: 15px;
+}
+
+.reactor-header-info {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 10px auto;
+    padding: 0 15px;
+}
+
+.warning-label {
+    color: #ff4d4d;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+}
+
+.reactor-title {
+    margin: 5px 0;
+    font-size: 1.5rem;
+}
+
+.reactor-desc {
+    color: #ccc;
+    line-height: 1.3;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+.auto-slider-group {
+    margin-bottom: 25px;
+}
+
+.user-slider-group {
+    margin-bottom: 15px;
+}
+/* ------------------------------------------ */
+
 .reactor-container {
     display: flex;
     justify-content: center;
-    padding: 20px 0;
+    padding: 0 0 20px 0; /* Mise à jour (remplace l'ancien style inline padding-top: 0) */
 }
 
 .reactor-card {
@@ -14,9 +59,11 @@
 
 /* Le fond de la console (Effet métal) */
 .machine-console {
-    margin-top: 30px;
-    padding: 40px 30px;
-    background: linear-gradient(135deg, #3a3f44 0%, #222528 100%); /* Si vous avez une image, remplacez par : background: url('/images/votre-image-machine.jpg') center/cover; */
+    margin-top: 0; /* Mise à jour */
+    width: 100%; /* Ajout depuis inline */
+    max-width: 650px; /* Ajout depuis inline */
+    padding: 25px 30px; /* Mise à jour */
+    background: linear-gradient(135deg, #3a3f44 0%, #222528 100%);
     border: 3px solid #111;
     border-radius: 8px;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.5);
@@ -52,9 +99,9 @@
     background-color: #0d1a10;
     border: 4px solid #050a06;
     border-radius: 4px;
-    padding: 20px;
+    padding: 15px; /* Mise à jour */
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 25px; /* Mise à jour */
     box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 rgba(255,255,255,0.1);
     font-family: 'Courier New', Courier, monospace;
 }
@@ -78,7 +125,7 @@
 /* Labels gravés dans le métal */
 .engraved-label {
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Mise à jour */
     font-size: 0.85rem;
     color: #999;
     text-transform: uppercase;
@@ -163,8 +210,9 @@ input[type="range"].active::-webkit-slider-thumb {
 
 /* Gros bouton de validation type "Urgence / Matériel" */
 .hardware-btn {
+    display: none; /* Ajout depuis inline */
     width: 100%;
-    margin-top: 20px;
+    margin-top: 15px; /* Mise à jour */
     padding: 15px;
     font-size: 1.1rem;
     font-weight: bold;

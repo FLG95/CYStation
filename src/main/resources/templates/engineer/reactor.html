@@ -12,49 +12,47 @@
 </head>
 <body>
 
-<div th:replace="~{public/header :: header}"></div>
-
 <main class="cnes-layout">
-    <section class="cnes-section" style="padding-top: 20px;">
-        <div class="section-header" style="margin-bottom: 15px;">
+    <section class="cnes-section reactor-section">
+        <div class="section-header reactor-section-header">
             <h2>Ingénierie & Maintenance</h2>
         </div>
 
-        <div style="text-align: center; max-width: 700px; margin: 0 auto 10px auto; padding: 0 15px;">
-            <span style="color: #ff4d4d; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">Opération Manuelle Requise</span>
-            <h3 style="margin: 5px 0; font-size: 1.5rem;">Synchronisation du Réacteur</h3>
-            <p style="color: #ccc; line-height: 1.3; font-size: 0.95rem; margin-bottom: 0;">Ajustez le contrôle d'injection manuel pour qu'il corresponde à la fréquence cible générée par l'IA de la station afin de stabiliser le noyau.</p>
+        <div class="reactor-header-info">
+            <span class="warning-label">Opération Manuelle Requise</span>
+            <h3 class="reactor-title">Synchronisation du Réacteur</h3>
+            <p class="reactor-desc">Ajustez le contrôle d'injection manuel pour qu'il corresponde à la fréquence cible générée par l'IA de la station afin de stabiliser le noyau.</p>
         </div>
 
-        <div class="reactor-container" style="padding-top: 0;">
-            <div class="machine-console" id="reactor-interface" style="margin-top: 0; width: 100%; max-width: 650px; padding: 25px 30px;">
+        <div class="reactor-container">
+            <div class="machine-console" id="reactor-interface">
                 <div class="screw top-left"></div>
                 <div class="screw top-right"></div>
                 <div class="screw bottom-left"></div>
                 <div class="screw bottom-right"></div>
 
-                <div class="lcd-screen display-panel" style="margin-bottom: 25px; padding: 15px;">
+                <div class="lcd-screen display-panel">
                     <div id="status-text">ÉTAT : DÉSYNCHRONISÉ</div>
                     <div class="timer-display">MAINTIEN REQUIS : <span id="timer">5.0</span>s</div>
                 </div>
 
                 <div class="physical-controls sliders-wrapper">
-                    <div class="slider-group" style="margin-bottom: 25px;">
-                        <label class="engraved-label" style="margin-bottom: 10px;">FRÉQUENCE CIBLE (IA)</label>
+                    <div class="slider-group auto-slider-group">
+                        <label class="engraved-label">FRÉQUENCE CIBLE (IA)</label>
                         <div class="slider-track-bg">
                             <input type="range" id="autoSlider" min="0" max="100" value="0" disabled>
                         </div>
                     </div>
 
-                    <div class="slider-group" style="margin-bottom: 15px;">
-                        <label class="engraved-label" style="margin-bottom: 10px;">CALIBRAGE MANUEL</label>
+                    <div class="slider-group user-slider-group">
+                        <label class="engraved-label">CALIBRAGE MANUEL</label>
                         <div class="slider-track-bg">
                             <input type="range" id="userSlider" min="0" max="100" value="50">
                         </div>
                     </div>
                 </div>
 
-                <button id="submitBtn" class="hardware-btn" style="display: none; margin-top: 15px;">DÉCLENCHER LA SYNCHRONISATION</button>
+                <button id="submitBtn" class="hardware-btn">DÉCLENCHER LA SYNCHRONISATION</button>
             </div>
         </div>
     </section>
