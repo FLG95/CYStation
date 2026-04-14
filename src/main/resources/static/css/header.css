@@ -1,113 +1,130 @@
-/* Conteneur principal du header */
-.custom-header {
-    background: linear-gradient(135deg, var(--color-1) 0%, var(--color-2) 100%);
-    padding: 1rem 2rem;
-    box-shadow: 0 4px 15px rgba(0, 9, 36, 0.6);
-    border-bottom: 2px solid var(--color-4);
-}
-
-/* Barre de navigation flexbox */
-.navbar {
+/* --- HEADER SOMBRE --- */
+.cnes-header {
+    background-color: #0b0d17; /* Fond imposé */
+    border-bottom: 1px solid var(--color-3);
+    padding: 15px 5%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Sépare le groupe de gauche et le groupe de droite */
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.nav-left, .nav-right {
+/* --- GROUPE GAUCHE --- */
+.header-left {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 40px; /* Espace entre le logo et le menu */
 }
 
-/* Le Logo */
-.logo {
+/* --- LOGO --- */
+.header-logo a {
+    color: var(--color-9);
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--color-8);
-    text-decoration: none;
-    margin-right: 2rem;
-    letter-spacing: 1px;
     text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(171, 255, 209, 0.2);
 }
 
-/* Les liens de navigation */
-.nav-link {
+/* --- NAVIGATION --- */
+.header-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.header-nav a {
     color: var(--color-10);
     text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    position: relative;
-    padding: 0.5rem 0;
-    transition: color 0.3s ease;
-}
-
-/* Animation de soulignement au survol */
-.nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--color-7);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-    color: var(--color-7);
-}
-
-.nav-link:hover::after {
-    width: 100%;
-}
-
-/* Groupe de boutons d'authentification */
-.auth-buttons {
-    display: flex;
-    gap: 1rem;
-}
-
-/* Style de base des boutons */
-.btn {
-    padding: 0.5rem 1.2rem;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
     font-size: 0.95rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.header-nav a:hover {
+    color: var(--color-7);
+    border-bottom: 2px solid var(--color-7);
+}
+
+/* --- BOUTONS D'ACTION (DROITE) --- */
+.header-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.cnes-btn-nav {
+    background-color: transparent;
+    color: var(--color-7);
+    border: 1px solid var(--color-7);
+    padding: 8px 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* Bouton "Se connecter" (Contours) */
-.btn-outline {
-    background: transparent;
-    color: var(--color-7);
-    border: 1px solid var(--color-6);
-}
-
-.btn-outline:hover {
-    background: rgba(49, 176, 176, 0.15); /* Légère opacité de la couleur 6 */
-    color: var(--color-8);
-    border-color: var(--color-8);
-}
-
-/* Bouton "S'inscrire" (Rempli) */
-.btn-filled {
-    background: linear-gradient(90deg, var(--color-6) 0%, var(--color-7) 100%);
+.cnes-btn-nav:hover {
+    background-color: var(--color-7);
     color: var(--color-1);
-    border: none;
-    box-shadow: 0 0 10px rgba(70, 207, 179, 0.3);
+    box-shadow: 0 0 15px rgba(70, 207, 179, 0.3);
 }
 
-.btn-filled:hover {
-    background: linear-gradient(90deg, var(--color-7) 0%, var(--color-8) 100%);
-    box-shadow: 0 0 15px rgba(115, 240, 198, 0.6);
-    transform: translateY(-2px);
+.logout-btn {
+    color: #ef4444;
+    border-color: #ef4444;
 }
 
-.custom-header .nav-link,
-.custom-header .logo,
-.custom-header .btn {
-    font-family: inherit;
+.logout-btn:hover {
+    background-color: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.alt-btn {
+    border-color: var(--color-4);
+    color: var(--color-9);
+}
+
+.alt-btn:hover {
+    background-color: var(--color-4);
+    color: #fff;
+}
+
+/* --- RESPONSIVITÉ (MOBILES & TABLETTES) --- */
+@media (max-width: 992px) {
+    .header-left { gap: 20px; }
+    .header-nav ul { gap: 15px; }
+}
+
+@media (max-width: 768px) {
+    .cnes-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .header-left {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .header-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

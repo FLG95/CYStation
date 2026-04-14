@@ -2,95 +2,131 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Station Spatiale - Accueil</title>
-
+    <title>CYStation - Accueil</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
-
-<body class="space-theme">
+<body>
 
 <div th:replace="~{public/header :: header}"></div>
 
-<main class="home-container">
+<main class="cnes-layout">
 
-    <section class="hero-classic">
-        <div class="hero-content">
-            <input type="search" name="q" placeholder="Search...">
-            <h1>Opérations Orbitales</h1>
-            <p>Système de télémétrie et de gestion des infrastructures de la station spatiale.</p>
-            <a th:href="@{/about}" class="btn-primary">Découvrir la mission</a>
+    <section class="cnes-hero">
+        <div class="cnes-hero-content">
+            <span class="tag">Opérations en cours</span>
+            <h1>CYStation : L'avant-poste orbital</h1>
+            <p>Suivez en temps réel la maintenance des systèmes et les recherches scientifiques menées à 400km d'altitude.</p>
+            <a th:href="@{/about}" class="cnes-btn">Découvrir la mission</a>
         </div>
     </section>
 
-    <section class="intro-section">
-        <div class="intro-text">
-            <h2>Architecture de la Station</h2>
-            <p>Notre station est un chef-d'œuvre d'ingénierie modulaire. Conçue pour résister aux environnements les plus hostiles de l'espace profond, elle est divisée en plusieurs secteurs hautement spécialisés assurant la survie, la propulsion et l'accomplissement de nos objectifs scientifiques.</p>
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>À la une</h2>
+        </div>
+        <div class="cnes-grid news-grid">
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80" alt="Orbite">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">14 Avril 2026</span>
+                    <h3>Manœuvre d'évitement réussie</h3>
+                    <p>La station a ajusté son périgée pour éviter un débris de satellite ancien.</p>
+                </div>
+            </article>
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80" alt="Ingénierie">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">12 Avril 2026</span>
+                    <h3>Rendement énergétique accru</h3>
+                    <p>Les nouveaux panneaux solaires déchargent le noyau à fusion de 10%.</p>
+                </div>
+            </article>
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Data">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">11 Avril 2026</span>
+                    <h3>Transmission Deep Space</h3>
+                    <p>Réception confirmée des données provenant de la mission lunaire Artemis.</p>
+                </div>
+            </article>
         </div>
     </section>
 
-    <section class="modules-showcase">
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80" alt="Pont de commandement">
-            </div>
-            <div class="module-info">
-                <h3>Pont de Commandement</h3>
-                <p>Centre névralgique de la navigation. Équipé de consoles de cartographie stellaire avancées pour le contrôle de la trajectoire orbitale.</p>
-            </div>
+    <section class="cnes-section bg-dark-alt">
+        <div class="section-header">
+            <h2>Infrastructures du Complexe</h2>
         </div>
+        <div class="cnes-grid infrastructure-grid">
 
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80" alt="Réacteur">
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Commandement">
+                <div class="infra-overlay"><h3>Pont de Commandement</h3></div>
             </div>
-            <div class="module-info">
-                <h3>Noyau Énergétique</h3>
-                <p>Réacteur à fusion thermique générant l'alimentation primaire de toute l'infrastructure. Requiert une surveillance constante.</p>
-            </div>
-        </div>
 
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80" alt="Baie Médicale">
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80" alt="Energie">
+                <div class="infra-overlay"><h3>Noyau Énergétique</h3></div>
             </div>
-            <div class="module-info">
-                <h3>Baie Médicale</h3>
-                <p>Laboratoire de diagnostic et de soins intensifs, capable d'analyser la biométrie de l'équipage en temps réel.</p>
-            </div>
-        </div>
 
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=800&q=80" alt="Support Vie">
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80" alt="Santé">
+                <div class="infra-overlay"><h3>Baie Médicale</h3></div>
             </div>
-            <div class="module-info">
-                <h3>Support Vie (O2)</h3>
-                <p>Système critique assurant la filtration de l'air, le recyclage de l'eau et le maintien de la pression atmosphérique interne.</p>
-            </div>
-        </div>
 
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1516849677285-28c2b6d615f5?auto=format&fit=crop&w=800&q=80" alt="Communications">
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=600&q=80" alt="O2">
+                <div class="infra-overlay"><h3>Support Vie (O2)</h3></div>
             </div>
-            <div class="module-info">
-                <h3>Centre de Transmissions</h3>
-                <p>Réseau d'antennes à haut gain pour le transfert de paquets de données cryptées avec le centre de contrôle terrestre.</p>
-            </div>
-        </div>
 
-        <div class="module-card">
-            <div class="module-image">
-                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80" alt="Sécurité">
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1516849677285-28c2b6d615f5?auto=format&fit=crop&w=600&q=80" alt="Telecom">
+                <div class="infra-overlay"><h3>Transmissions</h3></div>
             </div>
-            <div class="module-info">
-                <h3>Poste de Sécurité</h3>
-                <p>Supervision des accès par sas biométriques et surveillance intégrale par caméras de l'intégrité des coursives.</p>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80" alt="Securité">
+                <div class="infra-overlay"><h3>Poste de Sécurité</h3></div>
             </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80" alt="Labo">
+                <div class="infra-overlay"><h3>Laboratoire de Chimie</h3></div>
+            </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1527066579998-dbbae57f45ce?auto=format&fit=crop&w=600&q=80" alt="Serre">
+                <div class="infra-overlay"><h3>Serre Hydroponique</h3></div>
+            </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" alt="Hangar">
+                <div class="infra-overlay"><h3>Baie d'Amarrage</h3></div>
+            </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="Serveur">
+                <div class="infra-overlay"><h3>Data Center Orbital</h3></div>
+            </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80" alt="Sas">
+                <div class="infra-overlay"><h3>Sas de Sortie EVA</h3></div>
+            </div>
+
+            <div class="infra-card">
+                <img src="https://images.unsplash.com/photo-1464851707681-f9d5fdaccea8?auto=format&fit=crop&w=600&q=80" alt="Observatoire">
+                <div class="infra-overlay"><h3>Observatoire Cupola</h3></div>
+            </div>
+
         </div>
     </section>
 

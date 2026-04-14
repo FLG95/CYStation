@@ -2,42 +2,94 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>À propos - ISS</title>
+    <title>À propos - CYStation</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/about.css}">
 </head>
 
-<body class="space-theme">
+<body>
 
 <div th:replace="~{public/header :: header}"></div>
 
-<main class="about-container">
+<main class="cnes-layout">
 
-    <section class="about-hero">
-        <div class="hero-overlay">
-            <h1>Notre Mission</h1>
-            <p>Découvrez les secrets de l'univers depuis l'orbite terrestre basse.</p>
+    <section class="cnes-hero" id="hero-about">
+        <div class="cnes-hero-content">
+            <span class="tag">Dossier de mission</span>
+            <h1>Le Vaisseau et son Équipage</h1>
+            <p>Découvrez les spécifications techniques de CYStation et les membres de l'expédition actuelle en orbite terrestre basse.</p>
         </div>
     </section>
 
-    <section class="about-content">
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" alt="La Terre vue de l'espace">
-            <div class="card-text">
-                <h2>Un Laboratoire Unique</h2>
-                <p>La Station Spatiale Internationale n'est pas seulement un satellite, c'est le laboratoire le plus avancé jamais construit par l'humanité, flottant à 400 km au-dessus de nos têtes.</p>
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>L'Équipage</h2>
+        </div>
+        <div class="cnes-grid news-grid">
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="Thomas Pesquet">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">Commandant de bord</span>
+                    <h3>Thomas Pesquet</h3>
+                    <p>Ingénieur aéronautique et pilote. Il supervise les opérations critiques, la navigation orbitale et les sorties extra-véhiculaires (EVA).</p>
+                </div>
+            </article>
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80" alt="Dr. Sarah Jenkins">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">Spécialiste Scientifique</span>
+                    <h3>Dr. Sarah Jenkins</h3>
+                    <p>Astrophysicienne. En charge des expérimentations en microgravité dans la serre hydroponique et le laboratoire de chimie.</p>
+                </div>
+            </article>
+
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1573165231977-3f0e27935f2d?auto=format&fit=crop&w=800&q=80" alt="Marc-André Leclerc">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">Ingénieur Systèmes</span>
+                    <h3>Marc-André Leclerc</h3>
+                    <p>Responsable du maintien des infrastructures critiques : le noyau énergétique, le support de vie O2 et les pare-feu du data center.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="cnes-section bg-dark-alt">
+        <div class="section-header">
+            <h2>Spécifications Techniques</h2>
+        </div>
+
+        <div class="ship-presentation">
+            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1000&q=80" alt="Vaisseau spatial en orbite">
+            <div class="ship-text">
+                <p>CYStation est une plateforme modulaire de 450 tonnes, composée de 12 secteurs pressurisés interconnectés. Sa structure en treillis central supporte un réseau de panneaux solaires générant jusqu'à 120 kW d'énergie pure pour alimenter le noyau de fusion. Amarrée à 408 km d'altitude, elle effectue le tour de la Terre toutes les 90 minutes.</p>
             </div>
         </div>
 
-        <div class="info-card reverse">
-            <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=600&q=80" alt="Astronaute en sortie spatiale">
-            <div class="card-text">
-                <h2>Coopération Internationale</h2>
-                <p>Ce projet rassemble les agences spatiales du monde entier (NASA, ESA, Roscosmos, JAXA, CSA) dans un but commun : repousser les frontières de la science.</p>
-            </div>
+        <div class="cnes-grid news-grid" style="margin-top: 40px;">
+            <article class="cnes-card stat-card">
+                <h3>27 600 km/h</h3>
+                <p>Vitesse de croisière</p>
+            </article>
+            <article class="cnes-card stat-card">
+                <h3>408 km</h3>
+                <p>Altitude moyenne</p>
+            </article>
+            <article class="cnes-card stat-card">
+                <h3>916 m³</h3>
+                <p>Volume pressurisé</p>
+            </article>
         </div>
     </section>
 

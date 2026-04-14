@@ -7,73 +7,83 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
-<body class="space-theme">
+<body>
 
 <div th:replace="~{public/header :: header}"></div>
 
-<main class="register-main-container">
-    <div class="stars-overlay"></div>
+<main class="cnes-layout register-full-page">
 
-    <div class="register-card">
-        <div class="register-header">
-            <h2>Rejoindre l'équipage</h2>
-            <p>Initialisation de votre profil orbital</p>
+    <div class="register-split-container">
+
+        <div class="register-form-side">
+            <div class="form-wrapper">
+                <div class="register-header">
+                    <h2>Enrôlement Personnel</h2>
+                    <p>Veuillez saisir vos identifiants d'accès orbital.</p>
+                </div>
+
+                <form th:action="@{/register}" th:object="${user}" method="post" class="cnes-form">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Prénom</label>
+                            <input type="text" id="firstName" th:field="*{firstName}" placeholder="Ex: Jean" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Nom</label>
+                            <input type="text" id="lastName" th:field="*{lastName}" placeholder="Ex: Dupont" required/>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Genre</label>
+                            <select th:field="*{gender}" id="gender" required>
+                                <option value="">-- Choisir --</option>
+                                <option th:each="g : ${T(io.squid.CyStation.enums.Gender).values()}"
+                                        th:value="${g}"
+                                        th:text="${g.displayValue}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDate">Date de naissance</label>
+                            <input type="date" id="birthDate" th:field="*{birthDate}"
+                                   th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">Email de transmissions</label>
+                        <input type="email" id="email" th:field="*{email}" placeholder="votre.email@cyss.space" required/>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="password">Code d'accès secret</label>
+                        <input type="password" id="password" th:field="*{password}" placeholder="••••••••" required/>
+                    </div>
+
+                    <button type="submit" class="cnes-btn-submit">Valider l'intégration</button>
+                </form>
+
+                <div class="error-message" th:if="${param.error}">
+                    <strong>Erreur :</strong> Ce matricule email est déjà assigné.
+                </div>
+
+                <div class="login-link">
+                    Déjà membre de la station ? <a th:href="@{/login}">Identifiez-vous ici</a>
+                </div>
+            </div>
         </div>
 
-        <form th:action="@{/register}" th:object="${user}" method="post" class="register-form">
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="firstName">Prénom</label>
-                    <input type="text" id="firstName" th:field="*{firstName}" placeholder="Ex: Jean" required/>
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Nom</label>
-                    <input type="text" id="lastName" th:field="*{lastName}" placeholder="Ex: Dupont" required/>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="gender">Genre</label>
-                    <select th:field="*{gender}" id="gender" required>
-                        <option value="">-- Choisir --</option>
-                        <option th:each="g : ${T(io.squid.CyStation.enums.Gender).values()}"
-                                th:value="${g}"
-                                th:text="${g.displayValue}">
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="birthDate">Date de naissance</label>
-                    <input type="date" id="birthDate" th:field="*{birthDate}"
-                           th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" />
-                </div>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="email">Email de transmissions</label>
-                <input type="email" id="email" th:field="*{email}" placeholder="votre.email@cyss.space" required/>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="password">Code d'accès (Mot de passe)</label>
-                <input type="password" id="password" th:field="*{password}" placeholder="••••••••" required/>
-            </div>
-
-            <button type="submit" class="btn-submit">S'enrôler maintenant</button>
-        </form>
-
-        <div class="error-message" th:if="${param.error}">
-            <strong>Erreur :</strong> Ce matricule email est déjà assigné.
+        <div class="register-info-side">
         </div>
 
-        <div class="login-link">
-            Déjà membre de la station ? <a th:href="@{/login}">Identifiez-vous</a>
-        </div>
     </div>
+
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
