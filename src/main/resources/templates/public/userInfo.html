@@ -1,38 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Personnel - CYStation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/userInfo.css}">
 </head>
 <body>
 
 <div th:replace="~{public/header :: header}"></div>
 
+<main class="cnes-layout profile-full-page">
 
-<main>
+    <div class="profile-split-container">
 
-    <p>Nom : <span th:text="${user.lastName}"></span></p>
-    <p>Prénom : <span th:text="${user.firstName}"></span></p>
-    <p>Genre : <span th:text="${user.gender.getDisplayValue()}"></span></p>
-    <p>Rôle : <span th:text="${user.role.getDisplayValue()}"></span></p>
-    <p>Expérience : <span th:text="${user.experience}"></span></p>
-    <p>Email : <span th:text="${user.email}"></span></p>
-    <p>Mot de passe : <span>••••••••</span></p>
-    <form th:action="@{/user/update-exp}" method="post">
-        <button name="addExp">Add Exp</button>
-    </form>
+        <div class="profile-info-side">
+            <div class="form-wrapper">
+                <div class="profile-header">
+                    <span class="tag">Dossier Personnel</span>
+                    <h2>Profil de l'Équipage</h2>
+                    <p>Accès autorisé aux paramètres biométriques.</p>
+                </div>
 
-    <form th:action="@{/user/reset-exp}" method="post">
-        <button name="resetExp">Reset Exp</button>
-    </form>
+                <div class="user-details-grid">
+                    <div class="detail-item">
+                        <label>Identité</label>
+                        <p><span th:text="${user.firstName}">Prénom</span> <span th:text="${user.lastName}">Nom</span></p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Email de transmission</label>
+                        <p th:text="${user.email}">matricule@cyss.space</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Genre / Type</label>
+                        <p th:text="${user.gender != null ? user.gender.displayValue : 'Non spécifié'}">Humain</p>
+                    </div>
+                    <div class="detail-item highlight-item">
+                        <label>Date de Naissance</label>
+                        <p th:text="${user.birthDate != null ? user.birthDate : 'Non spécifiée'}">Date</p>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="cnes-btn-action" onclick="alert('Module de modification hors-ligne.')">Modifier le Dossier</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-image-side">
+        </div>
+
+    </div>
 
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
-
 
 </body>
 </html>

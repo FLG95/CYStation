@@ -1,0 +1,181 @@
+/* --- STRUCTURE SPLIT PLEIN ÉCRAN (IDEM REGISTER) --- */
+.profile-full-page {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: calc(100vh - 140px);
+}
+
+.profile-split-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex: 1;
+}
+
+/* --- CÔTÉ GAUCHE (INFOS) --- */
+.profile-info-side {
+    flex: 1;
+    background-color: var(--color-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 550px;
+}
+
+.profile-header {
+    margin-bottom: 35px;
+    border-bottom: 2px solid var(--color-4);
+    padding-bottom: 15px;
+}
+
+.profile-header .tag {
+    display: inline-block;
+    background-color: var(--color-4);
+    color: var(--color-10);
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.profile-header h2 {
+    color: var(--color-9);
+    font-size: 2.2rem;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+}
+
+.profile-header p {
+    color: var(--color-10);
+    margin: 0;
+    opacity: 0.7;
+}
+
+/* --- GRILLE DE DÉTAILS --- */
+.user-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item label {
+    color: var(--color-7);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.detail-item p {
+    color: var(--color-10);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.highlight-item p {
+    color: var(--color-9);
+    font-weight: bold;
+}
+
+/* Boite d'XP */
+.experience-box {
+    grid-column: span 2;
+    background-color: var(--color-1);
+    padding: 20px;
+    border-left: 4px solid var(--color-7);
+}
+
+.exp-value {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.exp-value .number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-7);
+    line-height: 1;
+}
+
+.exp-value .unit {
+    color: var(--color-10);
+    font-weight: bold;
+    opacity: 0.6;
+}
+
+/* --- ACTIONS --- */
+.profile-actions {
+    display: flex;
+    gap: 20px;
+    border-top: 1px solid var(--color-3);
+    padding-top: 30px;
+}
+
+.profile-actions form {
+    flex: 1;
+}
+
+.cnes-btn-action {
+    width: 100%;
+    background-color: transparent;
+    color: var(--color-7);
+    padding: 12px;
+    border: 2px solid var(--color-7);
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.85rem;
+}
+
+.cnes-btn-action:hover {
+    background-color: var(--color-7);
+    color: var(--color-1);
+}
+
+.reset-btn {
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.reset-btn:hover {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* --- CÔTÉ DROIT (IMAGE) --- */
+.profile-image-side {
+    flex: 1;
+    background: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+    background-size: cover;
+    border-left: 2px solid var(--color-4);
+}
+
+/* --- RESPONSIVITÉ --- */
+@media (max-width: 992px) {
+    .profile-split-container { flex-direction: column-reverse; }
+    .profile-image-side { min-height: 30vh; border-left: none; border-bottom: 2px solid var(--color-4); }
+    .user-details-grid { gap: 20px; }
+}
+
+@media (max-width: 600px) {
+    .user-details-grid { grid-template-columns: 1fr; }
+    .experience-box { grid-column: span 1; }
+    .profile-actions { flex-direction: column; }
+    .profile-info-side { padding: 40px 20px; }
+}
