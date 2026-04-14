@@ -36,8 +36,8 @@ public class UserService {
     }
 
     @Transactional
-    public void addExp(User user){
-        user.setExperience(user.getExperience()+1);
+    public void addExp(User user, int expToAdd){
+        user.setExperience(user.getExperience()+expToAdd);
 
         if(user.getExperience()<0){
             user.setRole(Role.PASSENGER);

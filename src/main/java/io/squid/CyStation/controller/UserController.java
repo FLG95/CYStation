@@ -59,23 +59,21 @@ public class UserController {
     }
 
     @PostMapping("/user/update-exp")
-    public String addExp(Principal principal, Model model){
+    public String addExp(@RequestParam("amount") int amount, Principal principal, Model model){
         User user = userRepository.findUserByEmail(principal.getName());
-        userService.addExp(user);
+        userService.addExp(user, amount);
         model.addAttribute("user", user);
         return "redirect:/userInfo";
     }
 
     @PostMapping("/user/reset-exp")
+    @ResponseBody
     public String resetExp(Principal principal, Model model){
         User user = userRepository.findUserByEmail(principal.getName());
         userService.resetExp(user);
         model.addAttribute("user", user);
         return "redirect:/userInfo";
     }
-
-
-
 
 
 }

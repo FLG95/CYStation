@@ -117,13 +117,14 @@
         submitBtn.style.display = "block";
         statusText.innerText = "ÉTAT : RÉACTEUR STABILISÉ";
     }
-7
+
 
     submitBtn.addEventListener('click', () => {
         const token = document.querySelector('meta[name="_csrf"]').content;
         const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const expAmount = 50;
 
-        fetch('/user/update-exp', {
+        fetch('/user/update-exp?amount=' + expAmount, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
