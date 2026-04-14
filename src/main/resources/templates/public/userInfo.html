@@ -23,7 +23,7 @@
                 <div class="profile-header">
                     <span class="tag">Dossier Personnel</span>
                     <h2>Profil de l'Équipage</h2>
-                    <p>Accès autorisé aux paramètres biométriques.</p>
+                    <p>Accès autorisé aux paramètres biométriques et professionnels.</p>
                 </div>
 
                 <div class="user-details-grid">
@@ -39,9 +39,17 @@
                         <label>Genre / Type</label>
                         <p th:text="${user.gender != null ? user.gender.displayValue : 'Non spécifié'}">Humain</p>
                     </div>
-                    <div class="detail-item highlight-item">
+                    <div class="detail-item">
                         <label>Date de Naissance</label>
                         <p th:text="${user.birthDate != null ? user.birthDate : 'Non spécifiée'}">Date</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Rôle</label>
+                        <p th:text="${user.role != null ? user.role : 'Non assigné'}">Rôle</p>
+                    </div>
+                    <div class="detail-item highlight-item">
+                        <label>Expérience</label>
+                        <p th:text="${user.experience}">0</p>
                     </div>
                 </div>
 
