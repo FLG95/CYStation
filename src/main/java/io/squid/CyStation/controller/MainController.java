@@ -31,6 +31,9 @@ public class MainController {
     @RequestMapping("/telemetry")
     public String telemetry(){ return "engineer/telemetry";}
 
+    @RequestMapping("/astrometry")
+    public String astrometry(){ return "engineer/astrometry";}
+
     @RequestMapping("/mission")
     public String mission() {
         return "public/mission";

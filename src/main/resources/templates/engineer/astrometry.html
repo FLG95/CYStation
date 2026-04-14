@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - Astrométrie</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/astrometry.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+    <section class="cnes-section astrometry-section">
+        <div class="section-header astrometry-section-header">
+            <h2>Ingénierie & Navigation</h2>
+        </div>
+
+        <div class="astrometry-header-info">
+            <span class="warning-label">Cartographie Manuelle</span>
+            <h3 class="astrometry-title">Relevé d'astrométrie (Cupola)</h3>
+            <p class="astrometry-desc">Le balayage automatique a échoué. Utilisez le curseur pour verrouiller manuellement les 3 amas de débris orbitaux sur l'écran radar afin de mettre à jour les cartes de navigation.</p>
+        </div>
+
+        <div class="astrometry-container">
+            <div class="machine-console" id="astrometry-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : BALAYAGE EN COURS...</div>
+                    <div class="progress-display">CIBLES VERROUILLÉES : <span id="targets-count">0</span> / 3</div>
+                </div>
+
+                <div class="radar-group">
+                    <label class="engraved-label">CAPTEURS LONGUE PORTÉE</label>
+                    <div class="radar-container">
+                        <div class="radar-sweep"></div>
+                        <div class="radar-grid"></div>
+
+                        <div class="blip" style="top: 25%; left: 35%;"></div>
+                        <div class="blip" style="top: 65%; left: 75%;"></div>
+                        <div class="blip" style="top: 45%; left: 15%;"></div>
+                    </div>
+                </div>
+
+                <button id="submitBtn" class="hardware-btn submit-btn">TRANSMETTRE LA CARTOGRAPHIE</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    const blips = document.querySelectorAll('.blip');
+    const targetsCountDisplay = document.getElementById('targets-count');
+    const statusText = document.getElementById('status-text');
+    const submitBtn = document.getElementById('submitBtn');
+    const astrometryInterface = document.getElementById('astrometry-interface');
+
+    let lockedCount = 0;
+
+    // Ajouter l'événement de clic sur chaque point rouge (débris)
+    blips.forEach(blip => {
+        blip.addEventListener('click', function() {
+            // Si la cible n'est pas déjà verrouillée
+            if (!this.classList.contains('locked')) {
+                this.classList.add('locked');
+                lockedCount++;
+                targetsCountDisplay.innerText = lockedCount;
+
+                // Animation de confirmation
+                astrometryInterface.classList.add('target-flash');
+                setTimeout(() => astrometryInterface.classList.remove('target-flash'), 200);
+
+                // Vérifier si c'est gagné
+                if (lockedCount === 3) {
+                    victory();
+                } else {
+                    statusText.innerText = `ÉTAT : CIBLE ${lockedCount} CONFIRMÉE`;
+                    statusText.style.color = "#ffaa00";
+                }
+            }
+        });
+    });
+
+    function victory() {
+        astrometryInterface.classList.add('success');
+        statusText.innerText = "ÉTAT : SECTEUR CARTOGRAPHIÉ";
+        statusText.style.color = "#00ff00";
+        submitBtn.style.display = "block";
+
+        // Arrêter le balayage visuel
+        document.querySelector('.radar-sweep').style.display = 'none';
+    }
+
+    submitBtn.addEventListener('click', () => {
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const expAmount = 20;
+
+        fetch('/user/update-exp?amount=' + expAmount, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [header]: token
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/userInfo";
+                } else {
+                    alert("Erreur " + response.status);
+                }
+            });
+    });
+</script>
+
+</body>
+</html>

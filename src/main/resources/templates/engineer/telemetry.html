@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module d'Ingénierie - Télémétrie</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -124,21 +126,24 @@
     }
 
     submitBtn.addEventListener('click', () => {
-        fetch('/user/update-exp', {
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const expAmount = 25;
+
+        fetch('/user/update-exp?amount=' + expAmount, {
             method: 'POST',
             headers: {
-                'Accept': 'application/json'
+                'Content-Type': 'application/json',
+                [header]: token
             }
         })
             .then(response => {
                 if (response.ok) {
-                    alert("Patch déployé avec succès. Points d'expérience ajoutés.");
                     window.location.href = "/userInfo";
                 } else {
-                    alert("Erreur lors de la transmission des données.");
+                    alert("Erreur " + response.status);
                 }
-            })
-            .catch(error => console.error('Erreur:', error));
+            });
     });
 </script>
 

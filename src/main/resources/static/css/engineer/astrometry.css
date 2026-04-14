@@ -1,0 +1,239 @@
+/* astrometry.css - Module Radar Astrométrique */
+
+.astrometry-section {
+    padding-top: 20px;
+}
+
+.astrometry-header-info {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 15px auto;
+    padding: 0 15px;
+}
+
+.warning-label {
+    color: #4da6ff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+}
+
+.astrometry-title {
+    margin: 5px 0;
+    font-size: 1.5rem;
+}
+
+.astrometry-desc {
+    color: #ccc;
+    line-height: 1.3;
+    font-size: 0.95rem;
+}
+
+.astrometry-container {
+    display: flex;
+    justify-content: center;
+    padding: 0 0 20px 0;
+}
+
+/* Console métallique */
+.machine-console {
+    width: 100%;
+    max-width: 550px;
+    padding: 25px 30px;
+    background: linear-gradient(135deg, #1c232b 0%, #11151a 100%);
+    border: 3px solid #111;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.5);
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+
+/* Flash de validation de cible */
+.machine-console.target-flash {
+    box-shadow: inset 0 0 30px rgba(255, 170, 0, 0.4);
+}
+
+.machine-console.success {
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.3), 0 10px 20px rgba(0,0,0,0.5);
+}
+
+/* Vis industrielles */
+.screw {
+    width: 12px; height: 12px;
+    background: radial-gradient(circle, #888 0%, #333 100%);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3), 1px 1px 3px rgba(0,0,0,0.8);
+}
+.screw::after {
+    content: ''; position: absolute;
+    top: 50%; left: 20%; width: 60%; height: 2px;
+    background: rgba(0,0,0,0.7); transform: translateY(-50%) rotate(45deg);
+}
+.screw.top-left { top: 10px; left: 10px; transform: rotate(15deg); }
+.screw.top-right { top: 10px; right: 10px; transform: rotate(75deg); }
+.screw.bottom-left { bottom: 10px; left: 10px; transform: rotate(-25deg); }
+.screw.bottom-right { bottom: 10px; right: 10px; transform: rotate(45deg); }
+
+/* Écran LCD */
+.lcd-screen {
+    background-color: #05141a;
+    border: 4px solid #030a0d;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: inset 0 0 15px rgba(0, 150, 255, 0.1);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#status-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #4da6ff;
+    margin-bottom: 10px;
+}
+
+.progress-display {
+    font-size: 1.5rem;
+    color: #b3d9ff;
+}
+
+.machine-console.success .progress-display {
+    color: #00ff00;
+    text-shadow: 0 0 8px #00ff00;
+}
+
+/* Zone du Radar */
+.radar-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.engraved-label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.radar-container {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #001a0a;
+    border: 4px solid #003314;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 40px rgba(0, 255, 0, 0.2), 0 5px 15px rgba(0,0,0,0.8);
+}
+
+/* Quadrillage et cercles du radar */
+.radar-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+            linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
+    background-size: 25px 25px;
+    background-position: center center;
+    border-radius: 50%;
+}
+
+.radar-grid::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 50%; height: 50%;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    transform: translate(-50%, -50%);
+}
+
+.radar-grid::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 1px;
+    background: rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 0 125px rgba(0,0,0,0) inset; /* Trick pour la croix */
+}
+
+/* Animation de balayage (faisceau) */
+.radar-sweep {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    background: linear-gradient(90deg, rgba(0,255,0,0) 0%, rgba(0,255,0,0.4) 100%);
+    transform-origin: bottom left;
+    animation: scan 4s linear infinite;
+    z-index: 5;
+    pointer-events: none; /* Pour pouvoir cliquer à travers */
+}
+
+@keyframes scan {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Cibles (Débris) */
+.blip {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #ff3333;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: crosshair; /* Curseur cible */
+    box-shadow: 0 0 10px #ff3333;
+    z-index: 10;
+    animation: pulse-red 1.5s infinite;
+    border: 2px solid #000;
+}
+
+/* Cible verrouillée */
+.blip.locked {
+    background: #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+    animation: none;
+    cursor: default;
+    border-color: #006600;
+}
+
+@keyframes pulse-red {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+}
+
+/* Bouton d'envoi */
+.submit-btn {
+    display: none;
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.1s;
+    background: linear-gradient(to bottom, #4da6ff 0%, #0066cc 100%);
+    border: 2px solid #003366;
+    box-shadow: 0 6px 0 #003366, 0 10px 15px rgba(0,0,0,0.5);
+}
+
+.submit-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #003366, 0 5px 10px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, #0066cc 0%, #004c99 100%);
+}
