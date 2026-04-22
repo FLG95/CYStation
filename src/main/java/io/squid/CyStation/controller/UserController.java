@@ -5,14 +5,11 @@ import io.squid.CyStation.repository.UserRepository;
 import io.squid.CyStation.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
 
 import java.security.Principal;
-import java.sql.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -78,8 +75,8 @@ public class UserController {
         return "redirect:/login?deleted";
     }
 
-    @PostMapping("/user/update-exp")
-    public String addExp(@RequestParam("amount") int amount, Principal principal, Model model){
+    @PostMapping("/user/updateExp")
+    public String updateExp(@RequestParam("amount") int amount, Principal principal, Model model){
         User user = userRepository.findUserByEmail(principal.getName());
         userService.addExp(user, amount);
         model.addAttribute("user", user);
@@ -96,5 +93,11 @@ public class UserController {
     }
 
 
+    @GetMapping("/profiles")
+    public String profiles(Model model) {
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("usersList", users);
+        return "public/profiles";
+    }
 
 }

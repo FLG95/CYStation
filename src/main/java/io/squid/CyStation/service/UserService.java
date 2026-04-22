@@ -35,6 +35,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     @Transactional
     public void deleteAccount(String email) {

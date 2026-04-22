@@ -130,7 +130,7 @@
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const expAmount = 25;
 
-        fetch('/user/update-exp?amount=' + expAmount, {
+        fetch('/user/updateExp?amount=' + expAmount, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
