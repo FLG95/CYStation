@@ -26,7 +26,7 @@
         <a sec:authorize="isAnonymous()" th:href="@{/register}" class="cnes-btn-nav alt-btn">Inscription</a>
 
         <a sec:authorize="isAuthenticated()" th:href="@{/userInfo}" class="cnes-btn-nav alt-btn">Mon Profil</a>
-        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline;">
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="cnes-btn-nav logout-btn">Déconnexion</button>
         </form>
     </div>

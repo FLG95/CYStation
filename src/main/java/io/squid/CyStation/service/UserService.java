@@ -35,6 +35,32 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    @Transactional
+    public void deleteAccount(String email) {
+        User user = userRepository.findUserByEmail(email);
+
+        if (user != null) {
+            userRepository.delete(user);
+        }
+    }
+
+
+    @Transactional
+    public void updateUserProfile(String email, User updatedData) {
+        User user = userRepository.findUserByEmail(email);
+
+        if (user != null) {
+
+            user.setFirstName(updatedData.getFirstName());
+            user.setLastName(updatedData.getLastName());
+            user.setBirthDate(updatedData.getBirthDate());
+            user.setGender(updatedData.getGender());
+
+            userRepository.save(user);
+        }
+    }
+
     @Transactional
     public void addExp(User user, int expToAdd){
         user.setExperience(user.getExperience()+expToAdd);

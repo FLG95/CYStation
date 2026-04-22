@@ -83,12 +83,12 @@
 }
 
 .logout-btn {
-    color: #ef4444;
-    border-color: #ef4444;
+    color: var(--color-11);
+    border-color: var(--color-11);
 }
 
 .logout-btn:hover {
-    background-color: #ef4444;
+    background-color: var(--color-11);
     color: #fff;
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
 }

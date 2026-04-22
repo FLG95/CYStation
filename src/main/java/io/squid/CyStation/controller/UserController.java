@@ -3,6 +3,8 @@ package io.squid.CyStation.controller;
 import io.squid.CyStation.model.User;
 import io.squid.CyStation.repository.UserRepository;
 import io.squid.CyStation.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +60,24 @@ public class UserController {
         return "public/userInfo";
     }
 
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute("user") User userForm, Principal principal) {
+
+        userService.updateUserProfile(principal.getName(), userForm);
+
+        return "redirect:/userInfo?updated";
+    }
+
+    @PostMapping("/user/deleteProfile")
+    public String deleteProfile(Principal principal, HttpServletRequest request) throws ServletException {
+
+        userService.deleteAccount(principal.getName());
+
+        request.logout();
+
+        return "redirect:/login?deleted";
+    }
+
     @PostMapping("/user/update-exp")
     public String addExp(@RequestParam("amount") int amount, Principal principal, Model model){
         User user = userRepository.findUserByEmail(principal.getName());
@@ -74,6 +94,7 @@ public class UserController {
         model.addAttribute("user", user);
         return "redirect:/userInfo";
     }
+
 
 
 }

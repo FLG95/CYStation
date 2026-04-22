@@ -26,36 +26,77 @@
                     <p>Accès autorisé aux paramètres biométriques et professionnels.</p>
                 </div>
 
-                <div class="user-details-grid">
-                    <div class="detail-item">
-                        <label>Identité</label>
-                        <p><span th:text="${user.firstName}">Prénom</span> <span th:text="${user.lastName}">Nom</span></p>
-                    </div>
-                    <div class="detail-item">
-                        <label>Email de transmission</label>
-                        <p th:text="${user.email}">matricule@cyss.space</p>
-                    </div>
-                    <div class="detail-item">
-                        <label>Genre</label>
-                        <p th:text="${user.gender != null ? user.gender.displayValue : 'Non spécifié'}">Humain</p>
-                    </div>
-                    <div class="detail-item">
-                        <label>Date de Naissance</label>
-                        <p th:text="${user.birthDate != null ? user.birthDate : 'Non spécifiée'}">Date</p>
-                    </div>
-                    <div class="detail-item">
-                        <label>Rôle</label>
-                        <p th:text="${user.role != null ? user.role.getDisplayValue() : 'Non assigné'}">Rôle</p>
-                    </div>
-                    <div class="detail-item highlight-item">
-                        <label>Expérience</label>
-                        <p th:text="${user.experience}">0</p>
-                    </div>
+                <div th:if="${param.updated}" class="alert alert-success">
+                    Votre compte a mis à jour avec succès.
                 </div>
 
+                <form th:action="@{/profile/update}" th:object="${user}" method="post">
+
+                    <input type="hidden" th:field="*{email}" />
+                    <div class="user-details-grid">
+                        <div class="detail-item">
+                            <label>Prénom</label>
+                            <input type="text" th:field="*{firstName}" class="form-control" />
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Nom</label>
+                            <input type="text" th:field="*{lastName}" class="form-control" />
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Email de transmission</label>
+                            <input type="email" th:field="*{email}" class="form-control" readonly />
+                            <small class="text-muted">L'email ne peut pas être modifié.</small>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Genre</label>
+                            <select th:field="*{gender}" class="form-control">
+                                <option th:each="g : ${T(io.squid.CyStation.enums.Gender).values()}"
+                                        th:value="${g}"
+                                        th:text="${g.displayValue}"></option>
+                            </select>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Date de Naissance</label>
+                            <input type="date" th:field="*{birthDate}" class="form-control" />
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Rôle actuel</label>
+                            <p th:text="${user.role != null ? user.role.displayValue : 'Non assigné'}" class="form-control-plaintext"></p>
+                        </div>
+
+                        <div class="detail-item highlight-item">
+                            <label>Expérience accumulée</label>
+                            <p th:text="${user.experience}" class="form-control-plaintext">0</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        <a th:href="@{/userInfo}" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+
                 <div class="profile-actions">
-                    <button class="cnes-btn-action" onclick="alert('Module de modification hors-ligne.')">Modifier le Dossier</button>
+                    <button class="cnes-btn-action" onclick="alert('Module de modification hors-ligne.')">Modifier le
+                        Dossier
+                    </button>
                 </div>
+
+
+                <form class="delete-button" th:action="@{/user/deleteProfile}" method="post"
+                      onsubmit="return confirm('Es-tu vraiment sûr de vouloir nous quitter ? Toutes tes données (EXP, etc.) seront perdues.');">
+
+                    <button type="submit" class="btn btn-outline-danger">
+                        Supprimer mon compte définitivement
+                    </button>
+                </form>
+
+
             </div>
         </div>
 

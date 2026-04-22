@@ -20,6 +20,11 @@
 
         <div class="login-form-side">
             <div class="form-wrapper">
+
+                <div th:if="${param.deleted}" class="alert alert-success">
+                    Votre compte a été supprimé avec succès. Au plaisir de vous revoir !
+                </div>
+
                 <div class="login-header">
                     <h2>Terminal d'Accès</h2>
                     <p>Identifiez-vous pour entrer dans la station.</p>
