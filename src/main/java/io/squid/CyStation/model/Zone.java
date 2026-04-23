@@ -1,6 +1,7 @@
 package io.squid.CyStation.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Zone {
@@ -9,6 +10,9 @@ public class Zone {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL)
+    private List<Device> devices;
 
     public Zone() {}
 
@@ -26,5 +30,13 @@ public class Zone {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
     }
 }

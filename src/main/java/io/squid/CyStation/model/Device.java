@@ -11,6 +11,8 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private DeviceStatus status;
 
     @ManyToOne
@@ -18,7 +20,6 @@ public class Device {
     private Zone zone;
 
     public Device(){
-
     }
 
     public Long getId(){
@@ -43,4 +44,11 @@ public class Device {
         this.status = status;
     }
 
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
 }

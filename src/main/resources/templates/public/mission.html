@@ -35,6 +35,9 @@
                     <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Zone">
                     <div class="infra-overlay">
                         <h3 th:text="${zone.name}">Nom de la zone</h3>
+                        <div style="font-size: 0.8rem; margin-top: 10px; color: #00e5ff;">
+                            <span th:each="device : ${zone.devices}" th:text="${device.name} + ' '"></span>
+                        </div>
                     </div>
                 </div>
             </th:block>
@@ -60,6 +63,16 @@
             <form id="createZoneForm" th:action="@{/mission/zone/create}" method="post">
                 <label for="zoneName">Désignation du module &#10142;</label>
                 <input type="text" id="zoneName" name="name" placeholder="Ex: Secteur Gamma" required>
+
+                <label>Appareils à bord &#10142;</label>
+                <div id="device-inputs">
+                    <input type="text" name="deviceNames" placeholder="Nom de l'appareil (ex: Antenne)">
+                </div>
+
+                <button type="button" class="cnes-btn" style="background: transparent; border: 1px solid var(--color-7); color: var(--color-7); margin-bottom: 20px; width: 100%;" onclick="addDevice()">
+                    + Ajouter un autre appareil
+                </button>
+
                 <button type="submit" class="cnes-btn btn-full">Confirmer le déploiement</button>
             </form>
         </div>
@@ -68,6 +81,18 @@
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    function addDevice() {
+        const container = document.getElementById('device-inputs');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'deviceNames';
+        input.placeholder = 'Autre appareil...';
+        input.style.marginTop = '5px';
+        container.appendChild(input);
+    }
+</script>
 
 </body>
 </html>
