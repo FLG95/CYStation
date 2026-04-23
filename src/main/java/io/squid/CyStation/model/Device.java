@@ -1,5 +1,6 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,7 +11,7 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Boolean isActive;
+    private DeviceStatus status;
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
@@ -36,10 +37,10 @@ public class Device {
         this.name = name;
     }
 
-    public Boolean getIsActive(){ return isActive; }
+    public DeviceStatus getStatus(){ return status; }
 
-    public void setIsActive(Boolean isActive){
-        this.isActive = isActive;
+    public void setStatus(DeviceStatus status){
+        this.status = status;
     }
 
 }
