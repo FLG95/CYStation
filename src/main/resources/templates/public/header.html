@@ -5,7 +5,6 @@
 
 <header th:fragment="header" class="cnes-header">
 
-
     <div class="header-left">
         <div class="header-logo">
             <a th:href="@{/}">CYStation</a>
@@ -15,7 +14,7 @@
             <ul>
                 <li><a th:href="@{/}">Accueil</a></li>
                 <li><a th:href="@{/about}">Information</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/control}">Control</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/mission}">Zones</a></li>
             </ul>
         </nav>
     </div>
@@ -29,14 +28,12 @@
             <button type="submit" class="cnes-btn-nav logout-btn">Déconnexion</button>
         </form>
 
-
         <div sec:authorize="isAuthenticated()" class="header-avatar-wrapper">
             <img th:src="@{/images/avatars/{name}(name=${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails) ? @userRepository.findUserByEmail(#authentication.name).profilePicture : 'default-avatar.png'})}"
                  alt="Avatar"
                  class="header-avatar-img">
         </div>
     </div>
-
 
 </header>
 

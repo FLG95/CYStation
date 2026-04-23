@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>CYStation - Missions</title>
+    <title>CYStation - Mission</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -15,79 +16,54 @@
 
 <main class="cnes-layout">
 
-    <section class="cnes-hero mission-hero">
+    <section class="cnes-hero">
         <div class="cnes-hero-content">
-            <span class="tag">Tableau des contrats</span>
-            <h1>Missions Disponibles</h1>
-            <p>Sélectionnez une mission pour contribuer au maintien de la station et gagner de l'expérience.</p>
+            <span class="tag">Administration Spatiale</span>
+            <h1>Gestion des Zones</h1>
+            <p>Cartographie des modules de la station.</p>
         </div>
     </section>
 
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">
-            <h2>Contrats ouverts</h2>
+            <h2>Réseau des zones actives</h2>
         </div>
 
-        <div class="cnes-grid news-grid">
-
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=800&q=80" alt="Noyau">
-                </div>
-                <div class="card-content">
-                    <span class="xp-badge">+ 500 XP</span>
-                    <h3>Maintenance du Noyau</h3>
-                    <p>Vérification des condensateurs de flux thermiques du secteur 4. Une intervention manuelle est requise.</p>
-                    <div class="mission-actions">
-                        <a th:href="@{/reactor}" class="cnes-btn">Accepter</a>
+        <div class="cnes-grid infrastructure-grid">
+            <th:block th:if="${not #lists.isEmpty(zones)}">
+                <div class="infra-card" th:each="zone : ${zones}">
+                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Zone">
+                    <div class="infra-overlay">
+                        <h3 th:text="${zone.name}">Nom de la zone</h3>
                     </div>
                 </div>
-            </article>
+            </th:block>
 
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1527066579998-dbbae57f45ce?auto=format&fit=crop&w=800&q=80" alt="Serre">
+            <a href="#zoneModal" class="infra-card add-card">
+                <div class="infra-overlay admin-overlay">
+                    <h3>&#10010;<br>Rajouter une zone</h3>
                 </div>
-                <div class="card-content">
-                    <span class="xp-badge">+ 250 XP</span>
-                    <h3>Analyse hydroponique</h3>
-                    <p>Récolter les échantillons de la serre B et analyser les niveaux de nutriments dans l'eau.</p>
-                    <div class="mission-actions">
-                        <a th:href="@{/hydroponic}" class="cnes-btn">Accepter</a>
-                    </div>
-                </div>
-            </article>
+            </a>
 
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1516849677285-28c2b6d615f5?auto=format&fit=crop&w=800&q=80" alt="Antenne">
-                </div>
-                <div class="card-content">
-                    <span class="xp-badge">+ 150 XP</span>
-                    <h3>Mise à jour télémétrique</h3>
-                    <p>Déployer le patch logiciel v4.2 sur le système de communication de l'antenne principale.</p>
-                    <div class="mission-actions">
-                        <a th:href="@{/telemetry}" class="cnes-btn">Accepter</a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1464851707681-f9d5fdaccea8?auto=format&fit=crop&w=800&q=80" alt="Observation">
-                </div>
-                <div class="card-content">
-                    <span class="xp-badge">+ 300 XP</span>
-                    <h3>Relevé d'astrométrie</h3>
-                    <p>Utiliser les instruments de la Cupola pour cartographier le nouveau champ de débris orbital.</p>
-                    <div class="mission-actions">
-                        <a th:href="@{/astrometry}" class="cnes-btn">Accepter</a>
-                    </div>
-                </div>
-            </article>
-
+            <div th:if="${#lists.isEmpty(zones)}" class="empty-state">
+                <em>Aucun module enregistré.</em>
+            </div>
         </div>
     </section>
+
+    <div id="zoneModal" class="modal">
+        <div class="modal-content cnes-form">
+            <a href="#" class="close-btn">&#10006;</a>
+            <div class="section-header">
+                <h2>Initialiser un module</h2>
+            </div>
+            <form id="createZoneForm" th:action="@{/mission/zone/create}" method="post">
+                <label for="zoneName">Désignation du module &#10142;</label>
+                <input type="text" id="zoneName" name="name" placeholder="Ex: Secteur Gamma" required>
+                <button type="submit" class="cnes-btn btn-full">Confirmer le déploiement</button>
+            </form>
+        </div>
+    </div>
 
 </main>
 
