@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @DiscriminatorColumn(name = "device_type", discriminatorType = DiscriminatorType.STRING)
 public class Device {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private DeviceStatus status;
