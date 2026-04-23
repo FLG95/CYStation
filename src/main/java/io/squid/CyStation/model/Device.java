@@ -1,16 +1,20 @@
 package io.squid.CyStation.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "device_type", discriminatorType = DiscriminatorType.STRING)
 public class Device {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String type;
+    private Boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 
     public Device(){
 
@@ -32,12 +36,10 @@ public class Device {
         this.name = name;
     }
 
-    public String getType(){
-        return type;
-    }
+    public Boolean getIsActive(){ return isActive; }
 
-    public void setType(){
-        this.type = type;
+    public void setIsActive(Boolean isActive){
+        this.isActive = isActive;
     }
 
 }
