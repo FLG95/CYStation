@@ -31,12 +31,16 @@
 
         <div class="cnes-grid infrastructure-grid">
             <th:block th:if="${not #lists.isEmpty(zones)}">
-                <div class="infra-card" th:each="zone : ${zones}">
+                <a href="#deviceModal" class="infra-card zone-clickable"
+                   th:each="zone : ${zones}"
+                   th:data-zone-id="${zone.id}"
+                   th:data-zone-name="${zone.name}">
+
                     <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Zone">
                     <div class="infra-overlay">
                         <h3 th:text="${zone.name}">Nom de la zone</h3>
                     </div>
-                </div>
+                </a>
             </th:block>
 
             <a href="#zoneModal" class="infra-card add-card">
@@ -44,6 +48,27 @@
                     <h3>&#10010;<br>Rajouter une zone</h3>
                 </div>
             </a>
+            <div id="deviceModal" class="modal">
+                <div class="modal-content cnes-form">
+                    <a href="#" class="close-btn">&#10006;</a>
+                    <div class="section-header">
+                        <h2>Ajouter un appareil dans <span id="displayZoneName" style="color: #00e5ff;"></span></h2>
+                    </div>
+                    <form id="createDeviceForm" th:action="@{/mission/device/create}" method="post">
+                        <input type="hidden" id="inputZoneId" name="zoneId">
+
+                        <label for="deviceName">Désignation de l'appareil &#10142;</label>
+                        <input type="text" id="deviceName" name="name" placeholder="Ex: Capteur principal" required>
+
+                        <label for="deviceType">Type de module &#10142;</label>
+                        <select id="deviceType" name="typeAppareil" required>
+                            <option value="CO2_SENSOR">Capteur CO2</option>
+                        </select>
+
+                        <button type="submit" class="cnes-btn btn-full">Déployer l'appareil</button>
+                    </form>
+                </div>
+            </div>
 
             <div th:if="${#lists.isEmpty(zones)}" class="empty-state">
                 <em>Aucun module enregistré.</em>
@@ -68,6 +93,24 @@
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const zoneCards = document.querySelectorAll('.zone-clickable');
+        const inputZoneId = document.getElementById('inputZoneId');
+        const displayZoneName = document.getElementById('displayZoneName');
 
+        zoneCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Récupération des données depuis la carte cliquée
+                const zoneId = this.getAttribute('data-zone-id');
+                const zoneName = this.getAttribute('data-zone-name');
+
+                // Injection dans le modal
+                inputZoneId.value = zoneId;
+                displayZoneName.textContent = zoneName;
+            });
+        });
+    });
+</script>
 </body>
 </html>

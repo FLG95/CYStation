@@ -18,7 +18,6 @@ public class CyStationApplication implements CommandLineRunner {
     }
 
 
-
     /*
     // Pr s'exec à chaque démarrage du serv (testing)
     @Bean

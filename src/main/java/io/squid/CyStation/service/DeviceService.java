@@ -26,6 +26,7 @@ public class DeviceService {
         return deviceRepository.save(device);
     }
 
+
     public void updateDeviceStatus(Long id, DeviceStatus status) {
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appareil introuvable avec l'ID : " + id));
@@ -33,6 +34,8 @@ public class DeviceService {
         device.setStatus(status);
         deviceRepository.save(device);
     }
+
+
 
     public void deleteDevice(Long id) {
         deviceRepository.deleteById(id);
