@@ -39,4 +39,7 @@ public class Device {
         this.status = status;
     }
 
+    public Zone getZone() { return zone; }
+
+    public void setZone(Zone zone) { this.zone = zone; }
 }
