@@ -1,5 +1,4 @@
 package io.squid.CyStation.model;
-
 import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
@@ -24,7 +23,6 @@ public class Device {
     public Long getId(){
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -32,13 +30,11 @@ public class Device {
     public String getName(){
         return name;
     }
-
     public void setName(String name){
         this.name = name;
     }
 
     public DeviceStatus getStatus(){ return status; }
-
     public void setStatus(DeviceStatus status){
         this.status = status;
     }

@@ -17,6 +17,9 @@ public class CyStationApplication implements CommandLineRunner {
 		SpringApplication.run(CyStationApplication.class, args);
     }
 
+
+
+    /*
     // Pr s'exec à chaque démarrage du serv (testing)
     @Bean
     public CommandLineRunner testCreation(DeviceRepository deviceRepository) {
@@ -29,7 +32,7 @@ public class CyStationApplication implements CommandLineRunner {
 
             System.out.println("Capteur sauvegardé dans MariaDB.");
         };
-    }
+    }*/
 
     @Override
     public void run(String... args) throws Exception {
