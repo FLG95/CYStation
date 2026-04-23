@@ -39,4 +39,9 @@ public class MainController {
         return "public/mission";
     }
 
+    @RequestMapping("/control")
+    public String control() {
+        return "public/control";
+    }
+
 }

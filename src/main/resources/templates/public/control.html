@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrôle - CYStation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/control.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/mission.css}">
+    <link rel="stylesheet" th:href="@{/css/profiles.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout control-full-page">
+
+    <div class="control-split-container">
+
+        <div class="control-menu-side">
+            <div class="menu-wrapper">
+
+                <div class="control-menu">
+
+                    <a th:href="@{/profiles}" class="control-btn js-load-btn">
+                        &gt; Membres de l'équipage
+                    </a>
+
+                    <a th:href="@{/mission}" class="control-btn js-load-btn">
+                        &gt; Mission
+                    </a>
+
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin}" class="control-btn control-btn-admin">
+                            &gt; Administration
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="control-image-side" id="right-panel"></div>
+
+    </div>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    const buttons = document.querySelectorAll('.js-load-btn');
+    const rightPanel = document.getElementById('right-panel');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const url = this.getAttribute('href');
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const newContent = doc.querySelector('main').innerHTML;
+
+                    rightPanel.innerHTML = newContent;
+                    rightPanel.classList.add('content-loaded');
+
+                    rightPanel.scrollTop = 0;
+                })
+                .catch(error => console.error('Erreur de chargement ➟', error));
+        });
+    });
+</script>
+
+</body>
+</html>

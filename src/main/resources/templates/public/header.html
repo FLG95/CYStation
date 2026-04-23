@@ -15,9 +15,7 @@
             <ul>
                 <li><a th:href="@{/}">Accueil</a></li>
                 <li><a th:href="@{/about}">Information</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/mission}">Mission</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/profiles}">Membres de l'équipage</a></li>
-
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/control}">Control</a></li>
             </ul>
         </nav>
     </div>
