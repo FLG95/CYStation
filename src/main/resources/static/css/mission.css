@@ -227,3 +227,7 @@
 .cnes-btn:active {
     transform: translateY(0);
 }
+
+body:has(.modal:target) {
+    overflow: hidden;
+}
