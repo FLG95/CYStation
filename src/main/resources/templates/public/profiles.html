@@ -28,6 +28,11 @@
                 </div>
 
                 <div class="card-body">
+
+                    <img th:src="@{/images/avatars/{name}(name=${u.profilePicture})}"
+                         alt="Avatar de l'équipage"
+                         class="header-avatar-img">
+
                     <h3 th:text="${u.firstName + ' ' + u.lastName}">Prénom Nom</h3>
                     <p>Email : <span th:text="${u.email}">email@cyss.space</span></p>
 

@@ -18,6 +18,7 @@ public class User {
     private String email;
     private int experience;
     private Role role;
+    private String profilePicture = "default-avatar.png";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
@@ -102,6 +103,17 @@ public class User {
     public void setBirthDate(LocalDate birthday) {
         this.birthDate = birthday;
     }
+
+
+
+    public String getProfilePicture() {
+        return profilePicture != null ? profilePicture : "default-avatar.png";
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
+
         if(userRepository.findUserByEmail(user.getEmail()) != null) {
             return "redirect:/register?error";
         }
@@ -38,6 +41,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String register(Model model) {
+
         model.addAttribute("user", new User());
         return "public/register";
     }
@@ -59,9 +63,8 @@ public class UserController {
 
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute("user") User userForm, Principal principal) {
-
+        // userForm.getProfilePicture() contiendra maintenant "robot.png" par exemple
         userService.updateUserProfile(principal.getName(), userForm);
-
         return "redirect:/userInfo?updated";
     }
 

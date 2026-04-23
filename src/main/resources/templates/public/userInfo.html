@@ -19,6 +19,7 @@
     <div class="profile-split-container">
 
         <div class="profile-info-side">
+
             <div class="form-wrapper">
                 <div class="profile-header">
                     <span class="tag">Dossier Personnel</span>
@@ -30,23 +31,45 @@
                     Votre compte a mis à jour avec succès.
                 </div>
 
-                <form th:action="@{/profile/update}" th:object="${user}" method="post">
+                <form th:action="@{/profile/update}" th:object="${user}" method="post" enctype="multipart/form-data">
 
-                    <input type="hidden" th:field="*{email}" />
+
+                    <div class="avatar-selector">
+                        <label>Sélectionnez votre avatar :</label>
+                        <div class="avatar-grid">
+                            <label class="avatar-item">
+                                <input type="radio" th:field="*{profilePicture}" value="avatar1.png" style="display:none;">
+                                <img th:src="@{/images/avatars/avatar1.png}" class="avatar-img-choice">
+                            </label>
+
+                            <label class="avatar-item">
+                                <input type="radio" th:field="*{profilePicture}" value="avatar2.png" style="display:none;">
+                                <img th:src="@{/images/avatars/avatar2.png}" class="avatar-img-choice">
+                            </label>
+
+                            <label class="avatar-item">
+                                <input type="radio" th:field="*{profilePicture}" value="default-avatar.png" style="display:none;">
+                                <img th:src="@{/images/avatars/default-avatar.png}" class="avatar-img-choice">
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="hidden" th:field="*{email}"/>
+
                     <div class="user-details-grid">
                         <div class="detail-item">
                             <label>Prénom</label>
-                            <input type="text" th:field="*{firstName}" class="form-control" />
+                            <input type="text" th:field="*{firstName}" class="form-control"/>
                         </div>
 
                         <div class="detail-item">
                             <label>Nom</label>
-                            <input type="text" th:field="*{lastName}" class="form-control" />
+                            <input type="text" th:field="*{lastName}" class="form-control"/>
                         </div>
 
                         <div class="detail-item">
                             <label>Email de transmission</label>
-                            <input type="email" th:field="*{email}" class="form-control" readonly />
+                            <input type="email" th:field="*{email}" class="form-control" readonly/>
                             <small class="text-muted">L'email ne peut pas être modifié.</small>
                         </div>
 
@@ -61,12 +84,13 @@
 
                         <div class="detail-item">
                             <label>Date de Naissance</label>
-                            <input type="date" th:field="*{birthDate}" class="form-control" />
+                            <input type="date" th:field="*{birthDate}" class="form-control"/>
                         </div>
 
                         <div class="detail-item">
                             <label>Rôle actuel</label>
-                            <p th:text="${user.role != null ? user.role.displayValue : 'Non assigné'}" class="form-control-plaintext"></p>
+                            <p th:text="${user.role != null ? user.role.displayValue : 'Non assigné'}"
+                               class="form-control-plaintext"></p>
                         </div>
 
                         <div class="detail-item highlight-item">

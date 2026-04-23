@@ -18,6 +18,10 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername( String email) throws UsernameNotFoundException {
         User user = userRepository.findUserByEmail(email);
 
+        if (user == null) {
+            throw new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email);
+        }
+
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())

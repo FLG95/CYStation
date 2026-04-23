@@ -25,7 +25,8 @@
                     <p>Veuillez saisir vos identifiants d'accès orbital.</p>
                 </div>
 
-                <form th:action="@{/register}" th:object="${user}" method="post" class="cnes-form">
+                <form th:action="@{/register}" th:object="${user}" method="post" class="cnes-form"
+                      enctype="multipart/form-data">
 
                     <div class="form-row">
                         <div class="form-group">
@@ -52,19 +53,21 @@
                         <div class="form-group">
                             <label for="birthDate">Date de naissance</label>
                             <input type="date" id="birthDate" th:field="*{birthDate}"
-                                   th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" />
+                                   th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"/>
                         </div>
                     </div>
 
                     <div class="form-group full-width">
                         <label for="email">Email de transmissions</label>
-                        <input type="email" id="email" th:field="*{email}" placeholder="votre.email@cyss.space" required/>
+                        <input type="email" id="email" th:field="*{email}" placeholder="votre.email@cyss.space"
+                               required/>
                     </div>
 
                     <div class="form-group full-width">
                         <label for="password">Code d'accès secret</label>
                         <input type="password" id="password" th:field="*{password}" placeholder="••••••••" required/>
                     </div>
+
 
                     <button type="submit" class="cnes-btn-submit">Valider l'intégration</button>
                 </form>
