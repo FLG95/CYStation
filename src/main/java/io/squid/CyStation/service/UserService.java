@@ -76,13 +76,13 @@ public class UserService {
     public void addExp(User user, int expToAdd){
         user.setExperience(user.getExperience()+expToAdd);
 
-        if(user.getExperience()<0){
+        if(user.getExperience()<= 0){
             user.setRole(Role.PASSENGER);
         }
-        else if(user.getExperience()>=5 && user.getExperience()<10){
+        else if(user.getExperience()>=50 && user.getExperience()<10){
             user.setRole(Role.SCIENTIST);
         }
-        else if (user.getExperience()>=10) {
+        else if (user.getExperience()>=100) {
             user.setRole(Role.ADMIN);
         }
 
