@@ -1,5 +1,6 @@
 package io.squid.CyStation.service;
 
+import io.squid.CyStation.model.User;
 import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.ZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,14 @@ public class ZoneService {
     public void save( Zone zone){
 
         zoneRepository.save(zone);
+    }
+
+
+    public void deleteZone(Long id){
+
+        Zone zone = zoneRepository.findById(id).orElseThrow(() -> new RuntimeException("Zone introuvable"));;
+
+        zoneRepository.delete(zone);
+
     }
 }

@@ -104,4 +104,11 @@ public class MissionController {
         return ResponseEntity.status(404).body("NOT_FOUND");
     }
 
+    @PostMapping("/mission/zone/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteZone(@PathVariable Long id) {
+        zoneService.deleteZone(id);
+        return ResponseEntity.ok("ZONE_DELETED");
+    }
+
 }

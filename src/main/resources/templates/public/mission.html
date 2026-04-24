@@ -39,7 +39,10 @@
 
 
             <th:block th:if="${not #lists.isEmpty(zones)}">
-                <a th:href="'#zoneDetailsModal-' + ${zone.id}" class="infra-card" th:each="zone : ${zones}">
+                <a th:href="'#zoneDetailsModal-' + ${zone.id}"
+                   class="infra-card" th:each="zone : ${zones}"
+                    th:id="'zone-card-' + ${zone.id}" alt="Zone">
+
                     <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80"
                          alt="Zone">
                     <div class="infra-overlay">
@@ -61,11 +64,20 @@
     </section>
 
     <div th:each="zone : ${zones}" th:id="'zoneDetailsModal-' + ${zone.id}" class="modal">
-        <div class="modal-content modal-large">
-            <a href="#" class="close-btn">&#10006;</a>
+
+        <div class="modal-content modal-large" >
+            <a href="#!" class="close-btn">&#10006;</a>
+
             <div class="section-header">
                 <h2 th:text="'Appareils dans ' + ${zone.name}"></h2>
+
+                <button type="button" style="cursor: pointer; position: relative; z-index: 999;"
+                        th:onclick="'deleteZoneAjax(' + ${zone.id} + ')'">
+                    Supprimer la Zone
+                </button>
             </div>
+
+
 
             <div class="cnes-grid infrastructure-grid">
                 <th:block th:if="${not #lists.isEmpty(zone.devices)}">
@@ -117,12 +129,16 @@
                 <input type="hidden" name="zoneId" th:value="${zone.id}">
 
                 <label th:for="'deviceName-' + ${zone.id}">Désignation de l'appareil &#10142;</label>
-                <input type="text" th:id="'deviceName-' + ${zone.id}" name="name" required>
+                <label>
+                    <input type="text" th:id="'deviceName-' + ${zone.id}" name="name" required>
+                </label>
 
                 <label th:for="'deviceType-' + ${zone.id}">Type de module &#10142;</label>
-                <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
-                    <option value="CO2_SENSOR">Capteur CO2</option>
-                </select>
+                <label>
+                    <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
+                        <option value="CO2_SENSOR">Capteur CO2</option>
+                    </select>
+                </label>
 
                 <button type="submit" class="cnes-btn btn-full">
                     Déployer l'appareil
@@ -133,7 +149,7 @@
 
     <div id="createZoneModal" class="modal">
         <div class="modal-content cnes-form">
-            <a href="#" class="close-btn">&#10006;</a>
+            <a href="#!" class="close-btn">&#10006;</a>
             <div class="section-header">
                 <h2>Initialiser une zone</h2>
             </div>
@@ -151,61 +167,10 @@
 
 <div th:replace="~{public/footer :: footer}"></div>
 
+<script th:src="@{/js/device-actions.js}" defer></script>
 
 </body>
 
-<script>
-
-    function toggleDeviceAjax(deviceId) {
-        const btn = document.getElementById('btn-' + deviceId);
-        const statusText = document.getElementById('status-text-' + deviceId); // On cible le <p>
-
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-        fetch('/mission/device/toggle/' + deviceId, {
-            method: 'POST',
-            headers: { [header]: token }
-        })
-            .then(response => {
-                if (response.ok) return response.text();
-                throw new Error();
-            })
-            .then(newStatus => {
-
-                if (newStatus === 'ONLINE') {
-                    statusText.textContent = 'ONLINE';
-                    btn.textContent = 'Éteindre';
-                    btn.className = 'btn-toggle off';
-                } else {
-                    statusText.textContent = 'OFFLINE';
-                    btn.textContent = 'Allumer';
-                    btn.className = 'btn-toggle on';
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
-    }
-
-    function deleteDeviceAjax(deviceId) {
-        if (!confirm("Confirmer la désintégration du module ?")) return;
-
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-        fetch('/mission/device/delete/' + deviceId, {
-            method: 'POST',
-            headers: { [header]: token }
-        })
-            .then(response => {
-                if (response.ok) {
-                    const card = document.getElementById('device-card-' + deviceId);
-                    card.style.opacity = '0';
-                    setTimeout(() => card.remove(), 300);
-                }
-            });
-    }
-
-</script>
 
 </html>
 

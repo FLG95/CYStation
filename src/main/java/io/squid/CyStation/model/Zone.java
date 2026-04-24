@@ -12,7 +12,7 @@ public class Zone {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Device> devices = new ArrayList<>();
 
     public Zone() {}
