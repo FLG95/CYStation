@@ -14,8 +14,6 @@
 </head>
 <body>
 
-<div th:replace="~{public/header :: header}"></div>
-
 <main class="cnes-layout">
     <section class="cnes-section hydroponic-section">
         <div class="section-header hydroponic-section-header">
@@ -25,7 +23,8 @@
         <div class="hydroponic-header-info">
             <span class="warning-label">Saisie de Commande Requise</span>
             <h3 class="hydroponic-title">Calibration des Nutriments</h3>
-            <p class="hydroponic-desc">Recopiez exactement la séquence de calibration affichée par le terminal pour valider l'analyse hydroponique du secteur B.</p>
+            <p class="hydroponic-desc">Recopiez exactement la séquence de calibration affichée par le terminal pour
+                valider l'analyse hydroponique du secteur B.</p>
         </div>
 
         <div class="hydroponic-container">
@@ -37,12 +36,14 @@
 
                 <div class="lcd-screen display-panel">
                     <div id="status-text">ÉTAT : EN ATTENTE DE SAISIE</div>
-                    <div class="target-display">SÉQUENCE CIBLE : <br><span id="target-password">CHARGEMENT...</span></div>
+                    <div class="target-display">SÉQUENCE CIBLE : <br><span id="target-password">CHARGEMENT...</span>
+                    </div>
                 </div>
 
                 <div class="terminal-input-group">
                     <label class="engraved-label" for="password-input">ENTRÉE TERMINAL</label>
-                    <input type="text" id="password-input" class="terminal-input" placeholder="Saisissez la séquence ici..." autocomplete="off">
+                    <input type="text" id="password-input" class="terminal-input"
+                           placeholder="Saisissez la séquence ici..." autocomplete="off">
                 </div>
 
                 <button id="submitBtn" class="hardware-btn">TRANSMETTRE LES DONNÉES</button>
@@ -51,7 +52,6 @@
     </section>
 </main>
 
-<div th:replace="~{public/footer :: footer}"></div>
 
 <script>
     const targetPasswordDisplay = document.getElementById('target-password');
@@ -61,59 +61,66 @@
     const hydroponicInterface = document.getElementById('hydroponic-interface');
 
     const sequences = [
-        "H2O-NUTR-88X",
-        "BIO-SYNC-A42",
-        "PH-LEVEL-7.4",
-        "OXYGEN-FLUX-9",
-        "ZETA-PLANT-00"
+        "H2O-NUTR-88X", "BIO-SYNC-A42", "PH-LEVEL-7.4", "OXYGEN-FLUX-9", "ZETA-PLANT-00"
     ];
 
     const targetSequence = sequences[Math.floor(Math.random() * sequences.length)];
     targetPasswordDisplay.innerText = targetSequence;
-
-    passwordInput.addEventListener('input', () => {
-        if (passwordInput.value === targetSequence) {
-            victory();
-        } else if (targetSequence.startsWith(passwordInput.value)) {
-
-            hydroponicInterface.classList.remove('error');
-        } else {
-
-            hydroponicInterface.classList.add('error');
-        }
-    });
 
     function victory() {
         hydroponicInterface.classList.remove('error');
         hydroponicInterface.classList.add('success');
 
         passwordInput.disabled = true;
-        submitBtn.style.display = "block";
+        if (submitBtn) submitBtn.style.display = "block";
+
         statusText.innerText = "ÉTAT : CALIBRATION RÉUSSIE";
         statusText.style.color = "#00ff00";
         statusText.style.textShadow = "0 0 8px #00ff00";
     }
 
-    submitBtn.addEventListener('click', () => {
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const expAmount = 20;
-
-        fetch('/user/updateExp?amount=' + expAmount, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [header]: token
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "/mission";
-                } else {
-                    alert("Erreur " + response.status);
-                }
-            });
+    passwordInput.addEventListener('input', () => {
+        if (passwordInput.value === targetSequence) {
+            victory();
+        } else if (targetSequence.startsWith(passwordInput.value)) {
+            hydroponicInterface.classList.remove('error');
+        } else {
+            hydroponicInterface.classList.add('error');
+        }
     });
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const token = document.querySelector('meta[name="_csrf"]').content;
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const deviceId = urlParams.get('deviceId');
+
+            fetch('/user/updateExp?amount=20', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [header]: token
+                }
+            })
+                .then(res => {
+                    console.log("XP OK ou traité, envoi du signal de fermeture...");
+
+                    window.parent.postMessage({
+                        type: 'MINIGAME_WIN',
+                        deviceId: deviceId
+                    }, '*');
+                })
+                .catch(err => {
+                    console.error("Erreur réseau, on force quand même la fermeture", err);
+                    window.parent.postMessage({
+                        type: 'MINIGAME_WIN',
+                        deviceId: deviceId
+                    }, '*');
+                });
+        });
+    }
 </script>
 
 </body>

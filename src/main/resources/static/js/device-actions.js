@@ -30,33 +30,6 @@ function toggleDeviceAjax(deviceId) {
         })
 }
 
-function repairDeviceAjax(deviceId) {
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-    fetch('/mission/device/repair/' + deviceId, {
-        method: 'POST',
-        headers: { [header]: token }
-    })
-        .then(response => {
-            if (response.ok) return response.json();
-            throw new Error("Erreur lors de la réparation");
-        })
-        .then(status => {
-            const statusText = document.getElementById('status-text-' + deviceId);
-            const btn = document.getElementById('btn-' + deviceId);
-            const repairBtn = document.getElementById('btn-repair-' + deviceId);
-
-            statusText.textContent = status.displayValue;
-
-            btn.disabled = false;
-            btn.textContent = 'Allumer';
-            btn.className = 'btn-toggle on';
-
-            repairBtn.style.display = 'none';
-        })
-        .catch(err => console.error(err));
-}
 
 function deleteDeviceAjax(deviceId) {
     if (!confirm("Confirmer la désintégration du module ?")) return;
@@ -109,4 +82,60 @@ function deleteZoneAjax(zoneId) {
         })
         .catch(error => console.error('Erreur:', error));
 }
+
+
+function repairDeviceAjax(deviceId, deviceType) {
+    const modal = document.getElementById('gameModal');
+    const iframe = document.getElementById('gameFrame');
+
+    const games = {
+        'CO2_SENSOR': '/mission/game/Co2',
+        'DEFAULT': '/mission/game/Co2'
+    };
+
+    const gameUrl = games[deviceType] || games['DEFAULT'];
+
+    iframe.src = gameUrl + "?deviceId=" + deviceId;
+
+    modal.style.display = 'flex';
+}
+
+function confirmRepairOnServer(deviceId) {
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    console.log("Envoi de la confirmation de réparation pour l'ID :", deviceId);
+
+    fetch('/mission/device/repair/' + deviceId, {
+        method: 'POST',
+        headers: { [header]: token }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Erreur serveur");
+            return response.json();
+        })
+        .then(deviceData => {
+            console.log("Données reçues du serveur :", deviceData);
+
+            if (deviceData && deviceData.id) {
+                updateDeviceUI(deviceData);
+            } else {
+                console.error("Le serveur a répondu, mais l'objet device est invalide :", deviceData);
+            }
+        })
+        .catch(err => console.error("Erreur lors du fetch de réparation :", err));
+}
+
+
+
+
+window.addEventListener('message', function(event) {
+    if (event.data.action === 'REPAIR_SUCCESS') {
+        const deviceId = event.data.deviceId;
+
+        closeModal();
+
+        confirmRepairOnServer(deviceId);
+    }
+});
 

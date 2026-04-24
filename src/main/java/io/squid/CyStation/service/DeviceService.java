@@ -75,13 +75,13 @@ public class DeviceService {
     }
 
     @Transactional
-    public DeviceStatus repair(Long id) {
+    public Device repair(Long id) {
         Device device = deviceRepository.findById(id).orElseThrow();
         if (device.getStatus() == DeviceStatus.MAINTENANCE) {
             device.setStatus(DeviceStatus.OFFLINE);
             deviceRepository.save(device);
         }
-        return device.getStatus();
+        return device;
     }
 
 

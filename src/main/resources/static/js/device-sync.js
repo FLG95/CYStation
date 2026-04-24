@@ -20,7 +20,8 @@ function connectWebSocket() {
     });
 }
 
-function updateUI(device) {
+function updateDeviceUI(device) {
+
     const statusText = document.getElementById('status-text-' + device.id);
     const btn = document.getElementById('btn-' + device.id);
     const repairBtn = document.getElementById('btn-repair-' + device.id);
@@ -29,27 +30,59 @@ function updateUI(device) {
 
         statusText.textContent = device.status.displayValue;
 
-        if (device.status.name === 'MAINTENANCE') {
-            btn.disabled = true;
-            btn.textContent = 'Allumer';
-            btn.className = 'btn-toggle on';
-            repairBtn.style.display = 'block';
-        } else if (device.status.name === 'ONLINE') {
+        if (device.status.name === 'ONLINE') {
             btn.disabled = false;
             btn.textContent = 'Éteindre';
             btn.className = 'btn-toggle off';
-            repairBtn.style.display = 'none';
-        } else {
+            if (repairBtn) repairBtn.style.display = 'none';
+        } else if (device.status.name === 'OFFLINE') {
             btn.disabled = false;
             btn.textContent = 'Allumer';
             btn.className = 'btn-toggle on';
-            repairBtn.style.display = 'none';
+            if (repairBtn) repairBtn.style.display = 'none';
         }
+    } else {
+        console.warn("Élément HTML introuvable pour le device " + device.id);
     }
 }
 
 connectWebSocket();
 
 
+function closeModal() {
+    document.getElementById('gameModal').style.display = 'none';
+    document.getElementById('gameFrame').src = '';
+}
 
 
+function confirmRepairOnServer(deviceId) {
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    fetch('/mission/device/repair/' + deviceId, {
+        method: 'POST',
+        headers: { [header]: token }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Erreur serveur lors de la réparation");
+            return response.json();
+        })
+        .then(device => {
+            console.log("Réparation confirmée pour :", device.name);
+
+            updateDeviceUI(device);
+        })
+        .catch(err => console.error("Erreur finale :", err));
+}
+
+
+
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'MINIGAME_WIN') {
+        const deviceId = event.data.deviceId;
+
+        closeModal();
+
+        confirmRepairOnServer(deviceId);
+    }
+});

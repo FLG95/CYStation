@@ -33,8 +33,6 @@ public class SimulationService {
                     device.setStatus(DeviceStatus.MAINTENANCE);
                     hasChanges = true;
 
-                    System.out.println("Simulation : Panne sur " + device.getName());
-
                     messagingTemplate.convertAndSend("/topic/device-status", device);
                 }
             }
@@ -43,7 +41,6 @@ public class SimulationService {
         if (hasChanges) {
 
             zoneRepository.saveAllAndFlush(zones);
-            System.out.println("Base de données mise à jour.");
         }
     }
 }

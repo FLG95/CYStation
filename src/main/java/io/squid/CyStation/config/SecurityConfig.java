@@ -38,6 +38,9 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .permitAll());
 
+        httpSecurity.headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+        );
         return httpSecurity.build();
 
     }

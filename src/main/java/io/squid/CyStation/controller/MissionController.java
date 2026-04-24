@@ -86,9 +86,10 @@ public class MissionController {
 
     @PostMapping("/mission/device/repair/{id}")
     @ResponseBody
-    public DeviceStatus repairDevice(@PathVariable Long id) {
+    public Device repairDevice(@PathVariable Long id) {
 
-        return deviceService.repair(id);
+        Device device = deviceService.repair(id);
+        return device;
     }
 
 
@@ -108,5 +109,13 @@ public class MissionController {
         zoneService.deleteZone(id);
         return ResponseEntity.ok("ZONE_DELETED");
     }
+
+
+    @GetMapping("/mission/game/Co2")
+    public String showCo2Game() {
+
+        return "engineer/hydroponic.html";
+    }
+
 
 }
