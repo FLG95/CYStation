@@ -60,7 +60,6 @@
     const statusText = document.getElementById('status-text');
     const hydroponicInterface = document.getElementById('hydroponic-interface');
 
-    // Liste de codes aléatoires possibles
     const sequences = [
         "H2O-NUTR-88X",
         "BIO-SYNC-A42",
@@ -69,19 +68,17 @@
         "ZETA-PLANT-00"
     ];
 
-    // Sélectionner une séquence au hasard
     const targetSequence = sequences[Math.floor(Math.random() * sequences.length)];
     targetPasswordDisplay.innerText = targetSequence;
 
-    // Vérifier la saisie à chaque lettre tapée
     passwordInput.addEventListener('input', () => {
         if (passwordInput.value === targetSequence) {
             victory();
         } else if (targetSequence.startsWith(passwordInput.value)) {
-            // Si le début est correct, on laisse en état neutre
+
             hydroponicInterface.classList.remove('error');
         } else {
-            // S'il y a une erreur de frappe
+
             hydroponicInterface.classList.add('error');
         }
     });

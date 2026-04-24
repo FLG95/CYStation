@@ -69,20 +69,17 @@
 
     let lockedCount = 0;
 
-    // Ajouter l'événement de clic sur chaque point rouge (débris)
     blips.forEach(blip => {
         blip.addEventListener('click', function() {
-            // Si la cible n'est pas déjà verrouillée
+
             if (!this.classList.contains('locked')) {
                 this.classList.add('locked');
                 lockedCount++;
                 targetsCountDisplay.innerText = lockedCount;
 
-                // Animation de confirmation
                 astrometryInterface.classList.add('target-flash');
                 setTimeout(() => astrometryInterface.classList.remove('target-flash'), 200);
 
-                // Vérifier si c'est gagné
                 if (lockedCount === 3) {
                     victory();
                 } else {
@@ -99,7 +96,6 @@
         statusText.style.color = "#00ff00";
         submitBtn.style.display = "block";
 
-        // Arrêter le balayage visuel
         document.querySelector('.radar-sweep').style.display = 'none';
     }
 

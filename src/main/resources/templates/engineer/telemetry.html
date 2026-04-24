@@ -86,24 +86,20 @@
     const submitBtn = document.getElementById('submitBtn');
     const telemetryInterface = document.getElementById('telemetry-interface');
 
-    // Écouter chaque clic sur un interrupteur
     checkboxes.forEach(box => {
         box.addEventListener('change', () => {
 
-            // Compter combien d'interrupteurs sont activés
             let activeCount = 0;
             checkboxes.forEach(cb => {
                 if(cb.checked) activeCount++;
             });
 
-            // Mettre à jour l'écran LCD
             relaysCountDisplay.innerText = activeCount;
 
-            // Vérifier la victoire
             if (activeCount === 4) {
                 victory();
             } else {
-                // Rétablir l'état normal si on décoche un bouton
+
                 telemetryInterface.classList.remove('success');
                 submitBtn.style.display = "none";
 
