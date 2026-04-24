@@ -287,7 +287,23 @@ iframe {
 
 
 
+
 .close-modal {
     position: absolute; top: 10px; right: 20px;
     color: white; font-size: 30px; cursor: pointer;
 }
+
+
+.device-type-badge {
+    background: rgba(0, 212, 255, 0.15); /* Bleu CNES transparent */
+    color: #00d4ff;
+    border: 1px solid rgba(0, 212, 255, 0.5);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+}
+

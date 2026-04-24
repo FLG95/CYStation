@@ -1,4 +1,5 @@
 package io.squid.CyStation.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
@@ -18,30 +19,37 @@ public class Device {
     @JsonIgnore
     private Zone zone;
 
-    public Device(){
+    public Device() {
 
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public DeviceStatus getStatus(){ return status; }
-    public void setStatus(DeviceStatus status){
+    public DeviceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeviceStatus status) {
         this.status = status;
     }
 
-    public Zone getZone() { return zone; }
+    public Zone getZone() {
+        return zone;
+    }
 
     public int getDeviceTypeId() {
         String className = this.getClass().getSimpleName();
@@ -54,10 +62,25 @@ public class Device {
             case "Co2Sensor" -> 0;
             case "Generator" -> 1;
             case "Radar" -> 2;
-            case "Radio"     -> 3;
-            default           -> 99;
+            case "Radio" -> 3;
+            default -> 99;
         };
     }
 
-    public void setZone(Zone zone) { this.zone = zone; }
+    public String getDeviceDisplayName() {
+        int type = this.getDeviceTypeId();
+
+        return switch (type) {
+            case 0 -> "Capteur CO2";
+            case 1 -> "Générateur";
+            case 2 -> "Radar Orbital";
+            case 3 -> "Relais Radio";
+            default -> "Équipement";
+        };
+    }
+
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
 }
