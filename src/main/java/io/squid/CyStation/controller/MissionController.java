@@ -5,6 +5,7 @@ import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
+import io.squid.CyStation.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ public class MissionController {
 
     @Autowired
     private ZoneRepository zoneRepository;
+
+    @Autowired
+    private ZoneService zoneService;
 
     @Autowired
     private DeviceRepository deviceRepository;
@@ -32,11 +36,20 @@ public class MissionController {
 
     @PostMapping("/mission/zone/create")
     public String createZone(@RequestParam String name) {
-        Zone newZone = new Zone();
-        newZone.setName(name);
-        zoneRepository.save(newZone);
 
-        return "redirect:/mission";
+        if (zoneRepository.findZoneByName(name) != null ){
+
+            return "redirect:/mission?error";
+
+        }else{
+
+            Zone newZone = new Zone();
+            newZone.setName(name);
+            zoneService.save(newZone);
+
+            return "redirect:/mission";
+
+        }
     }
 
     @PostMapping("/mission/device/create")
