@@ -79,18 +79,16 @@ public class MissionController {
 
     @PostMapping("/mission/device/toggle/{id}")
     @ResponseBody
-    public ResponseEntity<String> toggleDevice(@PathVariable Long id) {
-        Device device = deviceRepository.findDeviceById(id);
-        if (device != null) {
-            if (DeviceStatus.ONLINE.equals(device.getStatus())) {
-                device.setStatus(DeviceStatus.OFFLINE);
-            } else {
-                device.setStatus(DeviceStatus.ONLINE);
-            }
-            deviceRepository.save(device);
-            return ResponseEntity.ok(device.getStatus().name());
-        }
-        return ResponseEntity.status(404).build();
+    public DeviceStatus toggleDevice(@PathVariable Long id) {
+
+        return deviceService.toggleStatus(id);
+    }
+
+    @PostMapping("/mission/device/repair/{id}")
+    @ResponseBody
+    public DeviceStatus repairDevice(@PathVariable Long id) {
+
+        return deviceService.repair(id);
     }
 
 

@@ -11,6 +11,11 @@
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/mission.css}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script th:src="@{/js/device-actions.js}" defer></script>
+    <script th:src="@{/js/device-sync.js}" defer></script>
 </head>
 <body>
 
@@ -89,15 +94,29 @@
                             <h3 th:text="${device.name}"></h3>
 
                             <p th:id="'status-text-' + ${device.id}"
-                               th:text="${device.status}"
+                               th:text="${device.status.displayValue}"
                                style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;">
                             </p>
-                            <button type="button"
-                                    th:id="'btn-' + ${device.id}"
-                                    th:onclick="'toggleDeviceAjax(' + ${device.id} + ')'"
-                                    th:class="${device.status.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
-                                    th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
-                            </button>
+
+                            <div class="device-controls" style="display: flex; gap: 10px; align-items: center;">
+                                <button type="button"
+                                        th:id="'btn-' + ${device.id}"
+                                        th:onclick="'toggleDeviceAjax(' + ${device.id} + ')'"
+                                        th:class="${device.status.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
+                                        th:disabled="${device.status.name() == 'MAINTENANCE'}"
+                                        th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
+                                </button>
+
+                                <button type="button"
+                                        th:id="'btn-repair-' + ${device.id}"
+                                        th:onclick="'repairDeviceAjax(' + ${device.id} + ')'"
+                                        class="btn-repair"
+                                        th:style="${device.status.name() == 'MAINTENANCE' ? 'display:block' : 'display:none'}">
+                                    Réparer
+                                </button>
+                            </div>
+
+
 
                             <button type="button" class="cnes-btn btn-full"
                                     th:onclick="'deleteDeviceAjax(' + ${device.id} + ')'">
@@ -109,7 +128,7 @@
 
                 <a th:href="'#addDeviceModal-' + ${zone.id}" class="infra-card add-card">
                     <div class="infra-overlay admin-overlay">
-                        <h3>&#10010;<br>Rajouter un appareil</h3>
+                        <h3>&#10010;<br>Ajouter un appareil</h3>
                     </div>
                 </a>
             </div>
@@ -166,8 +185,6 @@
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
-
-<script th:src="@{/js/device-actions.js}" defer></script>
 
 </body>
 

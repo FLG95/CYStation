@@ -1,4 +1,5 @@
 package io.squid.CyStation.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
@@ -14,6 +15,7 @@ public class Device {
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
+    @JsonIgnore
     private Zone zone;
 
     public Device(){

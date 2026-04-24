@@ -53,4 +53,37 @@ public class DeviceService {
         deviceRepository.save(device);
     }
 
+    @Transactional
+    public DeviceStatus toggleStatus(Long id) {
+        Device device = deviceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Device non trouvé avec l'id : " + id));
+
+        if (device.getStatus() == DeviceStatus.MAINTENANCE) {
+
+            return device.getStatus();
+        }
+
+        if (device.getStatus() == DeviceStatus.ONLINE) {
+            device.setStatus(DeviceStatus.OFFLINE);
+        } else {
+            device.setStatus(DeviceStatus.ONLINE);
+        }
+
+        deviceRepository.save(device);
+
+        return device.getStatus();
+    }
+
+    @Transactional
+    public DeviceStatus repair(Long id) {
+        Device device = deviceRepository.findById(id).orElseThrow();
+        if (device.getStatus() == DeviceStatus.MAINTENANCE) {
+            device.setStatus(DeviceStatus.OFFLINE);
+            deviceRepository.save(device);
+        }
+        return device.getStatus();
+    }
+
+
+
 }

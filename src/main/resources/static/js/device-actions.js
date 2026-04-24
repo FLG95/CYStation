@@ -1,31 +1,61 @@
+
 function toggleDeviceAjax(deviceId) {
     const btn = document.getElementById('btn-' + deviceId);
-    const statusText = document.getElementById('status-text-' + deviceId); // On cible le <p>
-
+    const statusText = document.getElementById('status-text-' + deviceId);
     const token = document.querySelector('meta[name="_csrf"]').content;
     const header = document.querySelector('meta[name="_csrf_header"]').content;
 
     fetch('/mission/device/toggle/' + deviceId, {
         method: 'POST',
-        headers: {[header]: token}
+        headers: { [header]: token }
     })
         .then(response => {
-            if (response.ok) return response.text();
-            throw new Error();
+            if (response.ok) return response.json();
+            throw new Error("Erreur serveur");
         })
-        .then(newStatus => {
+        .then(status => {
+            console.log("Statut reçu :", status);
 
-            if (newStatus === 'ONLINE') {
-                statusText.textContent = 'ONLINE';
+            statusText.textContent = status.displayValue;
+
+            if (status.name === 'ONLINE') {
                 btn.textContent = 'Éteindre';
                 btn.className = 'btn-toggle off';
             } else {
-                statusText.textContent = 'OFFLINE';
                 btn.textContent = 'Allumer';
                 btn.className = 'btn-toggle on';
             }
+
+            btn.disabled = (status.name === 'MAINTENANCE');
         })
-        .catch(error => console.error('Erreur:', error));
+}
+
+function repairDeviceAjax(deviceId) {
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    fetch('/mission/device/repair/' + deviceId, {
+        method: 'POST',
+        headers: { [header]: token }
+    })
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error("Erreur lors de la réparation");
+        })
+        .then(status => {
+            const statusText = document.getElementById('status-text-' + deviceId);
+            const btn = document.getElementById('btn-' + deviceId);
+            const repairBtn = document.getElementById('btn-repair-' + deviceId);
+
+            statusText.textContent = status.displayValue;
+
+            btn.disabled = false;
+            btn.textContent = 'Allumer';
+            btn.className = 'btn-toggle on';
+
+            repairBtn.style.display = 'none';
+        })
+        .catch(err => console.error(err));
 }
 
 function deleteDeviceAjax(deviceId) {
