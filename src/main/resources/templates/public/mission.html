@@ -29,7 +29,14 @@
             <h2>Réseau des zones actives</h2>
         </div>
 
+        <div class="error-message" th:if="${param.error}">
+            <strong>Erreur :</strong> Cette Zone existe déjà.
+        </div>
+
         <div class="cnes-grid infrastructure-grid">
+
+
+
             <th:block th:if="${not #lists.isEmpty(zones)}">
                 <a th:href="'#zoneDetailsModal-' + ${zone.id}" class="infra-card" th:each="zone : ${zones}">
                     <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Zone">
@@ -106,10 +113,10 @@
         <div class="modal-content cnes-form">
             <a href="#" class="close-btn">&#10006;</a>
             <div class="section-header">
-                <h2>Initialiser un module</h2>
+                <h2>Initialiser une zone</h2>
             </div>
             <form th:action="@{/mission/zone/create}" method="post">
-                <label for="newZoneName">Désignation du module &#10142;</label>
+                <label for="newZoneName">Désignation de la nouvelle zone &#10142;</label>
                 <input type="text" id="newZoneName" name="name" required>
                 <button type="submit" class="cnes-btn btn-full">
                     Confirmer le déploiement

@@ -231,3 +231,14 @@
 body:has(.modal:target) {
     overflow: hidden;
 }
+
+
+.error-message {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 15px;
+    margin: 20px 0px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+}
