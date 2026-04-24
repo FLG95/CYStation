@@ -15,8 +15,6 @@ public class MainController {
         return "public/index";
     }
 
-
-
     @RequestMapping("/about")
     public String about(){
         return "public/about";

@@ -17,17 +17,22 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class MissionController {
 
-    @Autowired
-    private ZoneRepository zoneRepository;
+    private final ZoneRepository zoneRepository;
+    private final ZoneService zoneService;
+    private final DeviceRepository deviceRepository;
+    private final DeviceService deviceService;
 
-    @Autowired
-    private ZoneService zoneService;
 
-    @Autowired
-    private DeviceRepository deviceRepository;
+    public MissionController(ZoneRepository zoneRepository,
+                             ZoneService zoneService,
+                             DeviceRepository deviceRepository,
+                             DeviceService deviceService){
+        this.zoneRepository = zoneRepository;
+        this.zoneService = zoneService;
+        this.deviceRepository = deviceRepository;
+        this.deviceService = deviceService;
+    }
 
-    @Autowired
-    private DeviceService deviceService;
 
     @GetMapping("/mission")
     public String showMissionPage(Model model) {
@@ -38,11 +43,11 @@ public class MissionController {
     @PostMapping("/mission/zone/create")
     public String createZone(@RequestParam String name) {
 
-        if (zoneRepository.findZoneByName(name) != null ){
+        if (zoneRepository.findZoneByName(name) != null) {
 
             return "redirect:/mission?error";
 
-        }else{
+        } else {
 
             Zone newZone = new Zone();
             newZone.setName(name);
@@ -54,10 +59,10 @@ public class MissionController {
     }
 
     @PostMapping("/mission/device/create")
-    public String createDevice(@RequestParam String name,@RequestParam String deviceType, @RequestParam Long zoneId) {
+    public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
 
         Device newDevice;
-        switch(deviceType){
+        switch (deviceType) {
             case "CO2_SENSOR":
                 newDevice = new Co2Sensor();
                 break;

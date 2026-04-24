@@ -18,33 +18,12 @@ import java.util.Optional;
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
+    private final ZoneRepository zoneRepository;
 
-    @Autowired
-    private ZoneRepository zoneRepository;
 
-    public DeviceService(DeviceRepository deviceRepository) {
+    public DeviceService(DeviceRepository deviceRepository, ZoneRepository zoneRepository) {
         this.deviceRepository = deviceRepository;
-    }
-
-    public List<Device> getAllDevices() {
-        return deviceRepository.findAll();
-    }
-
-    public Optional<Device> getDeviceById(Long id) {
-        return deviceRepository.findById(id);
-    }
-
-    public Device saveDevice(Device device) {
-        return deviceRepository.save(device);
-    }
-
-
-    public void updateDeviceStatus(Long id, DeviceStatus status) {
-        Device device = deviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appareil introuvable avec l'ID : " + id));
-
-        device.setStatus(status);
-        deviceRepository.save(device);
+        this.zoneRepository = zoneRepository;
     }
 
 
@@ -73,6 +52,5 @@ public class DeviceService {
 
         deviceRepository.save(device);
     }
-
-
+    
 }

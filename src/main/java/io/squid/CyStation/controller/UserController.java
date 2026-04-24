@@ -62,7 +62,7 @@ public class UserController {
 
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute("user") User userForm, Principal principal) {
-        // userForm.getProfilePicture() contiendra maintenant "robot.png" par exemple
+
         userService.updateUserProfile(principal.getName(), userForm);
         return "redirect:/userInfo?updated";
     }
@@ -71,9 +71,7 @@ public class UserController {
     public String deleteProfile(Principal principal, HttpServletRequest request) throws ServletException {
 
         userService.deleteAccount(principal.getName());
-
         request.logout();
-
         return "redirect:/login?deleted";
     }
 

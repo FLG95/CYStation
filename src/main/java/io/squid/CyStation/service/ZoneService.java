@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 
 public class ZoneService {
 
-    @Autowired
-    ZoneRepository zoneRepository;
+    private final ZoneRepository zoneRepository;
+
+    public ZoneService( ZoneRepository zoneRepository){
+        this.zoneRepository = zoneRepository;
+    }
 
 
 
