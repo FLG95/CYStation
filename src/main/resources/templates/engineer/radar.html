@@ -7,14 +7,12 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
+
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/engineer/astrometry.css}">
 </head>
 <body>
 
-<div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout">
     <section class="cnes-section astrometry-section">
@@ -58,7 +56,6 @@
     </section>
 </main>
 
-<div th:replace="~{public/footer :: footer}"></div>
 
 <script>
     const blips = document.querySelectorAll('.blip');
@@ -69,20 +66,17 @@
 
     let lockedCount = 0;
 
-    // Ajouter l'événement de clic sur chaque point rouge (débris)
     blips.forEach(blip => {
         blip.addEventListener('click', function() {
-            // Si la cible n'est pas déjà verrouillée
+
             if (!this.classList.contains('locked')) {
                 this.classList.add('locked');
                 lockedCount++;
                 targetsCountDisplay.innerText = lockedCount;
 
-                // Animation de confirmation
                 astrometryInterface.classList.add('target-flash');
                 setTimeout(() => astrometryInterface.classList.remove('target-flash'), 200);
 
-                // Vérifier si c'est gagné
                 if (lockedCount === 3) {
                     victory();
                 } else {
@@ -99,7 +93,6 @@
         statusText.style.color = "#00ff00";
         submitBtn.style.display = "block";
 
-        // Arrêter le balayage visuel
         document.querySelector('.radar-sweep').style.display = 'none';
     }
 
@@ -107,6 +100,17 @@
         const token = document.querySelector('meta[name="_csrf"]').content;
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const expAmount = 20;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('deviceId');
+
+        const signalParent = () => {
+            console.log("Radar réparé, envoi du signal pour le device:", deviceId);
+            window.parent.postMessage({
+                type: 'MINIGAME_WIN',
+                deviceId: deviceId
+            }, '*');
+        };
 
         fetch('/user/updateExp?amount=' + expAmount, {
             method: 'POST',
@@ -116,11 +120,11 @@
             }
         })
             .then(response => {
-                if (response.ok) {
-                    window.location.href = "/mission";
-                } else {
-                    alert("Erreur " + response.status);
-                }
+                signalParent();
+            })
+            .catch(error => {
+                console.error("Erreur réseau EXP:", error);
+                signalParent();
             });
     });
 </script>

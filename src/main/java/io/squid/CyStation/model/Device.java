@@ -43,5 +43,21 @@ public class Device {
 
     public Zone getZone() { return zone; }
 
+    public int getDeviceTypeId() {
+        String className = this.getClass().getSimpleName();
+
+        if (className.contains("$")) {
+            className = className.substring(0, className.indexOf("$"));
+        }
+
+        return switch (className) {
+            case "Co2Sensor" -> 0;
+            case "Generator" -> 1;
+            case "Radar" -> 2;
+            case "Radio"     -> 3;
+            default           -> 99;
+        };
+    }
+
     public void setZone(Zone zone) { this.zone = zone; }
 }

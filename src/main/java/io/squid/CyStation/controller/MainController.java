@@ -1,10 +1,7 @@
 package io.squid.CyStation.controller;
 
-import io.squid.CyStation.model.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.ui.Model;
 
 @Controller
 public class MainController {
@@ -27,10 +24,10 @@ public class MainController {
     public String hydroponic(){ return "engineer/hydroponic";}
 
     @RequestMapping("/telemetry")
-    public String telemetry(){ return "engineer/telemetry";}
+    public String telemetry(){ return "radio";}
 
     @RequestMapping("/astrometry")
-    public String astrometry(){ return "engineer/astrometry";}
+    public String astrometry(){ return "radar";}
 
     @RequestMapping("/mission")
     public String mission() {

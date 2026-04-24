@@ -48,7 +48,7 @@ public class DeviceService {
                 .orElseThrow(() -> new RuntimeException("Zone introuvable"));
 
         device.setZone(zone);
-        device.setStatus(DeviceStatus.OFFLINE);
+        device.setStatus(DeviceStatus.MAINTENANCE);
 
         deviceRepository.save(device);
     }

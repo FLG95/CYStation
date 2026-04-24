@@ -11,8 +11,8 @@ function connectWebSocket() {
 
         stompClient.subscribe('/topic/device-status', function (response) {
             const device = JSON.parse(response.body);
-            console.log("Update reçu pour le device :", device);
-            updateUI(device);
+            console.log("Update reçu :", device);
+            updateDeviceUI(device);
         });
     }, function(error) {
         console.log("Erreur WebSocket, tentative de reconnexion dans 5s...");
@@ -21,28 +21,40 @@ function connectWebSocket() {
 }
 
 function updateDeviceUI(device) {
-
     const statusText = document.getElementById('status-text-' + device.id);
-    const btn = document.getElementById('btn-' + device.id);
+    const btn = document.getElementById('btn-' + device.id); // Bouton Allumer/Éteindre
     const repairBtn = document.getElementById('btn-repair-' + device.id);
 
     if (statusText) {
 
-        statusText.textContent = device.status.displayValue;
+        statusText.textContent = device.status.displayValue || device.status;
 
-        if (device.status.name === 'ONLINE') {
-            btn.disabled = false;
-            btn.textContent = 'Éteindre';
-            btn.className = 'btn-toggle off';
-            if (repairBtn) repairBtn.style.display = 'none';
-        } else if (device.status.name === 'OFFLINE') {
-            btn.disabled = false;
-            btn.textContent = 'Allumer';
-            btn.className = 'btn-toggle on';
+        const statusName = device.status.name || device.status;
+
+        if (statusName === 'MAINTENANCE') {
+
+            if (btn) btn.disabled = true;
+            if (repairBtn) {
+                repairBtn.style.display = 'block';
+                repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, ${device.deviceTypeId})`);
+            }
+        }
+        else if (statusName === 'ONLINE') {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Éteindre';
+                btn.className = 'btn-toggle off';
+            }
             if (repairBtn) repairBtn.style.display = 'none';
         }
-    } else {
-        console.warn("Élément HTML introuvable pour le device " + device.id);
+        else if (statusName === 'OFFLINE') {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Allumer';
+                btn.className = 'btn-toggle on';
+            }
+            if (repairBtn) repairBtn.style.display = 'none';
+        }
     }
 }
 

@@ -7,12 +7,12 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Module d'Ingénierie - CYStation</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
+
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/engineer/reactor.css}">
 </head>
 <body>
+
 
 <main class="cnes-layout">
     <section class="cnes-section reactor-section">
@@ -60,7 +60,6 @@
     </section>
 </main>
 
-<div th:replace="~{public/footer :: footer}"></div>
 
 <script>
     const autoSlider = document.getElementById('autoSlider');
@@ -110,19 +109,29 @@
 
     function victory() {
         targetReached = true;
-
         reactorInterface.classList.remove('syncing');
         reactorInterface.classList.add('success');
 
         submitBtn.style.display = "block";
         statusText.innerText = "ÉTAT : RÉACTEUR STABILISÉ";
+        statusText.style.color = "#00ff00";
     }
-
 
     submitBtn.addEventListener('click', () => {
         const token = document.querySelector('meta[name="_csrf"]').content;
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const expAmount = 50;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('deviceId');
+
+        const closeAndSignal = () => {
+            console.log("Envoi signal victoire au parent pour device:", deviceId);
+            window.parent.postMessage({
+                type: 'MINIGAME_WIN',
+                deviceId: deviceId
+            }, '*');
+        };
 
         fetch('/user/updateExp?amount=' + expAmount, {
             method: 'POST',
@@ -131,16 +140,18 @@
                 [header]: token
             }
         })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "/mission";
-                } else {
-                    alert("Erreur " + response.status);
-                }
+            .then(res => {
+                closeAndSignal();
+            })
+            .catch(err => {
+                console.error("Erreur réseau XP:", err);
+                closeAndSignal();
             });
     });
 
     updateAutoSlider();
+
+
 </script>
 
 </body>

@@ -1,9 +1,7 @@
 package io.squid.CyStation.controller;
 
 import io.squid.CyStation.enums.DeviceStatus;
-import io.squid.CyStation.model.Co2Sensor;
-import io.squid.CyStation.model.Device;
-import io.squid.CyStation.model.Zone;
+import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
@@ -66,6 +64,18 @@ public class MissionController {
             case "CO2_SENSOR":
                 newDevice = new Co2Sensor();
                 break;
+            case "GENERATOR":
+                newDevice = new Generator();
+                break;
+
+            case "RADAR":
+                newDevice = new Radar();
+                break;
+
+            case "RADIO":
+                newDevice = new Radio();
+                break;
+
             default:
                 throw new IllegalArgumentException("Type de module non reconnu : " + deviceType);
         }
@@ -111,11 +121,30 @@ public class MissionController {
     }
 
 
-    @GetMapping("/mission/game/Co2")
+    @GetMapping("/mission/game/co2")
     public String showCo2Game() {
 
         return "engineer/hydroponic.html";
     }
 
+
+    @GetMapping("/mission/game/reactor")
+    public String showReactorGame() {
+
+        return "engineer/reactor.html";
+    }
+
+    @GetMapping("/mission/game/radar")
+    public String showRadarGame() {
+
+        return "engineer/radar.html";
+    }
+
+
+    @GetMapping("/mission/game/radio")
+    public String showRadioGame() {
+
+        return "engineer/radio.html";
+    }
 
 }

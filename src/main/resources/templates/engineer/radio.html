@@ -7,14 +7,11 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/engineer/telemetry.css}">
 </head>
 <body>
 
-<div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout">
     <section class="cnes-section telemetry-section">
@@ -77,7 +74,6 @@
     </section>
 </main>
 
-<div th:replace="~{public/footer :: footer}"></div>
 
 <script>
     const checkboxes = document.querySelectorAll('.relay-checkbox');
@@ -88,7 +84,6 @@
 
     checkboxes.forEach(box => {
         box.addEventListener('change', () => {
-
             let activeCount = 0;
             checkboxes.forEach(cb => {
                 if(cb.checked) activeCount++;
@@ -99,7 +94,6 @@
             if (activeCount === 4) {
                 victory();
             } else {
-
                 telemetryInterface.classList.remove('success');
                 submitBtn.style.display = "none";
 
@@ -126,6 +120,17 @@
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const expAmount = 25;
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('deviceId');
+
+        const signalParent = () => {
+            console.log("Radio réparée, envoi du signal pour le device:", deviceId);
+            window.parent.postMessage({
+                type: 'MINIGAME_WIN',
+                deviceId: deviceId
+            }, '*');
+        };
+
         fetch('/user/updateExp?amount=' + expAmount, {
             method: 'POST',
             headers: {
@@ -134,11 +139,12 @@
             }
         })
             .then(response => {
-                if (response.ok) {
-                    window.location.href = "/mission";
-                } else {
-                    alert("Erreur " + response.status);
-                }
+
+                signalParent();
+            })
+            .catch(error => {
+                console.error("Erreur mise à jour EXP:", error);
+                signalParent();
             });
     });
 </script>
