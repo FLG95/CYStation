@@ -2,6 +2,7 @@ package io.squid.CyStation.service;
 
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.Device;
+import io.squid.CyStation.model.User;
 import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
@@ -24,6 +25,7 @@ public class DeviceService {
     public DeviceService(DeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
     }
+
     public List<Device> getAllDevices() {
         return deviceRepository.findAll();
     }
@@ -46,26 +48,31 @@ public class DeviceService {
     }
 
 
-
+    @Transactional
     public void deleteDevice(Long id) {
-        deviceRepository.deleteById(id);
-    }
 
+        Device device = deviceRepository.findById(id).orElse(null);
+        if (device != null) {
+
+            if (device.getZone() != null) {
+                device.getZone().getDevices().remove(device);
+            }
+            deviceRepository.delete(device);
+        }
+    }
 
 
     @Transactional
     public void addDeviceToZone(Device device, Long zoneId) {
-        // 1. On récupère la zone
+
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new RuntimeException("Zone introuvable"));
 
-        // 2. On lie le device à la zone (c'est l'étape qui remplit la colonne zone_id en DB)
         device.setZone(zone);
+        device.setStatus(DeviceStatus.OFFLINE);
 
-        // 3. On sauvegarde le device
         deviceRepository.save(device);
     }
-
 
 
 }

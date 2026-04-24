@@ -45,6 +45,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+
     @Transactional
     public void deleteAccount(String email) {
         User user = userRepository.findUserByEmail(email);

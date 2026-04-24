@@ -13,4 +13,5 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     List<Device> findByZoneAndStatus(Zone zone, DeviceStatus status);
 
+    public Device findDeviceById(Long id);
 }

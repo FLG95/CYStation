@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>CYStation - Mission</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
@@ -36,10 +38,10 @@
         <div class="cnes-grid infrastructure-grid">
 
 
-
             <th:block th:if="${not #lists.isEmpty(zones)}">
                 <a th:href="'#zoneDetailsModal-' + ${zone.id}" class="infra-card" th:each="zone : ${zones}">
-                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Zone">
+                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80"
+                         alt="Zone">
                     <div class="infra-overlay">
                         <h3 th:text="${zone.name}"></h3>
                     </div>
@@ -67,11 +69,28 @@
 
             <div class="cnes-grid infrastructure-grid">
                 <th:block th:if="${not #lists.isEmpty(zone.devices)}">
-                    <div class="infra-card" th:each="device : ${zone.devices}">
+                    <div class="infra-card" th:each="device : ${zone.devices}" th:id="'device-card-' + ${device.id}">
+
                         <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="Machine">
+
                         <div class="infra-overlay">
                             <h3 th:text="${device.name}"></h3>
-                            <p th:text="${device.status}" style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;"></p>
+
+                            <p th:id="'status-text-' + ${device.id}"
+                               th:text="${device.status}"
+                               style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;">
+                            </p>
+                            <button type="button"
+                                    th:id="'btn-' + ${device.id}"
+                                    th:onclick="'toggleDeviceAjax(' + ${device.id} + ')'"
+                                    th:class="${device.status.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
+                                    th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
+                            </button>
+
+                            <button type="button" class="cnes-btn btn-full"
+                                    th:onclick="'deleteDeviceAjax(' + ${device.id} + ')'">
+                                Supprimer l'appareil
+                            </button>
                         </div>
                     </div>
                 </th:block>
@@ -91,7 +110,10 @@
             <div class="section-header">
                 <h2>Ajouter un appareil dans <span style="color: #00e5ff;" th:text="${zone.name}"></span></h2>
             </div>
+
+
             <form th:action="@{/mission/device/create}" method="post">
+
                 <input type="hidden" name="zoneId" th:value="${zone.id}">
 
                 <label th:for="'deviceName-' + ${zone.id}">Désignation de l'appareil &#10142;</label>
@@ -129,5 +151,62 @@
 
 <div th:replace="~{public/footer :: footer}"></div>
 
+
 </body>
+
+<script>
+
+    function toggleDeviceAjax(deviceId) {
+        const btn = document.getElementById('btn-' + deviceId);
+        const statusText = document.getElementById('status-text-' + deviceId); // On cible le <p>
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        fetch('/mission/device/toggle/' + deviceId, {
+            method: 'POST',
+            headers: { [header]: token }
+        })
+            .then(response => {
+                if (response.ok) return response.text();
+                throw new Error();
+            })
+            .then(newStatus => {
+
+                if (newStatus === 'ONLINE') {
+                    statusText.textContent = 'ONLINE';
+                    btn.textContent = 'Éteindre';
+                    btn.className = 'btn-toggle off';
+                } else {
+                    statusText.textContent = 'OFFLINE';
+                    btn.textContent = 'Allumer';
+                    btn.className = 'btn-toggle on';
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+
+    function deleteDeviceAjax(deviceId) {
+        if (!confirm("Confirmer la désintégration du module ?")) return;
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        fetch('/mission/device/delete/' + deviceId, {
+            method: 'POST',
+            headers: { [header]: token }
+        })
+            .then(response => {
+                if (response.ok) {
+                    const card = document.getElementById('device-card-' + deviceId);
+                    card.style.opacity = '0';
+                    setTimeout(() => card.remove(), 300);
+                }
+            });
+    }
+
+</script>
+
 </html>
+
+

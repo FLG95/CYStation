@@ -9,11 +9,10 @@ import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MissionController {
@@ -56,6 +55,7 @@ public class MissionController {
 
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name,@RequestParam String deviceType, @RequestParam Long zoneId) {
+
         Device newDevice;
         switch(deviceType){
             case "CO2_SENSOR":
@@ -70,4 +70,33 @@ public class MissionController {
 
         return "redirect:/mission";
     }
+
+
+    @PostMapping("/mission/device/toggle/{id}")
+    @ResponseBody
+    public ResponseEntity<String> toggleDevice(@PathVariable Long id) {
+        Device device = deviceRepository.findDeviceById(id);
+        if (device != null) {
+            if (DeviceStatus.ONLINE.equals(device.getStatus())) {
+                device.setStatus(DeviceStatus.OFFLINE);
+            } else {
+                device.setStatus(DeviceStatus.ONLINE);
+            }
+            deviceRepository.save(device);
+            return ResponseEntity.ok(device.getStatus().name());
+        }
+        return ResponseEntity.status(404).build();
+    }
+
+
+    @PostMapping("/mission/device/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
+        if (deviceRepository.existsById(id)) {
+            deviceService.deleteDevice(id);
+            return ResponseEntity.ok("DELETED");
+        }
+        return ResponseEntity.status(404).body("NOT_FOUND");
+    }
+
 }
