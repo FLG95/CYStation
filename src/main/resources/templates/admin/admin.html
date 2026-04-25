@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Administration - Utilisateurs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body class="bg-dark">
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+    <section class="section-header">
+        <h1>Gestion du Personnel</h1>
+        <p>Liste des opérateurs et scientifiques de la station.</p>
+    </section>
+
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Rôle</th>
+                <th>Expérience</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}" th:id="'user-row-' + ${user.id}">
+                <td th:text="${user.id}">1</td>
+                <td>
+                    <div class="user-info">
+                        <small th:text="${user.email}">email@cnes.fr</small>
+                    </div>
+                </td>
+                <td>
+                    <span class="role-badge" th:text="${user.role}">USER</span>
+                </td>
+                <td>
+                    <span th:id="'exp-' + ${user.id}" th:text="${user.experience}">100</span> XP
+                </td>
+                <td class="actions-cell">
+                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50 XP</button>
+                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    function modifyExp(userId, amount) {
+        const formData = new FormData();
+        formData.append('id', userId);
+        formData.append('amount', amount);
+
+        fetch('/admin/users/add-exp', {
+            method: 'POST',
+            headers: { [header]: token },
+            body: formData
+        })
+            .then(res => res.json())
+            .then(newExp => {
+                document.getElementById('exp-' + userId).innerText = newExp;
+            });
+    }
+
+    function deleteUser(userId) {
+        if (!confirm("Révoquer l'accès de cet utilisateur ?")) return;
+
+        fetch('/admin/users/delete/' + userId, {
+            method: 'POST',
+            headers: { [header]: token }
+        })
+            .then(res => {
+                if (res.ok) document.getElementById('user-row-' + userId).remove();
+            });
+    }
+</script>
+</body>
+</html>

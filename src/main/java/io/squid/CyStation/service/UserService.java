@@ -1,20 +1,17 @@
 package io.squid.CyStation.service;
 
-import io.squid.CyStation.config.SecurityConfig;
 import io.squid.CyStation.enums.Role;
 import io.squid.CyStation.model.User;
 import io.squid.CyStation.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -30,6 +27,7 @@ public class UserService {
     }
 
 
+
     public void save(User user) {
 
         if (!user.isAdult()) {
@@ -37,7 +35,7 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.PASSENGER);
+        user.setRole(Role.ROLE_PASSENGER);
         userRepository.save(user);
     }
 
@@ -48,7 +46,8 @@ public class UserService {
 
     @Transactional
     public void deleteAccount(String email) {
-        User user = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
 
         if (user != null) {
             userRepository.delete(user);
@@ -59,16 +58,17 @@ public class UserService {
     @Transactional
     public void updateUserProfile(String email, User userForm) {
 
-        User userEnBase = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
 
-        if (userEnBase != null) {
+        if (user != null) {
 
-            userEnBase.setFirstName(userForm.getFirstName());
-            userEnBase.setLastName(userForm.getLastName());
+            user.setFirstName(userForm.getFirstName());
+            user.setLastName(userForm.getLastName());
 
-            userEnBase.setProfilePicture(userForm.getProfilePicture());
+            user.setProfilePicture(userForm.getProfilePicture());
 
-            userRepository.save(userEnBase);
+            userRepository.save(user);
         }
     }
 
@@ -77,26 +77,61 @@ public class UserService {
         user.setExperience(user.getExperience()+expToAdd);
 
         if(user.getExperience()<= 0){
-            user.setRole(Role.PASSENGER);
+            user.setRole(Role.ROLE_PASSENGER);
         }
-        else if(user.getExperience()>=50 && user.getExperience()<10){
-            user.setRole(Role.SCIENTIST);
+        else if(user.getExperience()>=50 && user.getExperience()<100){
+            user.setRole(Role.ROLE_SCIENTIST);
         }
         else if (user.getExperience()>=100) {
-            user.setRole(Role.ADMIN);
+            user.setRole(Role.ROLE_ADMIN);
         }
 
         userRepository.save(user);
+        refreshUserRole(user);
+
     }
+
 
 
     public void resetExp(User user){
         user.setExperience(0);
-        user.setRole(Role.PASSENGER);
+        user.setRole(Role.ROLE_PASSENGER);
 
         userRepository.save(user);
+        refreshUserRole(user);
     }
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'id : " + id));
+    }
+
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Impossible de supprimer : utilisateur inexistant.");
+        }
+        userRepository.deleteById(id);
+    }
+
+    public void refreshUserRole(User user) {
+
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                user.getEmail(),
+                user.getPassword(),
+                authorities
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
 }
+
+
 
 

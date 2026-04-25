@@ -5,6 +5,7 @@ import io.squid.CyStation.repository.UserRepository;
 import io.squid.CyStation.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
 
-        if(userRepository.findUserByEmail(user.getEmail()) != null) {
+        if(userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             return "redirect:/register?error";
         }
         else {
@@ -52,10 +53,12 @@ public class UserController {
     }
 
 
+
     @GetMapping("/userInfo")
     public String userInfo(Principal principal, Model model){
 
-        User user = userRepository.findUserByEmail(principal.getName());
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
         model.addAttribute("user", user);
         return "public/userInfo";
     }
@@ -77,7 +80,8 @@ public class UserController {
 
     @PostMapping("/user/updateExp")
     public String updateExp(@RequestParam("amount") int amount, Principal principal, Model model){
-        User user = userRepository.findUserByEmail(principal.getName());
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
         userService.addExp(user, amount);
         model.addAttribute("user", user);
         return "redirect:/userInfo";
@@ -86,7 +90,8 @@ public class UserController {
     @PostMapping("/user/reset-exp")
     @ResponseBody
     public String resetExp(Principal principal, Model model){
-        User user = userRepository.findUserByEmail(principal.getName());
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
         userService.resetExp(user);
         model.addAttribute("user", user);
         return "redirect:/userInfo";

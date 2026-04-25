@@ -17,7 +17,11 @@ public class User {
     private String password;
     private String email;
     private int experience;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+
     private String profilePicture = "default-avatar.png";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -32,7 +36,7 @@ public class User {
     }
 
 
-    public Long getID() {
+    public Long getId() {
         return id;
     }
 

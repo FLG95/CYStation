@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -17,6 +18,12 @@
 
     <section class="cnes-hero">
         <div class="cnes-hero-content">
+
+
+            <a sec:authorize="hasAuthority('2')" th:href="@{/admin/users}" class="cnes-btn-nav alt-btn">
+                Administration (Test Chiffre)
+            </a>
+
             <span class="tag">Opérations en cours</span>
             <h1>CYStation</h1>
             <p>Suivez en temps réel la maintenance des systèmes et les recherches scientifiques menées à 400km d'altitude.</p>

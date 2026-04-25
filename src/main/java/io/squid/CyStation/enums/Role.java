@@ -1,9 +1,9 @@
 package io.squid.CyStation.enums;
 
 public enum Role{
-    PASSENGER("Passager"),
-    SCIENTIST("Scientifique"),
-    ADMIN("Administrateur");
+    ROLE_PASSENGER("Passager"),
+    ROLE_SCIENTIST("Scientifique"),
+    ROLE_ADMIN("Administrateur");
 
 
     private final String displayValue;

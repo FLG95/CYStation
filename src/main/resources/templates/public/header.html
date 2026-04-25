@@ -25,15 +25,19 @@
         <a sec:authorize="isAnonymous()" th:href="@{/register}" class="cnes-btn-nav alt-btn">Inscription</a>
 
         <a sec:authorize="isAuthenticated()" th:href="@{/userInfo}" class="cnes-btn-nav alt-btn">Mon Profil</a>
+
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="cnes-btn-nav logout-btn">Déconnexion</button>
         </form>
 
-        <div sec:authorize="isAuthenticated()" class="header-avatar-wrapper">
-            <img th:src="@{/images/avatars/{name}(name=${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails) ? @userRepository.findUserByEmail(#authentication.name).profilePicture : 'default-avatar.png'})}"
-                 alt="Avatar"
-                 class="header-avatar-img">
-        </div>
+
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/}"
+           class="cnes-btn-nav alt-btn">
+            Administration
+        </a>
+
+
     </div>
 
 </header>

@@ -1,0 +1,105 @@
+.admin-table-container {
+    background: var(--color-2);
+    border: 1px solid var(--color-5);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    color: var(--color-10);
+}
+
+.admin-table th {
+    background: var(--color-3);
+    color: var(--color-9);
+    padding: 18px 20px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    border-bottom: 2px solid var(--color-5);
+}
+
+.admin-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.admin-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 600;
+    color: var(--color-10);
+    font-size: 1rem;
+}
+
+.user-info small {
+    color: var(--color-6);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.role-badge {
+    background: var(--color-4);
+    color: var(--color-9);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    border: 1px solid var(--color-6);
+}
+
+#exp-value {
+    color: var(--color-8);
+    font-weight: bold;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-action {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-exp {
+    background: transparent;
+    color: var(--color-7);
+    border-color: var(--color-7);
+}
+
+.btn-exp:hover {
+    background: var(--color-7);
+    color: var(--color-1);
+    box-shadow: 0 0 15px var(--color-7);
+}
+
+.btn-delete {
+    background: transparent;
+    color: var(--color-11);
+    border-color: var(--color-11);
+}
+
+.btn-delete:hover {
+    background: var(--color-11);
+    color: #fff;
+    box-shadow: 0 0 15px var(--color-11);
+}
