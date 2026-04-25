@@ -1,7 +1,10 @@
+/* --- about.css --- */
+/* On surcharge uniquement l'image du Hero défini dans index.css */
 #hero-about {
     background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
 }
 
+/* --- SECTION PRÉSENTATION VAISSEAU --- */
 .ship-presentation {
     display: flex;
     gap: 40px;
@@ -23,6 +26,7 @@
     line-height: 1.8;
 }
 
+/* --- CARTES DE STATISTIQUES (Basées sur .cnes-card) --- */
 .stat-card {
     padding: 40px 20px;
     text-align: center;
@@ -47,12 +51,7 @@
     font-size: 0.9rem;
 }
 
-.cnes-card .card-image img {
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    width: 100%;
-}
-
+/* --- RESPONSIVITÉ --- */
 @media (max-width: 900px) {
     .ship-presentation {
         flex-direction: column;
