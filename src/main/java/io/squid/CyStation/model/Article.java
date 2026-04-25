@@ -11,13 +11,14 @@ public class Article {
     private Long id;
 
     private String title;
-
     private String subtitle;
 
     private LocalDateTime date;
 
     @Column(columnDefinition = "TEXT")
     private String articleText;
+
+    private String imageUrl;
 
     public Article() {
     }
@@ -61,8 +62,6 @@ public class Article {
     public void setArticleText(String articleText) {
         this.articleText = articleText;
     }
-
-    private String imageUrl;
 
     public String getImageUrl() {
         return imageUrl;

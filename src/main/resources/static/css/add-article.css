@@ -97,6 +97,90 @@
     background-color: rgba(0, 9, 36, 0.9);
 }
 
+.dropdown-check-list {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-check-list .anchor {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 15px;
+    background-color: rgba(0, 9, 36, 0.7);
+    border: 1px solid var(--color-4);
+    color: var(--color-10);
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.dropdown-check-list .anchor:hover {
+    border-color: var(--color-7);
+    box-shadow: 0 0 10px rgba(70, 207, 179, 0.3);
+    background-color: rgba(0, 9, 36, 0.9);
+}
+
+.dropdown-check-list .anchor:after {
+    position: absolute;
+    content: "▼";
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+}
+
+.dropdown-check-list .items {
+    padding: 5px;
+    display: none;
+    margin: 0;
+    border: 1px solid var(--color-4);
+    border-top: none;
+    background-color: rgba(0, 9, 36, 0.95);
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 10;
+    list-style-type: none;
+}
+
+.dropdown-check-list.visible .items {
+    display: block;
+}
+
+.dropdown-check-list .items li {
+    padding: 10px;
+    color: var(--color-10);
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.dropdown-check-list .items li:hover {
+    background-color: rgba(70, 207, 179, 0.15);
+}
+
+.dropdown-check-list .items input[type="checkbox"] {
+    margin-right: 12px;
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.dropdown-check-list .items label {
+    cursor: pointer;
+    margin: 0;
+    width: 100%;
+    font-size: 0.95rem;
+    color: var(--color-10);
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: normal;
+}
+
 .terminal-actions {
     display: flex;
     gap: 20px;
