@@ -22,11 +22,15 @@ public class ArticleService {
         return articleRepository.findByTitleContainingIgnoreCase(keyword);
     }
 
-    // Nouvelle méthode pour sauvegarder
     public void saveArticle(Article article) {
         articleRepository.save(article);
     }
+
     public Article getArticleById(Long id) {
         return articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article non trouvé"));
+    }
+
+    public List<Article> findAll() {
+        return articleRepository.findAll();
     }
 }

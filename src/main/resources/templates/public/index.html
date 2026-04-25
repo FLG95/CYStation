@@ -27,20 +27,26 @@
         </div>
     </section>
 
-    <div class="cnes-grid news-grid">
-        <article class="cnes-card" th:each="article : ${latestArticles}">
-            <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block;">
-                <div class="card-content" style="display: flex; flex-direction: column; gap: 8px;">
-                <span class="card-date" style="color: #bbb; font-size: 0.9em;"
-                      th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
-
-                    <h3 th:text="${article.title}" style="font-weight: bold; margin: 0; color: #ffffff;"></h3>
-
-                    <p th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
-                </div>
+    <section class="cnes-section">
+        <div class="section-header">
+            <a th:href="@{/articles}" style="text-decoration: none; display: inline-block;">
+                <h2>Articles <span style="font-size: 0.5em; color: var(--color-7); vertical-align: middle;">► Voir tout</span></h2>
             </a>
-        </article>
-    </div>
+        </div>
+        <div class="cnes-grid news-grid">
+            <article class="infra-card" th:each="article, iterStat : ${latestArticles}" th:if="${iterStat.index &lt; 4}">
+                <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block; height: 100%;">
+                    <img th:src="${article.imageUrl != null and !article.imageUrl.isEmpty() ? article.imageUrl : 'https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80'}" alt="Image Article">
+                    <div class="infra-overlay" style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="color: var(--color-7); font-size: 0.9em; font-weight: bold;"
+                          th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+                        <h3 th:text="${article.title}"></h3>
+                        <p th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </section>
 
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">

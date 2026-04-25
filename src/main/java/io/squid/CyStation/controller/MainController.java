@@ -4,6 +4,7 @@ import io.squid.CyStation.model.Article;
 import io.squid.CyStation.service.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,6 @@ public class MainController {
         this.articleService = articleService;
     }
 
-
-
     @GetMapping({"/", "/index"})
     public String index(Model model) {
         model.addAttribute("latestArticles", articleService.getLatestArticles());
@@ -32,23 +31,21 @@ public class MainController {
         return "public/about";
     }
 
-    // Affiche le formulaire de création
+    @GetMapping("/articles")
+    public String showAllArticles(Model model) {
+        model.addAttribute("allArticles", articleService.findAll());
+        return "public/articles";
+    }
+
     @GetMapping("/article/add")
-    public String showAddArticleForm() {
+    public String showAddArticleForm(Model model) {
+        model.addAttribute("article", new Article());
         return "public/add-article";
     }
 
-    // Enregistre l'article dans la base de données
     @PostMapping("/article/add")
-    public String saveArticle(@RequestParam String title,
-                              @RequestParam String subtitle,
-                              @RequestParam String articleText) {
-        Article article = new Article();
-        article.setTitle(title);
-        article.setSubtitle(subtitle);
-        article.setArticleText(articleText);
-        article.setDate(LocalDateTime.now()); // Définit la date actuelle
-
+    public String saveArticle(@ModelAttribute Article article) {
+        article.setDate(LocalDateTime.now());
         articleService.saveArticle(article);
         return "redirect:/";
     }
@@ -64,7 +61,6 @@ public class MainController {
 
     @GetMapping("/article/{id}")
     public String showArticleDetail(@PathVariable Long id, Model model) {
-        // On récupère l'article via le service
         Article article = articleService.getArticleById(id);
         model.addAttribute("article", article);
         return "public/article-detail";

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CYStation - Tous les Articles</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout" style="padding-top: 60px; min-height: 80vh;">
+
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>Tous les Articles</h2>
+        </div>
+        <div class="cnes-grid news-grid">
+            <article class="infra-card" th:each="article : ${allArticles}">
+                <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block; height: 100%;">
+                    <img th:src="${article.imageUrl != null and !article.imageUrl.isEmpty() ? article.imageUrl : 'https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80'}" alt="Image Article">
+                    <div class="infra-overlay" style="display: flex; flex-direction: column; gap: 8px;">
+                        <span style="color: var(--color-7); font-size: 0.9em; font-weight: bold;"
+                              th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+                        <h3 th:text="${article.title}"></h3>
+                        <p th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+</body>
+</html>

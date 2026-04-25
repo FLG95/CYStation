@@ -2,30 +2,41 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${article.title}">Détail de l'article</title>
+    <title th:text="${article.title}">CYStation - Article</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/article-detail.css}">
 </head>
-<body style="background-color: #1a1a1a; color: white;">
+<body>
 
 <div th:replace="~{public/header :: header}"></div>
 
-<main class="container" style="padding: 100px 20px; max-width: 900px; margin: auto;">
-    <header style="margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 20px;">
-        <span style="color: #bbb;" th:text="${#temporals.format(article.date, 'dd MMMM yyyy à HH:mm')}"></span>
-        <h1 th:text="${article.title}" style="font-size: 2.5em; font-weight: bold; margin: 10px 0;"></h1>
-        <p th:text="${article.subtitle}" style="font-size: 1.2em; color: #ddd; font-style: italic;"></p>
-    </header>
+<main class="cnes-layout">
 
-    <article style="line-height: 1.8; font-size: 1.1em; white-space: pre-wrap;" th:text="${article.articleText}">
-    </article>
+    <section class="cnes-hero article-hero" th:style="${article.imageUrl != null and !article.imageUrl.isEmpty() ? 'background-image: url(' + article.imageUrl + ');' : 'background-image: url(https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80);'}">
+        <div class="cnes-hero-content">
+            <span class="tag" th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+            <h1 th:text="${article.title}"></h1>
+            <p th:text="${article.subtitle}"></p>
+        </div>
+    </section>
 
-    <div style="margin-top: 50px;">
-        <a th:href="@{/}" class="cnes-btn">Retour à l'accueil</a>
-    </div>
+    <section class="cnes-section">
+        <div class="article-text-section">
+            <div class="article-body" th:text="${article.articleText}"></div>
+
+            <div class="article-actions">
+                <a th:href="@{/}" class="cnes-btn">Retour à l'accueil</a>
+                <a th:href="@{/articles}" class="cnes-btn" style="background-color: var(--color-3); border-color: var(--color-3);">Tous les articles</a>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
+
 </body>
 </html>

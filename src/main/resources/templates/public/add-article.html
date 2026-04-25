@@ -2,33 +2,53 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter un Article</title>
+    <title>CYStation - Terminal de Rapport</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/add-article.css}">
 </head>
-<body>
+<body class="cnes-layout">
+
 <div th:replace="~{public/header :: header}"></div>
 
-<main class="container" style="padding: 50px 20px; max-width: 800px; margin: auto;">
-    <h1>Créer un nouvel article</h1>
-    <form th:action="@{/article/add}" method="post" style="display: flex; flex-direction: column; gap: 15px;">
-        <div>
-            <label>Titre principal :</label><br>
-            <input type="text" name="title" required style="width: 100%; padding: 8px;">
+<main class="space-bg">
+    <div class="mission-terminal">
+        <div class="terminal-header">
+            <span class="status-blink"></span>
+            <span class="terminal-title">Console d'enregistrement de mission</span>
         </div>
-        <div>
-            <label>Sous-titre :</label><br>
-            <input type="text" name="subtitle" required style="width: 100%; padding: 8px;">
-        </div>
-        <div>
-            <label>Contenu de l'article :</label><br>
-            <textarea name="articleText" rows="10" required style="width: 100%; padding: 8px;"></textarea>
-        </div>
-        <button type="submit" class="cnes-btn" style="width: fit-content; background-color: #3498db;">Publier l'article</button>
-    </form>
+
+        <form th:action="@{/article/add}" method="post" class="terminal-body">
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="title">Designation de la mission</label>
+                    <input type="text" id="title" name="title" placeholder="Titre de l'article" required>
+                </div>
+                <div class="input-group">
+                    <label for="subtitle">Code d'appel / Sous-titre</label>
+                    <input type="text" id="subtitle" name="subtitle" placeholder="Bref résumé" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="imageUrl">Flux visuel (URL de l'image)</label>
+                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://lien-vers-image.jpg">
+            </div>
+
+            <div class="input-group">
+                <label for="content">Données du rapport</label>
+                <textarea id="articleText" name="articleText" rows="12" placeholder="Saisissez le contenu ici..." required></textarea>            </div>
+
+            <div class="terminal-actions">
+                <button type="submit" class="cnes-btn-active">Transmettre au centre de commande</button>
+                <a th:href="@{/}" class="cnes-btn-ghost">Annuler la transmission</a>
+            </div>
+        </form>
+    </div>
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
+
 </body>
 </html>

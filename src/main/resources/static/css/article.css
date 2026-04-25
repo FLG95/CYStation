@@ -1,0 +1,63 @@
+/* --- about.css --- */
+/* On surcharge uniquement l'image du Hero défini dans index.css */
+#hero-about {
+    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
+}
+
+/* --- SECTION PRÉSENTATION VAISSEAU --- */
+.ship-presentation {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.ship-presentation img {
+    width: 50%;
+    border-radius: 4px;
+    border: 1px solid var(--color-3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.ship-text p {
+    font-size: 1.15rem;
+    color: var(--color-10);
+    opacity: 0.9;
+    line-height: 1.8;
+}
+
+/* --- CARTES DE STATISTIQUES (Basées sur .cnes-card) --- */
+.stat-card {
+    padding: 40px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-card h3 {
+    color: var(--color-7);
+    font-size: 2.5rem;
+    margin: 0;
+    text-shadow: 0 0 15px rgba(70, 207, 179, 0.2);
+}
+
+.stat-card p {
+    color: var(--color-10);
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+/* --- RESPONSIVITÉ --- */
+@media (max-width: 900px) {
+    .ship-presentation {
+        flex-direction: column;
+    }
+
+    .ship-presentation img {
+        width: 100%;
+    }
+}

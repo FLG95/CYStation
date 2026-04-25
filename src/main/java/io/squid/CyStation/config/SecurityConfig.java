@@ -16,31 +16,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        // Ajout de "/articles" dans la liste permitAll()
+                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/images/**", "/about", "/article/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
+                .logout((logout) -> logout.permitAll());
 
-        httpSecurity.authorizeHttpRequests(auth -> auth
-                // Ajout de "/article/**" pour rendre la lecture des articles publique
-                .requestMatchers("/register", "/login", "/index", "/", "/about", "/article/**", "/css/**", "/images/**").permitAll()
-                .anyRequest().authenticated());
-
-        httpSecurity.formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/index", true)
-                .permitAll());
-
-        httpSecurity.logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll());
-
-        httpSecurity.headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin())
-        );
-        return httpSecurity.build();
-
+        return http.build();
     }
 }
