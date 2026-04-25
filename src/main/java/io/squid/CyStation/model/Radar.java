@@ -17,6 +17,12 @@ public class Radar extends Sensor{
     }
 
     @Override
+    public boolean updateTelemetry() {
+        this.setDetected((int)(Math.random() * 6)); // entre 0 et 5
+        return true;
+    }
+
+    @Override
     public String getDeviceCategoryCode() {
         return DeviceCategory.RADAR.name();
     }

@@ -17,6 +17,12 @@ public class Co2Sensor extends Sensor {
     }
 
     @Override
+    public boolean updateTelemetry() {
+        this.setPpmLevel(400 + (int)(Math.random() * 400)); // entre 400 et 800 ppm
+        return true;
+    }
+
+    @Override
     public String getDeviceCategoryCode() {
         return DeviceCategory.CO2_SENSOR.name();
     }

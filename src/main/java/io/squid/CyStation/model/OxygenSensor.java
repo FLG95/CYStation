@@ -17,6 +17,12 @@ public class OxygenSensor extends Sensor{
     }
 
     @Override
+    public boolean updateTelemetry() {
+        this.setO2Percentage(0 + (int)(Math.random() * 101)); // entre 0 et 100
+        return true;
+    }
+
+    @Override
     public String getDeviceCategoryCode() {
         return DeviceCategory.OXYGEN_SENSOR.name();
     }
