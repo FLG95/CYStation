@@ -5,6 +5,7 @@ import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.ArticleService;
 import io.squid.CyStation.service.ZoneService;
 import org.springframework.stereotype.Controller;
+import java.util.List;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,8 +50,10 @@ public class MainController {
     }
 
     @PostMapping("/article/add")
-    public String saveArticle(@ModelAttribute Article article) {
+    public String saveArticle(@ModelAttribute Article article,
+                              @RequestParam(value = "types", required = false) List<String> types) {
         article.setDate(LocalDateTime.now());
+        article.setTypes(types != null ? String.join(",", types) : "");
         articleService.saveArticle(article);
         return "redirect:/";
     }

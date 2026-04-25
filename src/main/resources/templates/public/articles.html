@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>CYStation - Tous les Articles</title>
@@ -14,39 +13,41 @@
 <div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout" style="padding-top: 60px; min-height: 80vh;">
-
     <section class="cnes-section">
-        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <h2>Tous les Articles</h2>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+
+        <div class="section-header" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <h2>Tous les Articles</h2>
                 <input type="text" id="searchInput" placeholder="Rechercher un article..."
-                       style="padding: 10px; width: 280px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;">
-                <select id="typeFilter"
-                        style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; background: var(--color-bg, #0a0a1a); color: white; cursor: pointer;">
-                    <option value="">Tous les types</option>
-                    <option value="espace">- Espace</option>
-                    <option value="nature">- Nature</option>
-                    <option value="urgent">- Urgent</option>
-                    <option value="technologie">- Technologie</option>
-                    <option value="science">- Science</option>
-                    <option value="general">- Général</option>
-                </select>
+                       style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;">
+            </div>
+
+            <div id="typeFilters" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <button class="type-btn active" data-type="">Tous</button>
+                <button class="type-btn" data-type="espace">Espace</button>
+                <button class="type-btn" data-type="nature">Nature</button>
+                <button class="type-btn" data-type="urgent">Urgent</button>
+                <button class="type-btn" data-type="technologie">Technologie</button>
+                <button class="type-btn" data-type="science">Science</button>
             </div>
         </div>
 
         <div class="cnes-grid news-grid" id="articlesGrid">
             <article class="infra-card article-item"
                      th:each="article : ${allArticles}"
-                     th:attr="data-type=${article.type}, data-text=${article.articleText}">
+                     th:attr="data-types=${article.types},data-text=${article.articleText}">
                 <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block; height: 100%;">
                     <img th:src="${article.imageUrl != null and !article.imageUrl.isEmpty() ? article.imageUrl : 'https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80'}" alt="Image Article">
                     <div class="infra-overlay" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;">
                             <span style="color: var(--color-7); font-size: 0.9em; font-weight: bold;"
                                   th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
-                            <span th:if="${article.type != null and !article.type.isEmpty()}"
-                                  th:text="${article.type}"
-                                  style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-size: 0.8em; text-transform: capitalize;"></span>
+                            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                <span th:each="t : ${article.typeList}"
+                                      th:text="${t}"
+                                      style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-size: 0.75em; text-transform: capitalize;">
+                                </span>
+                            </div>
                         </div>
                         <h3 class="article-title" th:text="${article.title}"></h3>
                         <p class="article-subtitle" th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
@@ -59,30 +60,73 @@
             Aucun article trouvé.
         </p>
     </section>
-
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
 
+<style>
+    .type-btn {
+        padding: 7px 16px;
+        border-radius: 20px;
+        border: 1px solid var(--color-3);
+        background: transparent;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    .type-btn:hover { background: rgba(255,255,255,0.1); }
+    .type-btn.active { background: var(--color-7); border-color: var(--color-7); color: #000; font-weight: bold; }
+</style>
+
 <script>
     const searchInput = document.getElementById('searchInput');
-    const typeFilter  = document.getElementById('typeFilter');
     const noResult    = document.getElementById('noResult');
+    const typeButtons = document.querySelectorAll('.type-btn');
+
+    let activeTypes = new Set();
+
+    typeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.type;
+
+            if (type === '') {
+                activeTypes.clear();
+                typeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            } else {
+                document.querySelector('.type-btn[data-type=""]').classList.remove('active');
+
+                if (activeTypes.has(type)) {
+                    activeTypes.delete(type);
+                    btn.classList.remove('active');
+                } else {
+                    activeTypes.add(type);
+                    btn.classList.add('active');
+                }
+
+                if (activeTypes.size === 0) {
+                    document.querySelector('.type-btn[data-type=""]').classList.add('active');
+                }
+            }
+
+            filterArticles();
+        });
+    });
 
     function filterArticles() {
-        const keyword = searchInput.value.toLowerCase().trim();
-        const type    = typeFilter.value.toLowerCase();
+        const keyword  = searchInput.value.toLowerCase().trim();
         const articles = document.querySelectorAll('.article-item');
         let visible = 0;
 
-        articles.forEach(function(article) {
+        articles.forEach(article => {
             const title    = (article.querySelector('.article-title')?.textContent || '').toLowerCase();
             const subtitle = (article.querySelector('.article-subtitle')?.textContent || '').toLowerCase();
             const text     = (article.dataset.text || '').toLowerCase();
-            const artType  = (article.dataset.type || '').toLowerCase();
+            const artTypes = (article.dataset.types || '').toLowerCase().split(',').map(t => t.trim());
 
             const matchesKeyword = !keyword || title.includes(keyword) || subtitle.includes(keyword) || text.includes(keyword);
-            const matchesType    = !type || artType === type;
+            const matchesType    = activeTypes.size === 0 || [...activeTypes].every(t => artTypes.includes(t));
 
             if (matchesKeyword && matchesType) {
                 article.style.display = '';
@@ -96,7 +140,6 @@
     }
 
     searchInput.addEventListener('keyup', filterArticles);
-    typeFilter.addEventListener('change', filterArticles);
 </script>
 
 </body>
