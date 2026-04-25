@@ -1,50 +1,38 @@
 package io.squid.CyStation.controller;
 
-import io.squid.CyStation.service.UserService;
+import io.squid.CyStation.service.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
 
-    private final UserService userService;
+    private final ArticleService articleService;
 
-    public MainController(UserService userService) {
-        this.userService = userService;
+    public MainController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    @RequestMapping({"/" , "/index"})
-    public String index(){
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("latestArticles", articleService.getLatestArticles());
         return "public/index";
     }
 
-    @RequestMapping("/about")
-    public String about(Model model){
-        model.addAttribute("usersList", userService.getAllUsers());
+    // Nouvelle méthode pour accéder à la page About
+    @GetMapping("/about")
+    public String about() {
         return "public/about";
     }
 
-    @RequestMapping("/reactor")
-    public String reactor(){ return "engineer/reactor";}
-
-    @RequestMapping("/hydroponic")
-    public String hydroponic(){ return "engineer/hydroponic";}
-
-    @RequestMapping("/telemetry")
-    public String telemetry(){ return "radio";}
-
-    @RequestMapping("/astrometry")
-    public String astrometry(){ return "radar";}
-
-    @RequestMapping("/mission")
-    public String mission() {
-        return "public/mission";
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            model.addAttribute("articles", articleService.searchArticles(keyword));
+        }
+        model.addAttribute("keyword", keyword);
+        return "public/search";
     }
-
-    @RequestMapping("/control")
-    public String control() {
-        return "public/control";
-    }
-
 }
