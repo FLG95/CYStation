@@ -15,6 +15,10 @@ public class Zone {
     @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Device> devices = new ArrayList<>();
 
+
+    @Column(length = 500)
+    private String description;
+
     public Zone() {}
 
     public Long getId() {
@@ -35,4 +39,11 @@ public class Zone {
     public void setDevices(List<Device> devices) { this.devices = devices; }
 
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

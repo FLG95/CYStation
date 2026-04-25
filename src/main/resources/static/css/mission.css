@@ -271,3 +271,32 @@ iframe {
     vertical-align: middle;
     letter-spacing: 0.5px;
 }
+
+
+.editable-zone-name, .editable-zone-desc {
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.editable-zone-name:hover, .editable-zone-desc:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-7);
+    cursor: text;
+}
+
+.editable-zone-name:focus, .editable-zone-desc:focus {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--color-9);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.editable-zone-desc {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 15px;
+    min-height: 1.2em;
+    display: block;
+}
