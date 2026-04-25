@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class MissionController {
+public class ZoneController {
 
     private final ZoneRepository zoneRepository;
     private final ZoneService zoneService;
@@ -22,10 +22,10 @@ public class MissionController {
     private final DeviceService deviceService;
 
 
-    public MissionController(ZoneRepository zoneRepository,
-                             ZoneService zoneService,
-                             DeviceRepository deviceRepository,
-                             DeviceService deviceService){
+    public ZoneController(ZoneRepository zoneRepository,
+                          ZoneService zoneService,
+                          DeviceRepository deviceRepository,
+                          DeviceService deviceService){
         this.zoneRepository = zoneRepository;
         this.zoneService = zoneService;
         this.deviceRepository = deviceRepository;
@@ -33,12 +33,16 @@ public class MissionController {
     }
 
 
-    @GetMapping("/mission")
+
+
+    @GetMapping("/zone-overview")
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
-        return "public/mission";
+        return "public/zone-overview";
     }
+
+
 
     @PostMapping("/mission/zone/create")
     public String createZone(@RequestParam String name, @RequestParam String description) {

@@ -1,5 +1,7 @@
 package io.squid.CyStation.controller;
+import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.model.User;
+import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    ZoneRepository zoneRepository;
 
 
     @GetMapping("/")
@@ -39,4 +44,13 @@ public class AdminController {
         userService.save(user);
         return ResponseEntity.ok(user.getExperience());
     }
+
+    @GetMapping("/zone")
+    public String showMissionPage(Model model) {
+        model.addAttribute("zones", zoneRepository.findAll());
+        model.addAttribute("deviceCategories", DeviceCategory.values());
+        return "admin/zone";
+    }
+
+
 }

@@ -24,7 +24,8 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Utilisateur</th>
+                <th>Identité & Contact</th>
+                <th>Naissance</th>
                 <th>Rôle</th>
                 <th>Expérience</th>
                 <th>Actions</th>
@@ -33,20 +34,34 @@
             <tbody>
             <tr th:each="user : ${users}" th:id="'user-row-' + ${user.id}">
                 <td th:text="${user.id}">1</td>
+
                 <td>
                     <div class="user-info">
-                        <small th:text="${user.email}">email@cnes.fr</small>
+                        <span class="username" th:text="${user.firstName + ' ' + user.lastName}">Prénom Nom</span>
+                        <small class="user-email" th:text="${user.email}">email@cnes.fr</small>
                     </div>
                 </td>
+
                 <td>
-                    <span class="role-badge" th:text="${user.role}">USER</span>
+                    <div class="birth-info">
+                        <span th:text="${user.birthDate != null ? #temporals.format(user.birthDate, 'dd/MM/yyyy') : 'N/A'}">01/01/2000</span>
+                        <small class="gender-label" th:text="${user.gender.getDisplayValue()}">Homme</small>
+                    </div>
                 </td>
+
                 <td>
+                    <span th:id="'role-' + ${user.id}" class="role-badge" th:text="${user.role}">USER</span></td>
+                <td>
+                <span class="xp-value">
                     <span th:id="'exp-' + ${user.id}" th:text="${user.experience}">100</span> XP
+                </span>
                 </td>
+
                 <td class="actions-cell">
-                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50 XP</button>
-                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer</button>
+                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50</button>
+                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, -50)|">-50</button>
+                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Suprimer l'utilisateur<i
+                            class="fas fa-trash"></i></button>
                 </td>
             </tr>
             </tbody>
@@ -65,12 +80,25 @@
 
         fetch('/admin/users/add-exp', {
             method: 'POST',
-            headers: { [header]: token },
+            headers: {[header]: token},
             body: formData
         })
             .then(res => res.json())
             .then(newExp => {
                 document.getElementById('exp-' + userId).innerText = newExp;
+
+                let newRole = "ROLE_PASSENGER";
+                if (newExp >= 50) {
+                    newRole = "ROLE_SCIENTIST";
+                } else if (newExp >= 100) {
+                    newRole = "ROLE_ADMIN";
+                }
+
+                const roleBadge = document.getElementById('role-' + userId);
+                if (roleBadge) {
+                    roleBadge.innerText = newRole;
+
+                }
             });
     }
 
@@ -79,7 +107,7 @@
 
         fetch('/admin/users/delete/' + userId, {
             method: 'POST',
-            headers: { [header]: token }
+            headers: {[header]: token}
         })
             .then(res => {
                 if (res.ok) document.getElementById('user-row-' + userId).remove();

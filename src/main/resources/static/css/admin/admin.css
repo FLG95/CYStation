@@ -2,9 +2,8 @@
     background: var(--color-2);
     border: 1px solid var(--color-5);
     border-radius: 12px;
-    overflow: hidden;
-    margin: 2rem 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+
 }
 
 .admin-table {
@@ -37,17 +36,43 @@
 .user-info {
     display: flex;
     flex-direction: column;
+    gap: 2px;
 }
 
 .username {
     font-weight: 600;
     color: var(--color-10);
+    font-size: 0.95rem;
+}
+
+.user-email {
+    color: var(--color-6);
     font-size: 1rem;
+    opacity: 0.8;
 }
 
 .user-info small {
     color: var(--color-6);
     font-family: 'Courier New', Courier, monospace;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    padding: 0 10px;
+}
+
+.section-header h1 {
+    color: var(--color-10);
+    margin: 0;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.section-header p {
+    color: var(--color-6);
+    margin-top: 0.5rem;
+    opacity: 0.8;
 }
 
 .role-badge {
@@ -59,9 +84,24 @@
     border: 1px solid var(--color-6);
 }
 
-#exp-value {
-    color: var(--color-8);
+.xp-value {
+    font-family: 'Courier New', monospace;
+    color: var(--color-9);
     font-weight: bold;
+}
+
+.birth-info {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.gender-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--color-6);
+    letter-spacing: 1px;
 }
 
 .actions-cell {
@@ -103,3 +143,37 @@
     color: #fff;
     box-shadow: 0 0 15px var(--color-11);
 }
+
+body.bg-dark {
+    background-color: var(--color-1);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.cnes-layout {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.admin-table tbody tr:nth-child(odd) {
+    background-color: transparent;
+}
+
+
+.admin-table tbody tr:hover {
+    background-color: rgba(0, 255, 157, 0.05) !important;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table th:nth-child(1) { width: 50px; }
+.admin-table th:nth-child(2) { width: 220px; }
+.admin-table th:nth-child(3) { width: 130px; }
+.admin-table th:nth-child(4) { width: 120px; }
+.admin-table th:nth-child(5) { width: 100px; }
