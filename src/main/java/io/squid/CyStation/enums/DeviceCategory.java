@@ -9,7 +9,8 @@ public enum DeviceCategory {
     GENERATOR("Générateur", Generator::new),
     RADAR("Radar Orbital", Radar::new),
     RADIO("Relais Radio", Radio::new),
-    OXYGEN_SENSOR("Capteur Oxygène", OxygenSensor::new);
+    OXYGEN_SENSOR("Capteur Oxygène", OxygenSensor::new),
+    RADIATION_SENSOR("Capteur de Radiation", OxygenSensor::new);
 
     private final String displayName;
     private final Supplier<Device> instantiator;
