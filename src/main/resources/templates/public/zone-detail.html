@@ -21,12 +21,22 @@
 <div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout">
+
     <section class="section-header">
-        <h1 th:text="${zone.name}"
-            contenteditable="true"
-            class="editable-zone-name"
-            th:onblur="|updateZoneAjax(${zone.id}, this, 'name')|">
-        </h1>
+        <div class="header-with-actions">
+            <h1 th:text="${zone.name}"
+                contenteditable="true"
+                class="editable-zone-name"
+                th:onblur="|updateZoneAjax(${zone.id}, this, 'name')|">
+            </h1>
+
+            <button class="btn-action btn-delete"
+                    th:onclick="'deleteZoneAjax(' + ${zone.id} + ')'"
+                    title="Supprimer cette zone">
+                Supprimer la Zone
+            </button>
+        </div>
+
         <p th:text="${zone.description != null ? zone.description : 'Ajouter une description...'}"
            contenteditable="true"
            class="editable-zone-desc"

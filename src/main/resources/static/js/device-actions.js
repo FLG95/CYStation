@@ -63,19 +63,28 @@ function deleteZoneAjax(zoneId) {
     })
         .then(response => {
             if (response.ok) {
-                window.location.hash = '#!';
+                // 1. Vérifier si on est sur la page de détail de CETTE zone
+                // Si l'URL contient "/mission/zone/ID" ou si on est sur une page spécifique
+                const isDetailPage = window.location.pathname.includes('/mission/zone/' + zoneId);
 
-                const zoneCard = document.getElementById('zone-card-' + zoneId);
-                if (zoneCard) {
-                    zoneCard.style.transition = "all 0.5s ease";
-                    zoneCard.style.opacity = "0";
-                    zoneCard.style.transform = "scale(0.5)";
-                    setTimeout(() => zoneCard.remove(), 500);
+                if (isDetailPage) {
+
+                    window.location.href = '/index';
+                } else {
+
+                    window.location.hash = '#!';
+
+                    const zoneCard = document.getElementById('zone-card-' + zoneId);
+                    if (zoneCard) {
+                        zoneCard.style.transition = "all 0.5s ease";
+                        zoneCard.style.opacity = "0";
+                        zoneCard.style.transform = "scale(0.5)";
+                        setTimeout(() => zoneCard.remove(), 500);
+                    }
+
+                    const zoneModal = document.getElementById('zoneDetailsModal-' + zoneId);
+                    if (zoneModal) zoneModal.remove();
                 }
-
-                const zoneModal = document.getElementById('zoneDetailsModal-' + zoneId);
-                if (zoneModal) zoneModal.remove();
-
             } else {
                 alert("Erreur lors de la suppression de la zone.");
             }
