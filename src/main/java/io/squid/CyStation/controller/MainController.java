@@ -27,9 +27,7 @@ public class MainController {
     @GetMapping({"/", "/index"})
     public String index(Model model) {
         model.addAttribute("latestArticles", articleService.getLatestArticles());
-
         model.addAttribute("zones", zoneRepository.findAll());
-
         return "public/index";
     }
 

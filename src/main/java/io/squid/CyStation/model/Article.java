@@ -20,54 +20,29 @@ public class Article {
 
     private String imageUrl;
 
+    private String type; // ← NOUVEAU
+
     public Article() {
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getSubtitle() { return subtitle; }
+    public void setSubtitle(String subtitle) { this.subtitle = subtitle; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
 
-    public String getSubtitle() {
-        return subtitle;
-    }
+    public String getArticleText() { return articleText; }
+    public void setArticleText(String articleText) { this.articleText = articleText; }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public String getArticleText() {
-        return articleText;
-    }
-
-    public void setArticleText(String articleText) {
-        this.articleText = articleText;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    public String getType() { return type; }           // ← NOUVEAU
+    public void setType(String type) { this.type = type; } // ← NOUVEAU
 }

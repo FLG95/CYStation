@@ -20,6 +20,11 @@
             <span class="tag" th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
             <h1 th:text="${article.title}"></h1>
             <p th:text="${article.subtitle}"></p>
+            <!-- ← NOUVEAU : type affiché sous l'auteur -->
+            <span class="tag type-tag"
+                  th:if="${article.type != null and !article.type.isEmpty()}"
+                  th:text="${article.type}">
+            </span>
         </div>
     </section>
 

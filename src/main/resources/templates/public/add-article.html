@@ -36,6 +36,20 @@
                 <input type="url" id="imageUrl" th:field="*{imageUrl}" placeholder="https://lien-vers-image.jpg">
             </div>
 
+            <!-- ← NOUVEAU -->
+            <div class="input-group">
+                <label for="type">Type d'article</label>
+                <select id="type" th:field="*{type}" required>
+                    <option value="">-- Sélectionner un type --</option>
+                    <option value="espace">Espace</option>
+                    <option value="nature">Nature</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="technologie">Technologie</option>
+                    <option value="science">Science</option>
+                    <option value="general">Général</option>
+                </select>
+            </div>
+
             <div class="input-group">
                 <label for="articleText">Données du rapport</label>
                 <textarea id="articleText" th:field="*{articleText}" rows="12" placeholder="Saisissez le contenu ici..." required></textarea>

@@ -18,22 +18,46 @@
     <section class="cnes-section">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
             <h2>Tous les Articles</h2>
-            <input type="text" id="searchInput" placeholder="Rechercher un article..." style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <input type="text" id="searchInput" placeholder="Rechercher un article..."
+                       style="padding: 10px; width: 280px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;">
+                <select id="typeFilter"
+                        style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; background: var(--color-bg, #0a0a1a); color: white; cursor: pointer;">
+                    <option value="">Tous les types</option>
+                    <option value="espace">- Espace</option>
+                    <option value="nature">- Nature</option>
+                    <option value="urgent">- Urgent</option>
+                    <option value="technologie">- Technologie</option>
+                    <option value="science">- Science</option>
+                    <option value="general">- Général</option>
+                </select>
+            </div>
         </div>
 
         <div class="cnes-grid news-grid" id="articlesGrid">
-            <article class="infra-card article-item" th:each="article : ${allArticles}">
+            <article class="infra-card article-item"
+                     th:each="article : ${allArticles}"
+                     th:attr="data-type=${article.type}, data-text=${article.articleText}">
                 <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block; height: 100%;">
                     <img th:src="${article.imageUrl != null and !article.imageUrl.isEmpty() ? article.imageUrl : 'https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80'}" alt="Image Article">
                     <div class="infra-overlay" style="display: flex; flex-direction: column; gap: 8px;">
-                        <span style="color: var(--color-7); font-size: 0.9em; font-weight: bold;"
-                              th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: var(--color-7); font-size: 0.9em; font-weight: bold;"
+                                  th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+                            <span th:if="${article.type != null and !article.type.isEmpty()}"
+                                  th:text="${article.type}"
+                                  style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-size: 0.8em; text-transform: capitalize;"></span>
+                        </div>
                         <h3 class="article-title" th:text="${article.title}"></h3>
                         <p class="article-subtitle" th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
                     </div>
                 </a>
             </article>
         </div>
+
+        <p id="noResult" style="display:none; text-align:center; color:#aaa; padding: 40px; font-size: 1.1em;">
+            Aucun article trouvé.
+        </p>
     </section>
 
 </main>
@@ -41,21 +65,38 @@
 <div th:replace="~{public/footer :: footer}"></div>
 
 <script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let articles = document.querySelectorAll('.article-item');
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter  = document.getElementById('typeFilter');
+    const noResult    = document.getElementById('noResult');
+
+    function filterArticles() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        const type    = typeFilter.value.toLowerCase();
+        const articles = document.querySelectorAll('.article-item');
+        let visible = 0;
 
         articles.forEach(function(article) {
-            let title = article.querySelector('.article-title').textContent.toLowerCase();
-            let subtitle = article.querySelector('.article-subtitle').textContent.toLowerCase();
+            const title    = (article.querySelector('.article-title')?.textContent || '').toLowerCase();
+            const subtitle = (article.querySelector('.article-subtitle')?.textContent || '').toLowerCase();
+            const text     = (article.dataset.text || '').toLowerCase();
+            const artType  = (article.dataset.type || '').toLowerCase();
 
-            if (title.includes(filter) || subtitle.includes(filter)) {
+            const matchesKeyword = !keyword || title.includes(keyword) || subtitle.includes(keyword) || text.includes(keyword);
+            const matchesType    = !type || artType === type;
+
+            if (matchesKeyword && matchesType) {
                 article.style.display = '';
+                visible++;
             } else {
                 article.style.display = 'none';
             }
         });
-    });
+
+        noResult.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('keyup', filterArticles);
+    typeFilter.addEventListener('change', filterArticles);
 </script>
 
 </body>
