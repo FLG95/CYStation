@@ -16,6 +16,11 @@ public class Generator extends Device {
     }
 
     @Override
+    public String getDeviceCategoryCode() {
+        return DeviceCategory.GENERATOR.name();
+    }
+
+    @Override
     public String getDeviceDisplayName() {
         return DeviceCategory.GENERATOR.getDisplayName();
     }

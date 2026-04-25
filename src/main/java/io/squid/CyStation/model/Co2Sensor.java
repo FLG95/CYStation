@@ -17,6 +17,11 @@ public class Co2Sensor extends Sensor {
     }
 
     @Override
+    public String getDeviceCategoryCode() {
+        return DeviceCategory.CO2_SENSOR.name();
+    }
+
+    @Override
     public String getDeviceDisplayName() {
         return DeviceCategory.CO2_SENSOR.getDisplayName();
     }

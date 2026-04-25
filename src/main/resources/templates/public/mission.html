@@ -111,7 +111,9 @@
 
                                 <button type="button"
                                         th:id="'btn-repair-' + ${device.id}"
-                                        th:onclick="|repairDeviceAjax(${device.id}, ${device.deviceTypeId})|"
+                                        th:data-device-id="${device.id}"
+                                        th:data-category-code="${device.deviceCategoryCode}"
+                                        onclick="repairDeviceAjax(this.getAttribute('data-device-id'), this.getAttribute('data-category-code'))"
                                         class="btn-repair"
                                         th:style="${device.status.name() == 'MAINTENANCE' ? 'display:block' : 'display:none'}">
                                     Réparer
@@ -155,14 +157,12 @@
                 </label>
 
                 <label th:for="'deviceType-' + ${zone.id}">Type de module &#10142;</label>
-                <label>
-                    <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
-                        <option value="CO2_SENSOR">Capteur CO2</option>
-                        <option value="GENERATOR">Générateur</option>
-                        <option value="RADAR">Radar</option>
-                        <option value="RADIO">Radio</option>
-                    </select>
-                </label>
+                <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
+                    <option th:each="category : ${deviceCategories}"
+                            th:value="${category.name()}"
+                            th:text="${category.displayName}">
+                    </option>
+                </select>
 
                 <button type="submit" class="cnes-btn btn-full">
                     Déployer l'appareil

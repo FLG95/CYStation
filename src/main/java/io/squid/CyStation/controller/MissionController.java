@@ -36,6 +36,7 @@ public class MissionController {
     @GetMapping("/mission")
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
+        model.addAttribute("deviceCategories", DeviceCategory.values());
         return "public/mission";
     }
 
@@ -81,12 +82,18 @@ public class MissionController {
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
 
-        Device newDevice = DeviceCategory.valueOf(deviceType).createInstance();
+        try {
+            Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
 
-        newDevice.setName(name);
-        newDevice.setStatus(DeviceStatus.ONLINE);
+            newDevice.setName(name);
+            newDevice.setStatus(DeviceStatus.ONLINE);
 
-        deviceService.addDeviceToZone(newDevice, zoneId);
+            deviceService.addDeviceToZone(newDevice, zoneId);
+
+        } catch (IllegalArgumentException e) {
+            // Redirection propre si la catégorie n'existe pas dans l'Enum
+            return "redirect:/mission?error=invalid_device_type";
+        }
 
         return "redirect:/mission";
     }

@@ -17,6 +17,11 @@ public class OxygenSensor extends Sensor{
     }
 
     @Override
+    public String getDeviceCategoryCode() {
+        return DeviceCategory.OXYGEN_SENSOR.name();
+    }
+
+    @Override
     public String getDeviceDisplayName() {
         return DeviceCategory.OXYGEN_SENSOR.getDisplayName();
     }
