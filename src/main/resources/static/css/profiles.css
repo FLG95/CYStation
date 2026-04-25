@@ -1,27 +1,100 @@
-.users-grid {
+.profiles-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.profile-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-7);
+    padding: 25px;
+    display: flex;
+    align-items: center;
     gap: 20px;
-    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
 }
 
-.user-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #444;
-    border-radius: 10px;
-    padding: 15px;
-    transition: transform 0.3s;
+.profile-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-9);
+    opacity: 0.5;
 }
 
-.user-card:hover {
-    transform: translateY(-5px);
-    border-color: #00ff7f;
+.profile-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--color-9);
+    transform: translateX(10px);
+    box-shadow: -10px 0 20px rgba(0, 229, 255, 0.1);
+}
+
+.profile-avatar {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--color-7);
+    padding: 3px;
+    background: var(--color-1);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(30%);
+    transition: filter 0.3s ease;
+}
+
+.profile-card:hover .profile-avatar img {
+    filter: grayscale(0%);
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-info h2 {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin: 0 0 5px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .role-badge {
-    font-size: 0.8rem;
-    background: #333;
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--color-9);
+    border: 1px solid var(--color-9);
     padding: 2px 8px;
-    border-radius: 4px;
-    color: #aaa;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgba(0, 229, 255, 0.05);
+}
+
+.profile-info .email {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    font-family: monospace;
+}
+
+.profile-card::after {
+    content: "ID-SCAN";
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 0.6rem;
+    color: var(--color-7);
+    letter-spacing: 3px;
+    opacity: 0.3;
 }
