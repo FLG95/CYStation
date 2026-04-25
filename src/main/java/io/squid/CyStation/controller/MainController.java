@@ -19,7 +19,9 @@ public class MainController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/")
+
+
+    @GetMapping({"/", "/index"})
     public String index(Model model) {
         model.addAttribute("latestArticles", articleService.getLatestArticles());
         return "public/index";
