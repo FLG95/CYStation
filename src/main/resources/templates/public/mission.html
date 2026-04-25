@@ -46,12 +46,13 @@
             <th:block th:if="${not #lists.isEmpty(zones)}">
                 <a th:href="'#zoneDetailsModal-' + ${zone.id}"
                    class="infra-card" th:each="zone : ${zones}"
-                    th:id="'zone-card-' + ${zone.id}" alt="Zone">
+                   th:id="'zone-card-' + ${zone.id}" alt="Zone">
 
                     <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80"
                          alt="Zone">
                     <div class="infra-overlay">
                         <h3 th:text="${zone.name}"></h3>
+
                     </div>
                 </a>
             </th:block>
@@ -69,14 +70,25 @@
     </section>
 
     <div th:each="zone : ${zones}" th:id="'zoneDetailsModal-' + ${zone.id}" class="modal">
-
-        <div class="modal-content modal-large" >
+        <div class="modal-content modal-large">
             <a href="#!" class="close-btn">&#10006;</a>
 
-            <div class="section-header">
-                <h2 th:text="'Appareils dans ' + ${zone.name}"></h2>
+            <div class="section-header" style="border-bottom: 1px solid var(--color-7)">
+                <h2 th:text="${zone.name}"
+                    contenteditable="true"
+                    class="editable-zone-name"
+                    th:onblur="|updateZoneAjax(${zone.id}, this, 'name')|"
+                    title="Cliquez pour renommer">
+                </h2>
 
-                <button type="button" style="cursor: pointer; position: relative; z-index: 999;"
+                <p th:text="${zone.description != null ? zone.description : 'Ajouter une description...'}"
+                   contenteditable="true"
+                   class="editable-zone-desc"
+                   th:onblur="|updateZoneAjax(${zone.id}, this, 'description')|"
+                   title="Cliquez pour modifier la description">
+                </p>
+
+                <button type="button" class="cnes-btn"
                         th:onclick="'deleteZoneAjax(' + ${zone.id} + ')'">
                     Supprimer la Zone
                 </button>
@@ -87,7 +99,8 @@
                 <th:block th:if="${not #lists.isEmpty(zone.devices)}">
                     <div class="infra-card" th:each="device : ${zone.devices}" th:id="'device-card-' + ${device.id}">
 
-                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="Machine">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80"
+                             alt="Machine">
 
                         <div class="infra-overlay">
 
@@ -119,7 +132,6 @@
                                     Réparer
                                 </button>
                             </div>
-
 
 
                             <button type="button" class="cnes-btn btn-full"
@@ -157,12 +169,14 @@
                 </label>
 
                 <label th:for="'deviceType-' + ${zone.id}">Type de module &#10142;</label>
-                <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
-                    <option th:each="category : ${deviceCategories}"
-                            th:value="${category.name()}"
-                            th:text="${category.displayName}">
-                    </option>
-                </select>
+                <label>
+                    <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
+                        <option value="CO2_SENSOR">Capteur CO2</option>
+                        <option value="GENERATOR">Générateur</option>
+                        <option value="RADAR">Radar</option>
+                        <option value="RADIO">Radio</option>
+                    </select>
+                </label>
 
                 <button type="submit" class="cnes-btn btn-full">
                     Déployer l'appareil
@@ -180,6 +194,12 @@
             <form th:action="@{/mission/zone/create}" method="post">
                 <label for="newZoneName">Désignation de la nouvelle zone &#10142;</label>
                 <input type="text" id="newZoneName" name="name" required>
+
+                <label for="newZoneDesc">Description du secteur &#10142;</label>
+                <textarea id="newZoneDesc" name="description" rows="4"
+                          placeholder="Spécifiez la fonction de ce module..."
+                ></textarea>
+
                 <button type="submit" class="cnes-btn btn-full">
                     Confirmer le déploiement
                 </button>
@@ -190,7 +210,6 @@
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
-
 
 
 <div id="gameModal" class="modal-overlay" style="display: none;">

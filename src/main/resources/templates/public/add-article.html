@@ -36,18 +36,26 @@
                 <input type="url" id="imageUrl" th:field="*{imageUrl}" placeholder="https://lien-vers-image.jpg">
             </div>
 
-            <!-- ← NOUVEAU -->
+            <!-- Types multiples -->
             <div class="input-group">
-                <label for="type">Type d'article</label>
-                <select id="type" th:field="*{type}" required>
-                    <option value="">-- Sélectionner un type --</option>
-                    <option value="espace">Espace</option>
-                    <option value="nature">Nature</option>
-                    <option value="urgent">Urgent</option>
-                    <option value="technologie">Technologie</option>
-                    <option value="science">Science</option>
-                    <option value="general">Général</option>
-                </select>
+                <label>Types d'article</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="types" value="espace"> Espace
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="types" value="nature"> Nature
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="types" value="urgent"> Urgent
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="types" value="technologie"> Technologie
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="types" value="science"> Science
+                    </label>
+                </div>
             </div>
 
             <div class="input-group">

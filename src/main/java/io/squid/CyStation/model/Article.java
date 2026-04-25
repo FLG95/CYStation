@@ -2,6 +2,8 @@ package io.squid.CyStation.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 public class Article {
@@ -20,10 +22,10 @@ public class Article {
 
     private String imageUrl;
 
-    private String type; // ← NOUVEAU
+    // Stocké en base comme "espace,nature,urgent"
+    private String types;
 
-    public Article() {
-    }
+    public Article() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -43,6 +45,13 @@ public class Article {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public String getType() { return type; }           // ← NOUVEAU
-    public void setType(String type) { this.type = type; } // ← NOUVEAU
+    // Getter/Setter raw pour JPA (la string "espace,nature")
+    public String getTypes() { return types; }
+    public void setTypes(String types) { this.types = types; }
+
+    // Utilitaire : convertit la string en List pour Thymeleaf
+    public List<String> getTypeList() {
+        if (types == null || types.isEmpty()) return List.of();
+        return Arrays.asList(types.split(","));
+    }
 }
