@@ -1,7 +1,9 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+
 
 @Entity
 @DiscriminatorValue("RADAR")
@@ -14,4 +16,8 @@ public class Radar extends Sensor{
         this.detected = detected;
     }
 
+    @Override
+    public String getDeviceDisplayName() {
+        return DeviceCategory.RADAR.getDisplayName();
+    }
 }

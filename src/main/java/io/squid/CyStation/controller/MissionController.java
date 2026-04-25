@@ -1,5 +1,6 @@
 package io.squid.CyStation.controller;
 
+import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
@@ -59,28 +60,11 @@ public class MissionController {
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
 
-        Device newDevice;
-        switch (deviceType) {
-            case "CO2_SENSOR":
-                newDevice = new Co2Sensor();
-                break;
-            case "GENERATOR":
-                newDevice = new Generator();
-                break;
+        Device newDevice = DeviceCategory.valueOf(deviceType).createInstance();
 
-            case "RADAR":
-                newDevice = new Radar();
-                break;
-
-            case "RADIO":
-                newDevice = new Radio();
-                break;
-
-            default:
-                throw new IllegalArgumentException("Type de module non reconnu : " + deviceType);
-        }
         newDevice.setName(name);
         newDevice.setStatus(DeviceStatus.ONLINE);
+
         deviceService.addDeviceToZone(newDevice, zoneId);
 
         return "redirect:/mission";

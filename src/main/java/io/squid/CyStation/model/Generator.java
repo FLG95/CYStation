@@ -1,5 +1,6 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -14,5 +15,9 @@ public class Generator extends Device {
         this.productionValue = productionValue;
     }
 
+    @Override
+    public String getDeviceDisplayName() {
+        return DeviceCategory.GENERATOR.getDisplayName();
+    }
 
 }

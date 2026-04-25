@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "device_type", discriminatorType = DiscriminatorType.STRING)
-public class Device {
+public abstract class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,36 +51,10 @@ public class Device {
         return zone;
     }
 
-    public int getDeviceTypeId() {
-        String className = this.getClass().getSimpleName();
-
-        if (className.contains("$")) {
-            className = className.substring(0, className.indexOf("$"));
-        }
-
-        return switch (className) {
-            case "Co2Sensor" -> 0;
-            case "Generator" -> 1;
-            case "Radar" -> 2;
-            case "Radio" -> 3;
-            default -> 99;
-        };
-    }
-
-    public String getDeviceDisplayName() {
-        int type = this.getDeviceTypeId();
-
-        return switch (type) {
-            case 0 -> "Capteur CO2";
-            case 1 -> "Générateur";
-            case 2 -> "Radar Orbital";
-            case 3 -> "Relais Radio";
-            default -> "Équipement";
-        };
-    }
-
-
     public void setZone(Zone zone) {
         this.zone = zone;
     }
+
+    @Transient
+    public abstract String getDeviceDisplayName();
 }
