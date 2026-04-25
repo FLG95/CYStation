@@ -58,11 +58,13 @@
 
                         <button type="button"
                                 th:id="'btn-repair-' + ${device.id}"
+                                th:data-device-id="${device.id}"
+                                th:data-category-code="${device.deviceCategoryCode}"
                                 onclick="repairDeviceAjax(this.getAttribute('data-device-id'), this.getAttribute('data-category-code'))"
                                 class="btn-repair"
                                 th:style="${device.status.name() == 'MAINTENANCE' ? 'display:block' : 'display:none'}">
                             Réparer
-                        </button>
+                        </button>x
                     </div>
 
                     <button type="button" class="cnes-btn btn-full"
