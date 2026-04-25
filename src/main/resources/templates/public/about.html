@@ -30,38 +30,18 @@
             <h2>L'Équipage</h2>
         </div>
         <div class="cnes-grid news-grid">
-            <article class="cnes-card">
+
+            <article class="cnes-card" th:each="u : ${usersList}">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="Thomas Pesquet">
+                    <img th:src="@{/images/avatars/{name}(name=${u.profilePicture})}" alt="Avatar de l'équipage">
                 </div>
                 <div class="card-content">
-                    <span class="card-date">Commandant de bord</span>
-                    <h3>Thomas Pesquet</h3>
-                    <p>Ingénieur aéronautique et pilote. Il supervise les opérations critiques, la navigation orbitale et les sorties extra-véhiculaires (EVA).</p>
+                    <span class="card-date" th:text="${u.role.displayValue}">Rôle</span>
+                    <h3 th:text="${u.firstName + ' ' + u.lastName}">Prénom Nom</h3>
+                    <p>Expérience : <span th:text="${u.experience}">0</span> EXP</p>
                 </div>
             </article>
 
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80" alt="Dr. Sarah Jenkins">
-                </div>
-                <div class="card-content">
-                    <span class="card-date">Spécialiste Scientifique</span>
-                    <h3>Dr. Sarah Jenkins</h3>
-                    <p>Astrophysicienne. En charge des expérimentations en microgravité dans la serre hydroponique et le laboratoire de chimie.</p>
-                </div>
-            </article>
-
-            <article class="cnes-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1573165231977-3f0e27935f2d?auto=format&fit=crop&w=800&q=80" alt="Marc-André Leclerc">
-                </div>
-                <div class="card-content">
-                    <span class="card-date">Ingénieur Systèmes</span>
-                    <h3>Marc-André Leclerc</h3>
-                    <p>Responsable du maintien des infrastructures critiques : le noyau énergétique, le support de vie O2 et les pare-feu du data center.</p>
-                </div>
-            </article>
         </div>
     </section>
 
