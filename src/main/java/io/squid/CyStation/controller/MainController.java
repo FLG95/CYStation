@@ -21,6 +21,12 @@ public class MainController {
         return "public/index";
     }
 
+    // Nouvelle méthode pour accéder à la page About
+    @GetMapping("/about")
+    public String about() {
+        return "public/about";
+    }
+
     @GetMapping("/search")
     public String search(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
         if (keyword != null && !keyword.trim().isEmpty()) {
