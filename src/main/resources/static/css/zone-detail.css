@@ -1,0 +1,199 @@
+/* --- VARIABLES DE BASE --- */
+:root {
+    --color-1: #0a0a0c;
+    --color-7: #2d2d35;
+    --color-9: #00e5ff;
+}
+
+/* --- MISE EN PAGE & GRILLE --- */
+.cnes-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.infrastructure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+    align-items: stretch;
+}
+
+/* --- CARTES (INFRA-CARD) --- */
+.infra-card {
+    background: #16161a;
+    border: 1px solid var(--color-7);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.3s ease;
+    min-height: 380px;
+}
+
+.infra-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.infra-overlay {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HEADER DE L'APPAREIL --- */
+.device-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.device-header-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.device-type-badge {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--color-9);
+    border: 1px solid rgba(0, 212, 255, 0.5);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* --- BOUTONS & CONTRÔLES --- */
+.device-controls {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.btn-toggle {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-toggle.on { background: var(--color-9); color: #000; }
+.btn-toggle.off { background: #444; color: #fff; }
+
+.btn-repair {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cnes-btn {
+    background: transparent;
+    border: 1px solid var(--color-9);
+    color: var(--color-9);
+    padding: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cnes-btn:hover {
+    background: var(--color-9);
+    color: var(--color-1);
+    box-shadow: 0 0 20px var(--color-9);
+}
+
+.btn-full {
+    margin-top: auto; /* Pousse le bouton en bas de la carte */
+    width: 100%;
+}
+
+/* --- CARTE D'AJOUT (ADD-CARD) --- */
+.add-card {
+    text-decoration: none;
+    border: 2px dashed var(--color-7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    min-height: 200px;
+}
+
+.add-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-9);
+}
+
+/* --- MODALES --- */
+.modal, .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal:target { display: flex; }
+
+.modal-content {
+    background: #1a1a1a;
+    padding: 40px;
+    border: 1px solid var(--color-7);
+    width: 90%;
+    max-width: 1000px;
+    position: relative;
+    border-radius: 12px;
+}
+
+.close-btn, .close-modal {
+    position: absolute;
+    top: 15px; right: 20px;
+    color: #fff;
+    font-size: 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* --- FORMULAIRES --- */
+.cnes-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-9);
+    font-weight: bold;
+}
+
+.cnes-form input[type="text"], .cnes-form select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--color-7);
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+/* --- ETATS VIDE ET ERREURS --- */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    opacity: 0.8;
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 15px;
+    border-radius: 4px;
+}

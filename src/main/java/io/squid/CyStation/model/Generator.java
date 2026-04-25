@@ -16,6 +16,12 @@ public class Generator extends Device {
     }
 
     @Override
+    public boolean updateTelemetry() {
+        this.setProductionValue(80 + (int)(Math.random() * 20)); // entre 80 et 100
+        return true;
+    }
+
+    @Override
     public String getDeviceCategoryCode() {
         return DeviceCategory.GENERATOR.name();
     }

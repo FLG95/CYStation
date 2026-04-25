@@ -56,6 +56,9 @@ public abstract class Device {
     }
 
     @Transient
+    public abstract boolean updateTelemetry();
+
+    @Transient
     public abstract String getDeviceCategoryCode();
 
     @Transient

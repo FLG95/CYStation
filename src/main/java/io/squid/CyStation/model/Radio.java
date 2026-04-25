@@ -17,6 +17,12 @@ public class Radio extends Device{
     }
 
     @Override
+    public boolean updateTelemetry() {
+        this.setContact(Math.random() > 0.5 ? 1 : 0); // entre 0 et 1
+        return true;
+    }
+
+    @Override
     public String getDeviceCategoryCode() {
         return DeviceCategory.RADIO.name();
     }

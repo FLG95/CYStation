@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -50,70 +50,30 @@
 
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">
-            <h2>Infrastructures du Complexe</h2>
+            <a th:href="@{/mission}" style="text-decoration: none; display: inline-block;">
+                <h2>Infrastructures du Complexe <span style="font-size: 0.5em; color: var(--color-7); vertical-align: middle;">► Gérer les modules</span></h2>
+            </a>
         </div>
+
         <div class="cnes-grid infrastructure-grid">
+            <article class="infra-card" th:each="zone : ${zones}">
+                <a th:href="@{/mission/zone/{id}(id=${zone.id})}" style="text-decoration: none; display: block; height: 100%;">
 
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" alt="Commandement">
-                <div class="infra-overlay"><h3>Pont de Commandement</h3></div>
+                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" th:alt="${zone.name}">
+
+                    <div class="infra-overlay">
+                        <h3 th:text="${zone.name}">Nom de la Zone</h3>
+                        <p style="font-size: 0.8rem; color: var(--color-9); margin-top: 5px;"
+                           th:text="${#lists.size(zone.devices)} + ' modules détectés'">
+                        </p>
+                    </div>
+                </a>
+            </article>
+
+            <div th:if="${#lists.isEmpty(zones)}" class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 20px;">
+                <p>Aucune zone active détectée dans la station.</p>
+                <a th:href="@{/mission}" class="cnes-btn" style="margin-top: 10px;">Initialiser une zone</a>
             </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80" alt="Energie">
-                <div class="infra-overlay"><h3>Noyau Énergétique</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80" alt="Santé">
-                <div class="infra-overlay"><h3>Baie Médicale</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=600&q=80" alt="O2">
-                <div class="infra-overlay"><h3>Support Vie (O2)</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1516849677285-28c2b6d615f5?auto=format&fit=crop&w=600&q=80" alt="Telecom">
-                <div class="infra-overlay"><h3>Transmissions</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80" alt="Securité">
-                <div class="infra-overlay"><h3>Poste de Sécurité</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80" alt="Labo">
-                <div class="infra-overlay"><h3>Laboratoire de Chimie</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1527066579998-dbbae57f45ce?auto=format&fit=crop&w=600&q=80" alt="Serre">
-                <div class="infra-overlay"><h3>Serre Hydroponique</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" alt="Hangar">
-                <div class="infra-overlay"><h3>Baie d'Amarrage</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="Serveur">
-                <div class="infra-overlay"><h3>Data Center Orbital</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=600&q=80" alt="Sas">
-                <div class="infra-overlay"><h3>Sas de Sortie EVA</h3></div>
-            </div>
-
-            <div class="infra-card">
-                <img src="https://images.unsplash.com/photo-1464851707681-f9d5fdaccea8?auto=format&fit=crop&w=600&q=80" alt="Observatoire">
-                <div class="infra-overlay"><h3>Observatoire Cupola</h3></div>
-            </div>
-
         </div>
     </section>
 

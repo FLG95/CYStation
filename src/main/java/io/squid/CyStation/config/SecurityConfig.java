@@ -18,8 +18,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .headers((headers) -> headers
+                        .frameOptions((frameOptions) -> frameOptions.sameOrigin())
+                )
                 .authorizeHttpRequests((requests) -> requests
-                        // Ajout de "/articles" dans la liste permitAll()
                         .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/images/**", "/about", "/article/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

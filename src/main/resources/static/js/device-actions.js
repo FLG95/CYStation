@@ -104,6 +104,8 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
     console.log("Lancement du jeu (" + gameUrl + ") pour le device " + deviceId);
 }
 
+
+
 function confirmRepairOnServer(deviceId) {
     const token = document.querySelector('meta[name="_csrf"]').content;
     const header = document.querySelector('meta[name="_csrf_header"]').content;

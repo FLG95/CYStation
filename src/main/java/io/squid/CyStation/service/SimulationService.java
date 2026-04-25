@@ -54,26 +54,9 @@ public class SimulationService {
         boolean dbNeedsUpdate = false;
 
         for (Device device : devices) {
-            boolean isUpdated = false;
-
             if (device.getStatus() == DeviceStatus.ONLINE) {
+                boolean isUpdated = device.updateTelemetry();
 
-                if (device instanceof Co2Sensor co2Sensor) {
-                    co2Sensor.setPpmLevel(400 + (int)(Math.random() * 400)); // entre 400 et 800 ppm
-                    isUpdated = true;
-                }
-                else if (device instanceof Radar radar) {
-                    radar.setDetected((int)(Math.random() * 6)); // entre 0 et 5
-                    isUpdated = true;
-                }
-                else if (device instanceof Generator generator) {
-                    generator.setProductionValue(80 + (int)(Math.random() * 20)); // entre 80 et 100
-                    isUpdated = true;
-                }
-                else if (device instanceof Radio radio) {
-                    radio.setContact(Math.random() > 0.5 ? 1 : 0); // entre 0 et 1
-                    isUpdated = true;
-                }
 
                 if (isUpdated) {
                     dbNeedsUpdate = true;
@@ -81,8 +64,6 @@ public class SimulationService {
                 }
             }
         }
-
-        // Sauvegarde globale uniquement si au moins un appareil a changé
         if (dbNeedsUpdate) {
             deviceRepository.saveAllAndFlush(devices);
         }
