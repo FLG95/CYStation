@@ -56,5 +56,8 @@ public abstract class Device {
     }
 
     @Transient
+    public abstract String getDeviceCategoryCode();
+
+    @Transient
     public abstract String getDeviceDisplayName();
 }

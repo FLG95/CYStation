@@ -17,6 +17,11 @@ public class Radar extends Sensor{
     }
 
     @Override
+    public String getDeviceCategoryCode() {
+        return DeviceCategory.RADAR.name();
+    }
+
+    @Override
     public String getDeviceDisplayName() {
         return DeviceCategory.RADAR.getDisplayName();
     }

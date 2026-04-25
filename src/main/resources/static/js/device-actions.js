@@ -84,26 +84,24 @@ function deleteZoneAjax(zoneId) {
 }
 
 
-function repairDeviceAjax(deviceId, typeId) {
+function repairDeviceAjax(deviceId, deviceTypeCode) {
     const modal = document.getElementById('gameModal');
     const iframe = document.getElementById('gameFrame');
 
     const games = {
-        0: '/mission/game/co2',
-        1: '/mission/game/reactor',
-        2: '/mission/game/radar',
-        3: '/mission/game/radio'
+        'CO2_SENSOR' : '/mission/game/co2',
+        'GENERATOR': '/mission/game/reactor',
+        'RADAR': '/mission/game/radar',
+        'RADIO': '/mission/game/radio'
     };
 
-    const gameUrl = games[typeId];
+    const gameUrl = games[deviceTypeCode] || '/mission/game/radio';
 
-    if (gameUrl) {
-        modal.style.display = 'flex';
-        iframe.src = gameUrl + "?deviceId=" + deviceId;
-        console.log("Lancement du jeu type " + typeId + " pour le device " + deviceId);
-    } else {
-        console.error("Aucun mini-jeu configuré pour le type ID : " + typeId);
-    }
+    modal.style.display = 'flex';
+
+    iframe.src = gameUrl + "?deviceId=" + deviceId;
+
+    console.log("Lancement du jeu (" + gameUrl + ") pour le device " + deviceId);
 }
 
 function confirmRepairOnServer(deviceId) {

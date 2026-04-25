@@ -17,6 +17,11 @@ public class Radio extends Device{
     }
 
     @Override
+    public String getDeviceCategoryCode() {
+        return DeviceCategory.RADIO.name();
+    }
+
+    @Override
     public String getDeviceDisplayName() {
         return DeviceCategory.RADIO.getDisplayName();
     }
