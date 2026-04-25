@@ -82,8 +82,10 @@ public class UserService {
         else if(user.getExperience()>=50 && user.getExperience()<100){
             user.setRole(Role.ROLE_SCIENTIST);
         }
-        else if (user.getExperience()>=100) {
+        else if (user.getExperience()>=100 && user.getExperience() < 999) {
             user.setRole(Role.ROLE_ADMIN);
+        }else if (user.getExperience() >= 999){
+            user.setExperience(999);
         }
 
         userRepository.save(user);
