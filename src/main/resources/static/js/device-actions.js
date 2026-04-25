@@ -133,6 +133,47 @@ function confirmRepairOnServer(deviceId) {
 }
 
 
+function updateZoneAjax(zoneId, element, fieldName) {
+    const newValue = element.innerText.trim();
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    const params = new URLSearchParams();
+    params.append('id', zoneId);
+    params.append(fieldName, newValue);
+
+    fetch('/mission/zone/update', {
+        method: 'POST',
+        headers: {
+            [header]: token,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("Mise à jour réussie");
+
+                const mainCard = document.getElementById('zone-card-' + zoneId);
+                if (mainCard) {
+                    if (fieldName === 'name') {
+                        mainCard.querySelector('h3').innerText = newValue;
+                    }
+                }
+            } else {
+                alert("Erreur lors de la sauvegarde");
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.target.classList.contains('editable-zone-name') && e.key === 'Enter') {
+        e.preventDefault();
+        e.target.blur();
+    }
+});
+
 
 
 window.addEventListener('message', function(event) {

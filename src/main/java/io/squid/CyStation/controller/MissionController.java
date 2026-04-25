@@ -7,7 +7,7 @@ import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +40,7 @@ public class MissionController {
     }
 
     @PostMapping("/mission/zone/create")
-    public String createZone(@RequestParam String name) {
+    public String createZone(@RequestParam String name, @RequestParam String description) {
 
         if (zoneRepository.findZoneByName(name) != null) {
 
@@ -50,12 +50,33 @@ public class MissionController {
 
             Zone newZone = new Zone();
             newZone.setName(name);
+            newZone.setDescription(description);
             zoneService.save(newZone);
 
             return "redirect:/mission";
 
         }
     }
+
+    @PostMapping("mission/zone/update")
+    @ResponseBody
+    public ResponseEntity<String> updateZone(@RequestParam Long id,
+                                             @RequestParam(required = false) String name,
+                                             @RequestParam(required = false) String description) {
+        Zone zone = zoneRepository.findZoneById(id);
+
+        if (zone == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone non trouvée");
+        }
+
+        if (name != null && !name.isEmpty()) zone.setName(name);
+        if (description != null) zone.setDescription(description);
+
+        zoneService.save(zone);
+        return ResponseEntity.ok("Zone mise à jour avec succès");
+    }
+
+
 
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
