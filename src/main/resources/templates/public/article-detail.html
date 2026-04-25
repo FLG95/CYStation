@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${article.title}">Détail de l'article</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body style="background-color: #1a1a1a; color: white;">
+
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="container" style="padding: 100px 20px; max-width: 900px; margin: auto;">
+    <header style="margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 20px;">
+        <span style="color: #bbb;" th:text="${#temporals.format(article.date, 'dd MMMM yyyy à HH:mm')}"></span>
+        <h1 th:text="${article.title}" style="font-size: 2.5em; font-weight: bold; margin: 10px 0;"></h1>
+        <p th:text="${article.subtitle}" style="font-size: 1.2em; color: #ddd; font-style: italic;"></p>
+    </header>
+
+    <article style="line-height: 1.8; font-size: 1.1em; white-space: pre-wrap;" th:text="${article.articleText}">
+    </article>
+
+    <div style="margin-top: 50px;">
+        <a th:href="@{/}" class="cnes-btn">Retour à l'accueil</a>
+    </div>
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+</body>
+</html>

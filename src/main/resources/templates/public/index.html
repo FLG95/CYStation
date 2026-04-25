@@ -20,24 +20,27 @@
             <span class="tag">Opérations en cours</span>
             <h1>CYStation</h1>
             <p>Suivez en temps réel la maintenance des systèmes et les recherches scientifiques menées à 400km d'altitude.</p>
-            <a th:href="@{/about}" class="cnes-btn">Découvrir la mission</a>
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/about}" class="cnes-btn">Découvrir la mission</a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/article/add}" class="cnes-btn" style="background-color: #2ecc71;">+ Ajouter un article</a>
+            </div>
         </div>
     </section>
 
-    <section class="cnes-section">
-        <div class="section-header">
-            <h2>À la une</h2>
-        </div>
-        <div class="cnes-grid news-grid">
-            <article class="cnes-card" th:each="article : ${latestArticles}">
-                <div class="card-content">
-                    <p th:text="${article.articleText}"></p>
-                    <h4 th:text="${article.subtitle}" style="font-weight: bold; margin: 10px 0;"></h4>
-                    <span class="card-date" th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+    <div class="cnes-grid news-grid">
+        <article class="cnes-card" th:each="article : ${latestArticles}">
+            <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block;">
+                <div class="card-content" style="display: flex; flex-direction: column; gap: 8px;">
+                <span class="card-date" style="color: #bbb; font-size: 0.9em;"
+                      th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
+
+                    <h3 th:text="${article.title}" style="font-weight: bold; margin: 0; color: #ffffff;"></h3>
+
+                    <p th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
                 </div>
-            </article>
-        </div>
-    </section>
+            </a>
+        </article>
+    </div>
 
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">

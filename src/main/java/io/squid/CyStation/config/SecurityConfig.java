@@ -19,8 +19,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.authorizeHttpRequests(auth -> auth
-                // Ajout de "/about" dans la liste des routes publiques
-                .requestMatchers("/register", "/login", "/index", "/", "/about", "/css/**", "/images/**").permitAll()
+                // Ajout de "/article/**" pour rendre la lecture des articles publique
+                .requestMatchers("/register", "/login", "/index", "/", "/about", "/article/**", "/css/**", "/images/**").permitAll()
                 .anyRequest().authenticated());
 
         httpSecurity.formLogin(form -> form
