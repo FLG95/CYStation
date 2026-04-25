@@ -1,12 +1,13 @@
 package io.squid.CyStation.controller;
 
+import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +40,7 @@ public class MissionController {
     }
 
     @PostMapping("/mission/zone/create")
-    public String createZone(@RequestParam String name) {
+    public String createZone(@RequestParam String name, @RequestParam String description) {
 
         if (zoneRepository.findZoneByName(name) != null) {
 
@@ -49,6 +50,7 @@ public class MissionController {
 
             Zone newZone = new Zone();
             newZone.setName(name);
+            newZone.setDescription(description);
             zoneService.save(newZone);
 
             return "redirect:/mission";
@@ -56,31 +58,34 @@ public class MissionController {
         }
     }
 
+    @PostMapping("mission/zone/update")
+    @ResponseBody
+    public ResponseEntity<String> updateZone(@RequestParam Long id,
+                                             @RequestParam(required = false) String name,
+                                             @RequestParam(required = false) String description) {
+        Zone zone = zoneRepository.findZoneById(id);
+
+        if (zone == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone non trouvée");
+        }
+
+        if (name != null && !name.isEmpty()) zone.setName(name);
+        if (description != null) zone.setDescription(description);
+
+        zoneService.save(zone);
+        return ResponseEntity.ok("Zone mise à jour avec succès");
+    }
+
+
+
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
 
-        Device newDevice;
-        switch (deviceType) {
-            case "CO2_SENSOR":
-                newDevice = new Co2Sensor();
-                break;
-            case "GENERATOR":
-                newDevice = new Generator();
-                break;
+        Device newDevice = DeviceCategory.valueOf(deviceType).createInstance();
 
-            case "RADAR":
-                newDevice = new Radar();
-                break;
-
-            case "RADIO":
-                newDevice = new Radio();
-                break;
-
-            default:
-                throw new IllegalArgumentException("Type de module non reconnu : " + deviceType);
-        }
         newDevice.setName(name);
         newDevice.setStatus(DeviceStatus.ONLINE);
+
         deviceService.addDeviceToZone(newDevice, zoneId);
 
         return "redirect:/mission";

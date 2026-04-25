@@ -27,6 +27,7 @@
         </div>
     </section>
 
+<<<<<<< HEAD
     <div class="cnes-grid news-grid">
         <article class="cnes-card" th:each="article : ${latestArticles}">
             <a th:href="@{/article/{id}(id=${article.id})}" style="text-decoration: none; display: block;">
@@ -37,6 +38,41 @@
                     <h3 th:text="${article.title}" style="font-weight: bold; margin: 0; color: #ffffff;"></h3>
 
                     <p th:text="${article.subtitle}" style="margin: 0; color: #ffffff; font-size: 0.95em;"></p>
+=======
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>À la une</h2>
+        </div>
+        <div class="cnes-grid news-grid">
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80" alt="Orbite">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">14 Avril 2026</span>
+                    <h3>Manœuvre d'évitement réussie</h3>
+                    <p>La station a ajusté son périgée pour éviter un débris de satellite ancien.</p>
+                </div>
+            </article>
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80" alt="Ingénierie">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">12 Avril 2026</span>
+                    <h3>Rendement énergétique accru</h3>
+                    <p>Les nouveaux panneaux solaires déchargent le noyau à fusion de 10%.</p>
+                </div>
+            </article>
+            <article class="cnes-card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Data">
+                </div>
+                <div class="card-content">
+                    <span class="card-date">11 Avril 2026</span>
+                    <h3>Transmission Deep Space</h3>
+                    <p>Réception confirmée des données provenant de la mission lunaire Artemis.</p>
+>>>>>>> 08819a91903c4a5009a5b2c95cb48715e57ab093
                 </div>
             </a>
         </article>
