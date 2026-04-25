@@ -159,4 +159,14 @@ public class MissionController {
         return "engineer/radio.html";
     }
 
+    @GetMapping("/mission/zone/{id}")
+    public String viewZone(@PathVariable Long id, Model model) {
+
+        Zone zone = zoneRepository.findById(id).orElseThrow();
+        model.addAttribute("zone", zone);
+
+        return "public/zone-detail";
+    }
+
+
 }

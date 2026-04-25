@@ -19,7 +19,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        // Ajout de "/articles" dans la liste permitAll()
                         .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/images/**", "/about", "/article/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
