@@ -30,8 +30,13 @@
                 <span class="subtitle">Gérer les modules de la station</span>
             </div>
 
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Localiser un module...">
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button onclick="openGlobalLogs()" class="cnes-btn" style="background-color: var(--color-9); color: black; font-weight: bold; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                    Journal de Bord Global
+                </button>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Localiser un module...">
+                </div>
             </div>
         </div>
 
@@ -47,12 +52,12 @@
                     <div class="infra-overlay">
                         <h3 class="zone-title" th:text="${zone.name}"></h3>
                         <div class="zone-stats">
-                            <span class="stat-icon">⚙</span>
+                            <span class="stat-icon">&#9881;</span>
                             <p class="zone-info" th:text="${#lists.size(zone.devices)} + ' modules détectés'"></p>
                         </div>
                         <div class="card-footer">
                             <span>Accéder au terminal</span>
-                            <span class="arrow">→</span>
+                            <span class="arrow">&#8594;</span>
                         </div>
                     </div>
                 </a>
@@ -60,11 +65,39 @@
         </div>
 
         <div id="noResult" class="empty-state" style="display:none;">
-            <div class="empty-icon">⚠</div>
+            <div class="empty-icon">[!]</div>
             <p>Aucune zone ne correspond à votre recherche dans la base de données.</p>
         </div>
     </section>
 </main>
+
+<div id="logsModal" class="modal-overlay">
+    <div class="logs-modal-panel">
+        <div class="logs-modal-header">
+            <div class="logs-modal-title">
+                <h2 id="modalTitle">Historique Global</h2>
+                <span class="logs-modal-subtitle" id="modalSubtitle">Vue globale de la station</span>
+            </div>
+            <button class="logs-close-btn" onclick="closeLogsModal()" aria-label="Fermer">&times;</button>
+        </div>
+
+        <div class="logs-nav">
+            <button id="btn-live" class="logs-nav-btn active" onclick="refreshGlobalLogs(); setActiveNav(this)">
+                Live Station
+            </button>
+            <button class="logs-nav-btn" onclick="showReport('hour'); setActiveNav(this)">
+                Dernière Heure
+            </button>
+            <button class="logs-nav-btn" onclick="showReport('recent'); setActiveNav(this)">
+                50 Dernières Actions
+            </button>
+        </div>
+
+        <div class="logs-body">
+            <div id="logsContainer"></div>
+        </div>
+    </div>
+</div>
 
 <script>
     const searchInput = document.getElementById('searchInput');
@@ -90,6 +123,88 @@
     }
 
     searchInput.addEventListener('keyup', filterZones);
+
+    function setActiveNav(btn) {
+        document.querySelectorAll('.logs-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function openGlobalLogs() {
+        currentOpenDeviceId = null;
+        document.getElementById('btn-live').innerText = '► Live — Station Entière';
+        document.getElementById('logsModal').style.display = 'flex';
+        document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
+        refreshCurrentDeviceLogs();
+    }
+
+    function refreshGlobalLogs() {
+        fetch('/admin/reports/last-hour')
+            .then(r => r.json())
+            .then(data => updateLogsTable(data, 'Station Entière', 'Vue globale de la station'));
+    }
+
+    function showReport(type) {
+        const baseUrl = type === 'hour' ? '/admin/reports/last-hour' : '/admin/reports/recent-actions';
+        const title   = type === 'hour' ? 'Dernière Heure - Station' : '50 Dernières Actions - Station';
+        const sub     = type === 'hour' ? 'Événements des 60 dernières minutes' : 'Actions opérateur les plus récentes';
+        fetch(baseUrl).then(r => r.json()).then(data => updateLogsTable(data, title, sub));
+    }
+
+    function updateLogsTable(logs, title, subtitle) {
+        document.getElementById('modalTitle').innerText    = title;
+        document.getElementById('modalSubtitle').innerText = subtitle || '';
+        const container = document.getElementById('logsContainer');
+
+        if (!logs || logs.length === 0) {
+            container.innerHTML = '<div class="logs-empty"><div class="logs-empty-icon">[!]</div><p>Aucune donnée enregistrée pour cette sélection.</p></div>';
+            return;
+        }
+
+        const rows = logs.map(log => {
+            const date        = new Date(log.timestamp).toLocaleString('fr-FR');
+            const isTelemetry = log.eventType === 'TELEMETRY';
+            const isAction    = ['TOGGLE','REPAIR','UPDATE'].includes(log.eventType);
+            const badgeClass  = isTelemetry ? 'telemetry' : (isAction ? 'action' : 'other');
+            const opCell      = log.operatorName
+                ? '<span class="log-op">' + log.operatorName + '</span>'
+                : '<span class="log-sys">SYSTEM</span>';
+
+            return '<tr>' +
+                '<td class="log-date">' + date + '</td>' +
+                '<td><span class="log-badge ' + badgeClass + '">' + log.eventType + '</span></td>' +
+                '<td>' + opCell + '</td>' +
+                '<td class="log-metric">' + (log.metricName || '-') + '</td>' +
+                '<td class="log-old">' + (log.oldNumericValue ?? log.oldStringValue ?? '-') + '</td>' +
+                '<td class="log-new">' + (log.newNumericValue ?? log.newStringValue ?? '-') + '</td>' +
+                '</tr>';
+        }).join('');
+
+        container.innerHTML = '<table class="logs-table">' +
+            '<thead>' +
+            '<tr>' +
+            '<th>Date</th>' +
+            '<th>Événement</th>' +
+            '<th>Opérateur</th>' +
+            '<th>Métrique</th>' +
+            '<th>Ancien</th>' +
+            '<th>Nouveau</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody>' + rows + '</tbody>' +
+            '</table>';
+    }
+
+    function closeLogsModal() {
+        document.getElementById('logsModal').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLogsModal();
+    });
+
+    document.getElementById('logsModal').addEventListener('click', function(e) {
+        if (e.target === this) closeLogsModal();
+    });
 </script>
 <div th:replace="~{public/footer :: footer}"></div>
 </body>

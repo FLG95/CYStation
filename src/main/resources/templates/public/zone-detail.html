@@ -45,11 +45,6 @@
                th:onblur="|updateZoneAjax(${zone.id}, this, 'description')|">
             </p>
 
-            <div style="margin-top: 20px;">
-                <button onclick="openGlobalLogs()" class="cnes-btn" style="background-color: var(--color-9); color: black; font-weight: bold;">
-                    &#128225; Journal de Bord Global
-                </button>
-            </div>
         </div>
     </section>
 
@@ -87,16 +82,6 @@
                     <div class="infra-overlay"
                          style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%); box-sizing: border-box;">
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;">
-                            <span style="color: var(--color-9); font-size: 0.9em; font-weight: bold; text-transform: uppercase;"
-                                  th:text="${device.deviceDisplayName}"></span>
-
-                            <span style="color: #00e5ff; font-weight: bold; font-size: 1.1em;"
-                                  th:id="'telemetry-text-' + ${device.id}" th:text="${device.telemetryDisplay}"></span>
-
-                            <span style="color: #ffffff; font-size: 0.85em;" th:id="'status-text-' + ${device.id}"
-                                  th:text="'Statut: ' + ${device.status.displayValue}"></span>
-                        </div>
 
                         <h3 class="article-title" th:text="${device.name}"
                             style="color: white; margin: 0; font-size: 1.4rem;"></h3>
@@ -189,14 +174,14 @@
         </div>
 
         <div class="logs-nav">
-            <button id="btn-live" class="logs-nav-btn active" onclick="refreshCurrentDeviceLogs()">
-                &#128225; Live
+            <button id="btn-live" class="logs-nav-btn active" onclick="refreshCurrentDeviceLogs(); setActiveNav(this)">
+                Live
             </button>
             <button class="logs-nav-btn" onclick="showReport('hour'); setActiveNav(this)">
-                &#128336; Dernière Heure
+                Dernière Heure
             </button>
             <button class="logs-nav-btn" onclick="showReport('recent'); setActiveNav(this)">
-                &#128100; 50 Dernières Actions
+                50 Dernières Actions
             </button>
         </div>
 
@@ -241,7 +226,7 @@
 
     function showDeviceLogs(deviceId) {
         currentOpenDeviceId = deviceId;
-        document.getElementById('btn-live').innerText = '📡 Live — Module #' + deviceId;
+        document.getElementById('btn-live').innerText = '► Live — Module #' + deviceId;
         document.getElementById('logsModal').style.display = 'flex';
         document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
         refreshCurrentDeviceLogs();
@@ -249,7 +234,7 @@
 
     function openGlobalLogs() {
         currentOpenDeviceId = null;
-        document.getElementById('btn-live').innerText = '📡 Live — Station Entière';
+        document.getElementById('btn-live').innerText = '► Live — Station Entière';
         document.getElementById('logsModal').style.display = 'flex';
         document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
         refreshCurrentDeviceLogs();

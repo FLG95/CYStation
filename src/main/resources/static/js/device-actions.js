@@ -1,8 +1,6 @@
 
 
 function toggleDeviceAjax(deviceId) {
-    const btn = document.getElementById('btn-' + deviceId);
-    const statusText = document.getElementById('status-text-' + deviceId);
     const token = document.querySelector('meta[name="_csrf"]').content;
     const header = document.querySelector('meta[name="_csrf_header"]').content;
 
@@ -10,18 +8,10 @@ function toggleDeviceAjax(deviceId) {
         method: 'POST',
         headers: { [header]: token }
     })
-        .then(response => response.json())
-        .then(status => {
-            statusText.textContent = status.displayValue;
-
-            if (status.name === 'ONLINE') {
-                btn.textContent = (btn.classList.contains('btn-action')) ? 'OFF' : 'Éteindre';
-                btn.className = btn.classList.contains('btn-action') ? 'btn-action btn-off' : 'btn-toggle off';
-            } else {
-                btn.textContent = (btn.classList.contains('btn-action')) ? 'ON' : 'Allumer';
-                btn.className = btn.classList.contains('btn-action') ? 'btn-action btn-on' : 'btn-toggle on';
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
             }
-            btn.disabled = (status.name === 'MAINTENANCE');
         });
 }
 

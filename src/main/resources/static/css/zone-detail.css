@@ -1,15 +1,8 @@
 :root {
-    --color-1: #0a0a0c;
-    --color-7: #2d2d35;
-    --color-9: #00e5ff;
-    --color-11: #ef4444;
     --led-green: #00ff9d;
     --led-red: #ef4444;
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
 #hero-zone {
     text-align: left;
     align-items: flex-end;
