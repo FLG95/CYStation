@@ -45,7 +45,6 @@ class DataInitializerConfiguration {
 
 
 
-
             Zone bioLab = createZoneIfNotFound(zoneRepository, "Laboratoire Biologique",
                     "Recherche sur la survie végétale en milieu hostile.", "");
 

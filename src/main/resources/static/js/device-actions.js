@@ -56,42 +56,33 @@ function deleteDeviceAjax(deviceId) {
 }
 
 function deleteZoneAjax(zoneId) {
-    console.log("Appel de suppression pour la zone ID :", zoneId);
-    if (!confirm("Attention : Supprimer cette zone détruira tous les appareils associés. Confirmer ?")) return;
+    if (!confirm("Voulez-vous vraiment supprimer cette zone ?")) return;
 
     const token = document.querySelector('meta[name="_csrf"]').content;
     const header = document.querySelector('meta[name="_csrf_header"]').content;
 
-    fetch('/mission/zone/delete/' + zoneId, {
+    fetch(`/mission/zone/delete/${zoneId}`, {
         method: 'POST',
-        headers: {[header]: token}
+        headers: {
+            [header]: token
+        }
     })
         .then(response => {
             if (response.ok) {
-                // 1. Vérifier si on est sur la page de détail de CETTE zone
-                // Si l'URL contient "/mission/zone/ID" ou si on est sur une page spécifique
-                const isDetailPage = window.location.pathname.includes('/mission/zone/' + zoneId);
 
-                if (isDetailPage) {
+                const zoneRow = document.getElementById('zone-row-' + zoneId);
+                if (zoneRow) {
 
-                    window.location.href = '/index';
-                } else {
-
-                    window.location.hash = '#!';
-
-                    const zoneCard = document.getElementById('zone-card-' + zoneId);
-                    if (zoneCard) {
-                        zoneCard.style.transition = "all 0.5s ease";
-                        zoneCard.style.opacity = "0";
-                        zoneCard.style.transform = "scale(0.5)";
-                        setTimeout(() => zoneCard.remove(), 500);
+                    let next = zoneRow.nextElementSibling;
+                    while (next && next.classList.contains('device-row')) {
+                        let toRemove = next;
+                        next = next.nextElementSibling;
+                        toRemove.remove();
                     }
-
-                    const zoneModal = document.getElementById('zoneDetailsModal-' + zoneId);
-                    if (zoneModal) zoneModal.remove();
+                    zoneRow.remove();
                 }
             } else {
-                alert("Erreur lors de la suppression de la zone.");
+                alert("Erreur lors de la suppression (Code: " + response.status + ")");
             }
         })
         .catch(error => console.error('Erreur:', error));
@@ -99,7 +90,7 @@ function deleteZoneAjax(zoneId) {
 
 
 function repairDeviceAjax(deviceId, deviceTypeCode) {
-    // On force la recherche des éléments car ils peuvent changer selon la page
+
     const modal = document.getElementById('gameModal');
     const iframe = document.getElementById('gameFrame');
 
