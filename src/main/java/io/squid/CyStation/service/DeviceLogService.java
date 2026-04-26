@@ -5,6 +5,8 @@ import io.squid.CyStation.model.DeviceLog;
 import io.squid.CyStation.repository.DeviceLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,21 +21,34 @@ public class DeviceLogService {
         this.logRepository = logRepository;
     }
 
+    private String getCurrentOperator() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            return auth.getName();
+        }
+        return "SYSTEM";
+    }
+
     public void logTelemetry(Device device, String metric, Double oldV, Double newV) {
         logRepository.save(new DeviceLog(device, "TELEMETRY", oldV, newV, metric));
     }
 
     public void logStatusChange(Device device, String oldStatus, String newStatus) {
-        logRepository.save(new DeviceLog(device, "STATUS_CHANGE", oldStatus, newStatus, "STATUS"));
+        DeviceLog log = new DeviceLog(device, "STATUS_CHANGE", oldStatus, newStatus, "STATUS");
+        log.setOperatorName(getCurrentOperator());
+        logRepository.save(log);
     }
 
     public void logRepair(Device device) {
-        logRepository.save(new DeviceLog(device, "REPAIR", "MAINTENANCE", "ONLINE", "REPAIR_ACTION"));
+        DeviceLog log = new DeviceLog(device, "REPAIR", "MAINTENANCE", "ONLINE", "REPAIR_ACTION");
+        log.setOperatorName(getCurrentOperator());
+        logRepository.save(log);
     }
 
     public void logDeletion(Device device) {
-        String currentStatus = device.getStatus() != null ? device.getStatus().toString() : "UNKNOWN";
-        logRepository.save(new DeviceLog(device, "DELETE", currentStatus, "DELETED", "ADMIN_ACTION"));
+        DeviceLog log = new DeviceLog(device, "DELETE", device.getStatus().toString(), "DELETED", "ADMIN_ACTION");
+        log.setOperatorName(getCurrentOperator());
+        logRepository.save(log);
     }
 
     public void clearAllLogs() {

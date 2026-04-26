@@ -4,6 +4,7 @@ import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.*;
+import io.squid.CyStation.repository.DeviceLogRepository;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceLogService;
@@ -23,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,8 @@ public class ZoneController {
     private final DeviceRepository deviceRepository;
     private final DeviceService deviceService;
     private final DeviceLogService deviceLogService;
+    private final DeviceLogRepository deviceLogRepository;
+
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -47,12 +51,15 @@ public class ZoneController {
     public ZoneController(ZoneRepository zoneRepository,
                           ZoneService zoneService,
                           DeviceRepository deviceRepository,
-                          DeviceService deviceService, DeviceLogService deviceLogService) {
+                          DeviceService deviceService,
+                          DeviceLogService deviceLogService,
+                          DeviceLogRepository deviceLogRepository) {
         this.zoneRepository = zoneRepository;
         this.zoneService = zoneService;
         this.deviceRepository = deviceRepository;
         this.deviceService = deviceService;
         this.deviceLogService = deviceLogService;
+        this.deviceLogRepository = deviceLogRepository;
     }
 
     @PostMapping("/admin/logs/clear")
@@ -70,6 +77,27 @@ public class ZoneController {
     public ResponseEntity<List<DeviceLog>> getDeviceLogs(@PathVariable Long id) {
         List<DeviceLog> logs = deviceLogService.getLogsByDeviceId(id);
         return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/admin/reports/last-hour")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
+    @ResponseBody
+    public List<DeviceLog> getReportLastHour(@RequestParam(required = false) Long deviceId) {
+        LocalDateTime hourAgo = LocalDateTime.now().minusHours(1);
+        if (deviceId != null) {
+            return deviceLogRepository.findByDeviceIdAndTimestampAfterOrderByTimestampDesc(deviceId, hourAgo);
+        }
+        return deviceLogRepository.findByTimestampAfterOrderByTimestampDesc(hourAgo);
+    }
+
+    @GetMapping("/admin/reports/recent-actions")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
+    @ResponseBody
+    public List<DeviceLog> getReportRecentActions(@RequestParam(required = false) Long deviceId) {
+        if (deviceId != null) {
+            return deviceLogRepository.findTop50ByDeviceIdAndEventTypeNotOrderByTimestampDesc(deviceId, "TELEMETRY");
+        }
+        return deviceLogRepository.findTop50ByEventTypeNotOrderByTimestampDesc("TELEMETRY");
     }
 
     @GetMapping("/mission")
@@ -231,6 +259,7 @@ public class ZoneController {
         );
 
         model.addAttribute("zone", zone);
+        model.addAttribute("deviceCategories", DeviceCategory.values());
         return "public/zone-detail";
     }
 

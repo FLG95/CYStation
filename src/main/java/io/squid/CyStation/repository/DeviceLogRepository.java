@@ -17,4 +17,12 @@ public interface DeviceLogRepository extends JpaRepository<DeviceLog, Long> {
     void deleteLogsOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
 
     List<DeviceLog> findByDeviceIdOrderByTimestampDesc(Long deviceId);
+
+    List<DeviceLog> findByDeviceIdAndTimestampAfterOrderByTimestampDesc(Long deviceId, LocalDateTime time);
+    List<DeviceLog> findTop50ByDeviceIdAndEventTypeNotOrderByTimestampDesc(Long deviceId, String excludedType);
+
+    List<DeviceLog> findByTimestampAfterOrderByTimestampDesc(LocalDateTime startTime);
+
+    List<DeviceLog> findTop50ByEventTypeNotOrderByTimestampDesc(String excludedEventType);
+
 }

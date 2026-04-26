@@ -44,6 +44,13 @@
                class="editable-zone-desc"
                th:onblur="|updateZoneAjax(${zone.id}, this, 'description')|">
             </p>
+
+            <div style="margin-top: 20px;">
+                <button onclick="openGlobalLogs()" class="cnes-btn" style="background-color: var(--color-9); color: black; font-weight: bold;">
+                    <i class="fas fa-satellite-dish"></i> Journal de Bord Global
+                </button>
+            </div>
+
         </div>
     </section>
 
@@ -113,6 +120,14 @@
                                     th:style="${device.status.name() == 'MAINTENANCE' ? 'display:block; position: relative; z-index: 10; cursor: pointer;' : 'display:none; position: relative; z-index: 10; cursor: pointer;'}">
                                 Réparer
                             </button>
+                            <div class="device-controls" style="margin-top: 10px; display: flex; gap: 10px; position: relative; z-index: 10;">
+                                <button type="button"
+                                        class="btn-action"
+                                        style="position: relative; z-index: 10; cursor: pointer; background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold;"
+                                        th:onclick="|showDeviceLogs(${device.id})|">
+                                    Historique
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </article>
@@ -160,7 +175,23 @@
         <iframe id="gameFrame" src="" frameborder="0" style="width: 100%; height: 600px;"></iframe>
     </div>
 </div>
+<div id="logsModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="modal-content" style="background: #1a1a1a; color: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 1000px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--color-9); box-shadow: 0 0 20px rgba(0,229,255,0.2);">
 
+        <span onclick="closeLogsModal()" style="color: white; float: right; font-size: 28px; cursor: pointer;">&times;</span>
+
+        <h2 id="modalTitle" style="color: var(--color-9); margin-top: 0;">Historique du Module</h2>
+
+        <div class="report-nav" style="margin: 20px 0; display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 15px;">
+            <button id="btn-live" onclick="refreshCurrentDeviceLogs()" class="btn-action" style="background: #333;">📡 Live (Ce module)</button>
+            <button onclick="showReport('hour')" class="btn-action" style="background: #333;">🕒 Dernière Heure</button>
+            <button onclick="showReport('recent')" class="btn-action" style="background: #333;">👤 50 Dernières Actions</button>
+        </div>
+
+        <div id="logsContainer">
+        </div>
+    </div>
+</div>
 <div th:replace="~{public/footer :: footer}"></div>
 </body>
 </html>
@@ -214,6 +245,94 @@
                 console.error('Error:', error);
                 Swal.fire('Erreur', 'Une erreur réseau est survenue.', 'error');
             });
+    }
+
+    let currentOpenDeviceId = null;
+
+    function showDeviceLogs(deviceId) {
+        currentOpenDeviceId = deviceId;
+        document.getElementById('btn-live').innerText = '📡 Live (Ce module)';
+        document.getElementById('logsModal').style.display = 'flex';
+        refreshCurrentDeviceLogs();
+    }
+
+    function openGlobalLogs() {
+        currentOpenDeviceId = null;
+        document.getElementById('btn-live').innerText = '📡 Live (Station Entière)';
+        document.getElementById('logsModal').style.display = 'flex';
+        refreshCurrentDeviceLogs();
+    }
+
+    function refreshCurrentDeviceLogs() {
+        const url = currentOpenDeviceId
+            ? `/mission/device/${currentOpenDeviceId}/logs`
+            : `/admin/reports/last-hour`;
+
+        const title = currentOpenDeviceId
+            ? "Historique — Module #" + currentOpenDeviceId
+            : "Historique — Station Entière";
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => updateLogsTable(data, title));
+    }
+
+    function showReport(type) {
+        const baseUrl = type === 'hour' ? '/admin/reports/last-hour' : '/admin/reports/recent-actions';
+        const url = currentOpenDeviceId ? `${baseUrl}?deviceId=${currentOpenDeviceId}` : baseUrl;
+
+        const scope = currentOpenDeviceId ? "ce module" : "toute la station";
+        const title = type === 'hour' ? `Dernière Heure (${scope})` : `50 Dernières Actions (${scope})`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => updateLogsTable(data, title));
+    }
+
+    function updateLogsTable(logs, title) {
+        const container = document.getElementById('logsContainer');
+        document.getElementById('modalTitle').innerText = title;
+
+        if (!logs || logs.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">Aucune donnée enregistrée.</p>';
+            return;
+        }
+
+        let html = `
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--color-9); text-align: left;">
+                    <th style="padding: 12px;">Date</th>
+                    <th style="padding: 12px;">Événement</th>
+                    <th style="padding: 12px;">Opérateur</th>
+                    <th style="padding: 12px;">Métrique</th>
+                    <th style="padding: 12px;">Ancien</th>
+                    <th style="padding: 12px;">Nouveau</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        logs.forEach(log => {
+            const date = new Date(log.timestamp).toLocaleString('fr-FR');
+            const op = log.operatorName || '<span style="opacity: 0.5;">SYSTEM</span>';
+            const isTelemetry = log.eventType === 'TELEMETRY';
+
+            html += `
+            <tr style="border-bottom: 1px solid #333;">
+                <td style="padding: 10px; font-size: 0.85rem; color: #aaa;">${date}</td>
+                <td style="padding: 10px;"><span style="font-size: 0.75rem; padding: 2px 6px; background: ${isTelemetry ? '#1a3a3a' : '#3a1a1a'}; border-radius: 4px;">${log.eventType}</span></td>
+                <td style="padding: 10px; font-weight: bold; color: var(--color-9);">${op}</td>
+                <td style="padding: 10px;">${log.metricName || '—'}</td>
+                <td style="padding: 10px; color: #ff6b6b;">${log.oldNumericValue ?? log.oldStringValue ?? '—'}</td>
+                <td style="padding: 10px; color: #51cf66; font-weight: bold;">${log.newNumericValue ?? log.newStringValue ?? '—'}</td>
+            </tr>`;
+        });
+        container.innerHTML = html + '</tbody></table>';
+    }
+
+    function closeLogsModal() {
+        document.getElementById('logsModal').style.display = 'none';
+        currentOpenDeviceId = null;
     }
 
 </script>

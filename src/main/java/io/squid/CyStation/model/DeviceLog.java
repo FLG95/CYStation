@@ -28,6 +28,8 @@ public class DeviceLog {
 
     private String metricName;
 
+    private String operatorName;
+
     @PrePersist
     protected void onCreate() {
         this.timestamp = LocalDateTime.now();
@@ -122,5 +124,13 @@ public class DeviceLog {
 
     public void setMetricName(String metricName) {
         this.metricName = metricName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 }
