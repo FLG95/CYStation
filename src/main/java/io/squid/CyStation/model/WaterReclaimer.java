@@ -43,8 +43,8 @@ public class WaterReclaimer extends Device{
     }
 
     @Override
-    public String getTelemetryDisplay(){
-        return this.purityLevel + "";
+    public String getTelemetryDisplay() {
+        return String.format("Pureté: %.2f%% | Stock: %d L", this.purityLevel, this.fillLevel);
     }
 
 }
