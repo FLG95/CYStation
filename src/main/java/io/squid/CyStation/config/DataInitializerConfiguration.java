@@ -43,12 +43,14 @@ class DataInitializerConfiguration {
                     "Jean.Dupond@cystation.fr", "Jean", "Dupond", "1234",
                     Role.ROLE_PASSENGER, 0, LocalDate.of(1998, 12, 20), Gender.OTHER);
 
-            /*
+
+
+
             Zone bioLab = createZoneIfNotFound(zoneRepository, "Laboratoire Biologique",
-                    "Recherche sur la survie végétale en milieu hostile.");
+                    "Recherche sur la survie végétale en milieu hostile.", "");
 
             Zone engineRoom = createZoneIfNotFound(zoneRepository, "Salle des Moteurs",
-                    "Propulsion ionique et gestion de l'énergie.");
+                    "Propulsion ionique et gestion de l'énergie.", "");
 
 
             if (bioLab.getDevices() == null || bioLab.getDevices().isEmpty()) {
@@ -62,7 +64,7 @@ class DataInitializerConfiguration {
                 gen.setName("Generateur Principal");
                 deviceService.addDeviceToZone(gen, engineRoom.getId());
             }
-            */
+
 
             System.out.println(">> Initialisation terminée !");
         };
@@ -80,7 +82,6 @@ class DataInitializerConfiguration {
             user.setPassword(encoder.encode(pass));
             user.setRole(role);
             user.setExperience(exp);
-
             user.setBirthDate(birthDate);
             user.setGender(gender);
 
@@ -88,20 +89,21 @@ class DataInitializerConfiguration {
             System.out.println("Utilisateur spatial créé : " + email);
         }
     }
-    /*
-    private Zone createZoneIfNotFound(ZoneRepository repo, String name, String desc) {
+
+
+    private Zone createZoneIfNotFound(ZoneRepository repo, String name, String desc, String imgUrl) {
         Zone zone = repo.findZoneByName(name);
 
         if (zone == null) {
             zone = new Zone();
             zone.setName(name);
             zone.setDescription(desc);
-            zone
+            zone.setImageUrl(imgUrl);
             zone = repo.save(zone);
             System.out.println("Zone créée : " + name);
         }
 
         return zone;
     }
-     */
+
 }
