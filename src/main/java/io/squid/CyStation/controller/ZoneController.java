@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -61,6 +62,14 @@ public class ZoneController {
 
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/mission");
+    }
+
+    @GetMapping("/mission/device/{id}/logs")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public ResponseEntity<List<DeviceLog>> getDeviceLogs(@PathVariable Long id) {
+        List<DeviceLog> logs = deviceLogService.getLogsByDeviceId(id);
+        return ResponseEntity.ok(logs);
     }
 
     @GetMapping("/mission")

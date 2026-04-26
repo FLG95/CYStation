@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class DeviceLogService {
@@ -37,6 +38,10 @@ public class DeviceLogService {
 
     public void clearAllLogs() {
         logRepository.deleteAllInBatch();
+    }
+
+    public List<DeviceLog> getLogsByDeviceId(Long deviceId) {
+        return logRepository.findByDeviceIdOrderByTimestampDesc(deviceId);
     }
 
     @Scheduled(cron = "0 0 * * * *")
