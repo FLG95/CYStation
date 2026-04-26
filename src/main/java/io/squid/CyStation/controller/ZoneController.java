@@ -82,6 +82,20 @@ public class ZoneController {
         return ResponseEntity.ok("Zone mise à jour avec succès");
     }
 
+    @PostMapping("/admin/device/create")
+    public String createDeviceAdmin(@RequestParam String name,
+                                    @RequestParam String deviceType,
+                                    @RequestParam Long zoneId) {
+        try {
+            Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
+            newDevice.setName(name);
+            deviceService.addDeviceToZone(newDevice, zoneId);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/admin/zone?error";
+        }
+        return "redirect:/admin/zone";
+    }
+
 
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name,
@@ -176,6 +190,23 @@ public class ZoneController {
         model.addAttribute("deviceCategories", DeviceCategory.values());
 
         return "public/zone-detail";
+    }
+
+    @PostMapping("/admin/zone/create")
+    public String createZoneAdmin(@RequestParam String name,
+                                  @RequestParam(required = false) String description,
+                                  @RequestParam(required = false) String imageUrl,
+                                  HttpServletRequest request) {
+
+        if (zoneRepository.findZoneByName(name) == null) {
+            Zone newZone = new Zone();
+            newZone.setName(name);
+            newZone.setDescription(description);
+            newZone.setImageUrl(imageUrl);
+            zoneService.save(newZone);
+        }
+
+        return "redirect:/admin/zone";
     }
 
 

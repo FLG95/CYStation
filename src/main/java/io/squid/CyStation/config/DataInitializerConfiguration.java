@@ -43,7 +43,7 @@ class DataInitializerConfiguration {
                     "Jean.Dupond@cystation.fr", "Jean", "Dupond", "1234",
                     Role.ROLE_PASSENGER, 0, LocalDate.of(1998, 12, 20), Gender.OTHER);
 
-
+            /*
             Zone bioLab = createZoneIfNotFound(zoneRepository, "Laboratoire Biologique",
                     "Recherche sur la survie végétale en milieu hostile.");
 
@@ -62,6 +62,7 @@ class DataInitializerConfiguration {
                 gen.setName("Generateur Principal");
                 deviceService.addDeviceToZone(gen, engineRoom.getId());
             }
+            */
 
             System.out.println(">> Initialisation terminée !");
         };
@@ -87,7 +88,7 @@ class DataInitializerConfiguration {
             System.out.println("Utilisateur spatial créé : " + email);
         }
     }
-
+    /*
     private Zone createZoneIfNotFound(ZoneRepository repo, String name, String desc) {
         Zone zone = repo.findZoneByName(name);
 
@@ -95,10 +96,12 @@ class DataInitializerConfiguration {
             zone = new Zone();
             zone.setName(name);
             zone.setDescription(desc);
+            zone
             zone = repo.save(zone);
             System.out.println("Zone créée : " + name);
         }
 
         return zone;
     }
+     */
 }

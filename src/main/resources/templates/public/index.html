@@ -57,16 +57,14 @@
 
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">
-            <a th:href="@{/zone-overview}" style="text-decoration: none; display: inline-block;">
-                <h2>Infrastructures du Complexe <span style="font-size: 0.5em; color: var(--color-7); vertical-align: middle;">► Gérer les modules</span></h2>
-            </a>
+                <h2>Infrastructures du Complexe </h2>
         </div>
 
         <div class="cnes-grid infrastructure-grid">
             <article class="infra-card" th:each="zone : ${zones}">
-                <a th:href="@{/mission/zone/{id}(id=${zone.id})}" style="text-decoration: none; display: block; height: 100%;">
+                    <img th:src="${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80'}"
+                         th:alt="${zone.name}">
 
-                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" th:alt="${zone.name}">
 
                     <div class="infra-overlay">
                         <h3 th:text="${zone.name}">Nom de la Zone</h3>
@@ -74,12 +72,10 @@
                            th:text="${#lists.size(zone.devices)} + ' modules détectés'">
                         </p>
                     </div>
-                </a>
             </article>
 
             <div th:if="${#lists.isEmpty(zones)}" class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 20px;">
                 <p>Aucune zone active détectée dans la station.</p>
-                <a th:href="@{/mission}" class="cnes-btn" style="margin-top: 10px;">Initialiser une zone</a>
             </div>
         </div>
     </section>
