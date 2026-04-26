@@ -271,3 +271,9 @@
     width: 100%;
     margin-top: 10px;
 }
+
+.btn-delete-request {
+    position: relative;
+    z-index: 999 !important;
+    cursor: pointer !important;
+}

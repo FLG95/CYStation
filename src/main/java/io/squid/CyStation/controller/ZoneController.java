@@ -2,19 +2,29 @@ package io.squid.CyStation.controller;
 
 import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.DeviceStatus;
+import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceLogService;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -25,6 +35,12 @@ public class ZoneController {
     private final DeviceRepository deviceRepository;
     private final DeviceService deviceService;
     private final DeviceLogService deviceLogService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     public ZoneController(ZoneRepository zoneRepository,
@@ -56,28 +72,7 @@ public class ZoneController {
     }
 
 
-    @PostMapping("/mission/zone/create")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String createZone(@RequestParam String name,
-                             @RequestParam String description,
-                             HttpServletRequest request) { // Ajout de la requête
 
-        if (zoneRepository.findZoneByName(name) != null) {
-
-            String referer = request.getHeader("Referer");
-            return "redirect:" + (referer != null ? referer : "/mission") + "?error";
-
-        } else {
-            Zone newZone = new Zone();
-            newZone.setName(name);
-            newZone.setDescription(description);
-            zoneService.save(newZone);
-
-            String referer = request.getHeader("Referer");
-
-            return "redirect:" + (referer != null ? referer : "/mission");
-        }
-    }
 
     @PostMapping("mission/zone/update")
     @ResponseBody
@@ -145,7 +140,7 @@ public class ZoneController {
 
 
     @PostMapping("/mission/device/delete/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
         if (deviceRepository.existsById(id)) {
@@ -154,6 +149,7 @@ public class ZoneController {
         }
         return ResponseEntity.status(404).body("NOT_FOUND");
     }
+
 
     @PostMapping("/mission/zone/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -215,15 +211,20 @@ public class ZoneController {
 
 
     @GetMapping("/mission/zone/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String viewZone(@PathVariable Long id, Model model) {
-
+    @Transactional
+    public String getZoneDetail(@PathVariable Long id, Model model) {
         Zone zone = zoneRepository.findById(id).orElseThrow();
-        model.addAttribute("zone", zone);
-        model.addAttribute("deviceCategories", DeviceCategory.values());
 
+        entityManager.refresh(zone);
+
+        zone.getDevices().forEach(d ->
+                System.out.println("Appareil: " + d.getName() + " | Statut: " + d.getRequestStatus())
+        );
+
+        model.addAttribute("zone", zone);
         return "public/zone-detail";
     }
+
 
     @PostMapping("/admin/zone/create")
     @PreAuthorize("hasRole('ADMIN')")
@@ -241,6 +242,25 @@ public class ZoneController {
         }
 
         return "redirect:/admin/zone";
+    }
+
+    @PreAuthorize("hasRole('SCIENTIST')")
+    @PostMapping("/mission/device/request-deletion/{id}")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<?> requestDeletion(@PathVariable Long id, Principal principal) {
+        Device device = deviceRepository.findById(id).orElseThrow();
+
+        device.setRequestStatus(RequestStatus.PENDING);
+        device.setRequestedBy(principal.getName());
+        deviceRepository.save(device);
+
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("deviceId", id);
+        payload.put("status", "PENDING");
+        messagingTemplate.convertAndSend("/topic/device-updates", payload, (Map<String, Object>) null);
+        return ResponseEntity.ok().build();
     }
 
 

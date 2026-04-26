@@ -1,15 +1,22 @@
 package io.squid.CyStation.controller;
 import io.squid.CyStation.enums.DeviceCategory;
+import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.Device;
+import io.squid.CyStation.model.Zone;
+import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.UserService;
+import io.squid.CyStation.service.ZoneService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Controller
@@ -25,6 +32,11 @@ public class AdminController {
 
     @Autowired
     DeviceService deviceService;
+
+    @Autowired
+    ZoneService zoneService;
+    @Autowired
+    private DeviceRepository deviceRepository;
 
 
     @GetMapping("/")
@@ -74,6 +86,56 @@ public class AdminController {
             return "redirect:/admin/zone?error";
         }
         return "redirect:/admin/zone";
+    }
+
+    @PostMapping("/mission/zone/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String createZone(@RequestParam String name,
+                             @RequestParam String description,
+                             HttpServletRequest request) { // Ajout de la requête
+
+        if (zoneRepository.findZoneByName(name) != null) {
+
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/mission") + "?error";
+
+        } else {
+            Zone newZone = new Zone();
+            newZone.setName(name);
+            newZone.setDescription(description);
+            zoneService.save(newZone);
+
+            String referer = request.getHeader("Referer");
+
+            return "redirect:" + (referer != null ? referer : "/mission");
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/request")
+    public String showRequests(Model model) {
+
+        List<Device> requests = deviceRepository.findByRequestStatus(RequestStatus.PENDING);
+
+        model.addAttribute("pendingRequests", requests);
+        model.addAttribute("activeTab", "requests");
+        return "admin/request"; // Assurez-vous que le nom correspond à votre fichier HTML
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/process-deletion")
+    public ResponseEntity<?> processDeletion(@PathVariable Long id, @RequestParam boolean approved) {
+        Device device = deviceRepository.findById(id).orElseThrow();
+
+        if (approved) {
+            deviceRepository.delete(device);
+            return ResponseEntity.ok("Objet supprimé définitivement.");
+        } else {
+            device.setRequestStatus(RequestStatus.REJECTED);
+            device.setRequestedBy(null);
+            deviceRepository.save(device);
+            return ResponseEntity.ok("Suppression refusée, l'objet reste actif.");
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package io.squid.CyStation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.squid.CyStation.enums.DeviceStatus;
+import io.squid.CyStation.enums.RequestStatus;
 import jakarta.persistence.*;
 
 import java.util.Map;
@@ -20,6 +21,12 @@ public abstract class Device {
     @JoinColumn(name = "zone_id")
     @JsonIgnore
     private Zone zone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "request_status")
+    private RequestStatus requestStatus;
+
+    private String requestedBy;
 
     public Device() {
 
@@ -72,6 +79,21 @@ public abstract class Device {
     @Transient
     public abstract String getTelemetryDisplay();
 
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
+    public String getRequestedBy() {
+        return requestedBy;
+    }
+
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
+    }
     @Transient
     public abstract Map<String, Double> getTelemetryMetrics();
 
