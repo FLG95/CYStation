@@ -6,7 +6,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("WaterReclaimer")
+@DiscriminatorValue("WATER_RECLAIMER")
 public class WaterReclaimer extends Device{
 
     private double purityLevel;
