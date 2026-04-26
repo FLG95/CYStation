@@ -172,10 +172,10 @@
                 <label th:for="'deviceType-' + ${zone.id}">Type de module &#10142;</label>
                 <label>
                     <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
-                        <option value="CO2_SENSOR">Capteur CO2</option>
-                        <option value="GENERATOR">Générateur</option>
-                        <option value="RADAR">Radar</option>
-                        <option value="RADIO">Radio</option>
+                        <option th:each="category : ${deviceCategories}"
+                                th:value="${category.name()}"
+                                th:text="${category.displayName}">
+                        </option>
                     </select>
                 </label>
 

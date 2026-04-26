@@ -108,14 +108,15 @@
             <input type="hidden" name="zoneId" th:value="${zone.id}">
 
             <label>Nom du module</label>
-            <input type="text" name="name" required>
-
-            <label>Type de système</label>
-            <select name="deviceType" required>
-                <option value="CO2_SENSOR">Capteur CO2</option>
-                <option value="GENERATOR">Générateur</option>
-                <option value="RADAR">Radar</option>
-                <option value="RADIO">Radio</option>
+            <label>
+                <input type="text" th:id="'deviceName-' + ${zone.id}" name="name" required>
+            </label>
+            <label th:for="'deviceType-' + ${zone.id}">Type de module &#10142;</label>
+            <select th:id="'deviceType-' + ${zone.id}" name="deviceType" required>
+                <option th:each="category : ${deviceCategories}"
+                        th:value="${category.name()}"
+                        th:text="${category.displayName}">
+                </option>
             </select>
 
             <button type="submit" class="cnes-btn btn-full">Confirmer</button>

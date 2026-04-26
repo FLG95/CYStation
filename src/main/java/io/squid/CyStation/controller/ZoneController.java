@@ -33,7 +33,7 @@ public class ZoneController {
     }
 
 
-    @GetMapping("/zone-overview")
+    @GetMapping("/mission")
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
@@ -166,6 +166,7 @@ public class ZoneController {
 
         Zone zone = zoneRepository.findById(id).orElseThrow();
         model.addAttribute("zone", zone);
+        model.addAttribute("deviceCategories", DeviceCategory.values());
 
         return "public/zone-detail";
     }
