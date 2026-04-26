@@ -97,4 +97,12 @@ public abstract class Device {
     @Transient
     public abstract Map<String, Double> getTelemetryMetrics();
 
+    public boolean isRepairableByPassager() {
+        return this instanceof CoffeeMachine;
+    }
+
+    public String getDeviceTypeName() {
+        return this.getClass().getSimpleName();
+    }
+
 }

@@ -64,7 +64,8 @@
                          th:id="'led-' + ${device.id}">
                     </div>
 
-                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}" sec:authorize="hasRole('SCIENTIST')">
+                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}"
+                         sec:authorize="hasRole('SCIENTIST')">
                         <button type="button"
                                 th:id="'btn-delete-' + ${device.id}"
                                 th:disabled="${device.requestStatus != null && device.requestStatus.name() == 'PENDING'}"
@@ -87,23 +88,30 @@
                             style="color: white; margin: 0; font-size: 1.4rem;"></h3>
 
                         <div class="device-controls">
+
                             <button type="button"
                                     th:id="'btn-' + ${device.id}"
-                                    th:onclick="'toggleDeviceAjax(' + ${device.id} + ')'"
+                                    th:data-id="${device.id}"
+                                    onclick="toggleDeviceAjax(this.getAttribute('data-id'))"
                                     th:class="${device.status.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
                                     th:disabled="${device.status.name() == 'MAINTENANCE'}"
                                     th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
                             </button>
 
-                            <button type="button"
-                                    th:id="'btn-repair-' + ${device.id}"
-                                    th:data-device-id="${device.id}"
-                                    th:data-category-code="${device.deviceCategoryCode}"
-                                    onclick="repairDeviceAjax(this.getAttribute('data-device-id'), this.getAttribute('data-category-code'))"
-                                    class="btn-repair"
-                                    th:style="${device.status.name() == 'MAINTENANCE' ? 'display:block;' : 'display:none;'}">
-                                Réparer
-                            </button>
+                            <th:block th:if="${device.status?.name() == 'MAINTENANCE'}">
+
+                                <button type="button"
+                                        th:id="'btn-repair-' + ${device.id}"
+                                        th:if="${device.status?.name() == 'MAINTENANCE' and
+                                        (!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine')}"
+                                        th:data-id="${device.id}"
+                                        th:data-cat="${device.deviceCategoryCode}"
+                                        onclick="repairDeviceAjax(this.getAttribute('data-id'), this.getAttribute('data-cat'))"
+                                        class="btn-repair">
+                                    Réparer
+                                </button>
+
+                            </th:block>
 
                             <button type="button"
                                     class="btn-history"
@@ -196,7 +204,7 @@
 
 <script>
     /* ---- CSRF ---- */
-    const csrfToken  = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
     /* ---- Deletion ---- */
@@ -207,10 +215,13 @@
     }
 
     function sendDeletionRequest(deviceId) {
-        if (!csrfToken || !csrfHeader) { alert("Erreur de sécurité : session expirée."); return; }
+        if (!csrfToken || !csrfHeader) {
+            alert("Erreur de sécurité : session expirée.");
+            return;
+        }
         fetch(`/mission/device/request-deletion/${deviceId}`, {
             method: 'POST',
-            headers: { [csrfHeader]: csrfToken, 'Content-Type': 'application/json' }
+            headers: {[csrfHeader]: csrfToken, 'Content-Type': 'application/json'}
         })
             .then(r => r.ok ? (alert("Demande transmise et en attente de validation."), location.reload()) : alert("Erreur serveur : " + r.status))
             .catch(() => alert("Erreur réseau."));
@@ -228,7 +239,7 @@
         currentOpenDeviceId = deviceId;
         document.getElementById('btn-live').innerText = '► Live — Module #' + deviceId;
         document.getElementById('logsModal').style.display = 'flex';
-        document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
+        document.querySelectorAll('.logs-nav-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
         refreshCurrentDeviceLogs();
     }
 
@@ -236,28 +247,28 @@
         currentOpenDeviceId = null;
         document.getElementById('btn-live').innerText = '► Live — Station Entière';
         document.getElementById('logsModal').style.display = 'flex';
-        document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
+        document.querySelectorAll('.logs-nav-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
         refreshCurrentDeviceLogs();
     }
 
     function refreshCurrentDeviceLogs() {
-        const url   = currentOpenDeviceId ? `/mission/device/${currentOpenDeviceId}/logs` : `/admin/reports/last-hour`;
+        const url = currentOpenDeviceId ? `/mission/device/${currentOpenDeviceId}/logs` : `/admin/reports/last-hour`;
         const title = currentOpenDeviceId ? `Module #${currentOpenDeviceId}` : `Station Entière`;
-        const sub   = currentOpenDeviceId ? `Télémétrie & actions — device ${currentOpenDeviceId}` : `Vue globale de la station`;
+        const sub = currentOpenDeviceId ? `Télémétrie & actions — device ${currentOpenDeviceId}` : `Vue globale de la station`;
         fetch(url).then(r => r.json()).then(data => updateLogsTable(data, title, sub));
     }
 
     function showReport(type) {
         const baseUrl = type === 'hour' ? '/admin/reports/last-hour' : '/admin/reports/recent-actions';
-        const url     = currentOpenDeviceId ? `${baseUrl}?deviceId=${currentOpenDeviceId}` : baseUrl;
-        const scope   = currentOpenDeviceId ? `Module #${currentOpenDeviceId}` : 'Station Entière';
-        const title   = type === 'hour' ? `Dernière Heure — ${scope}` : `50 Dernières Actions — ${scope}`;
-        const sub     = type === 'hour' ? 'Événements des 60 dernières minutes' : 'Actions opérateur les plus récentes';
+        const url = currentOpenDeviceId ? `${baseUrl}?deviceId=${currentOpenDeviceId}` : baseUrl;
+        const scope = currentOpenDeviceId ? `Module #${currentOpenDeviceId}` : 'Station Entière';
+        const title = type === 'hour' ? `Dernière Heure — ${scope}` : `50 Dernières Actions — ${scope}`;
+        const sub = type === 'hour' ? 'Événements des 60 dernières minutes' : 'Actions opérateur les plus récentes';
         fetch(url).then(r => r.json()).then(data => updateLogsTable(data, title, sub));
     }
 
     function updateLogsTable(logs, title, subtitle) {
-        document.getElementById('modalTitle').innerText    = title;
+        document.getElementById('modalTitle').innerText = title;
         document.getElementById('modalSubtitle').innerText = subtitle || '';
         const container = document.getElementById('logsContainer');
 
@@ -271,11 +282,11 @@
         }
 
         const rows = logs.map(log => {
-            const date        = new Date(log.timestamp).toLocaleString('fr-FR');
+            const date = new Date(log.timestamp).toLocaleString('fr-FR');
             const isTelemetry = log.eventType === 'TELEMETRY';
-            const isAction    = ['TOGGLE','REPAIR','UPDATE'].includes(log.eventType);
-            const badgeClass  = isTelemetry ? 'telemetry' : (isAction ? 'action' : 'other');
-            const opCell      = log.operatorName
+            const isAction = ['TOGGLE', 'REPAIR', 'UPDATE'].includes(log.eventType);
+            const badgeClass = isTelemetry ? 'telemetry' : (isAction ? 'action' : 'other');
+            const opCell = log.operatorName
                 ? `<span class="log-op">${log.operatorName}</span>`
                 : `<span class="log-sys">SYSTEM</span>`;
 
@@ -317,7 +328,7 @@
     });
 
     /* Fermer en cliquant sur le fond */
-    document.getElementById('logsModal').addEventListener('click', function(e) {
+    document.getElementById('logsModal').addEventListener('click', function (e) {
         if (e.target === this) closeLogsModal();
     });
 </script>
