@@ -248,7 +248,6 @@
         }
     });
 
-    // Fermer les modals en cliquant en dehors
     document.querySelectorAll('.modal-overlay').forEach(modal => {
         modal.addEventListener('click', function (e) {
             if (e.target === this) this.style.display = 'none';
