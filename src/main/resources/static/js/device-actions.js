@@ -1,4 +1,5 @@
 
+
 function toggleDeviceAjax(deviceId) {
     const btn = document.getElementById('btn-' + deviceId);
     const statusText = document.getElementById('status-text-' + deviceId);
@@ -9,25 +10,19 @@ function toggleDeviceAjax(deviceId) {
         method: 'POST',
         headers: { [header]: token }
     })
-        .then(response => {
-            if (response.ok) return response.json();
-            throw new Error("Erreur serveur");
-        })
+        .then(response => response.json())
         .then(status => {
-            console.log("Statut reçu :", status);
-
             statusText.textContent = status.displayValue;
 
             if (status.name === 'ONLINE') {
-                btn.textContent = 'Éteindre';
-                btn.className = 'btn-toggle off';
+                btn.textContent = (btn.classList.contains('btn-action')) ? 'OFF' : 'Éteindre';
+                btn.className = btn.classList.contains('btn-action') ? 'btn-action btn-off' : 'btn-toggle off';
             } else {
-                btn.textContent = 'Allumer';
-                btn.className = 'btn-toggle on';
+                btn.textContent = (btn.classList.contains('btn-action')) ? 'ON' : 'Allumer';
+                btn.className = btn.classList.contains('btn-action') ? 'btn-action btn-on' : 'btn-toggle on';
             }
-
             btn.disabled = (status.name === 'MAINTENANCE');
-        })
+        });
 }
 
 
@@ -43,9 +38,19 @@ function deleteDeviceAjax(deviceId) {
     })
         .then(response => {
             if (response.ok) {
+                // TENTATIVE 1 : On cherche la carte (Vue Index)
                 const card = document.getElementById('device-card-' + deviceId);
-                card.style.opacity = '0';
-                setTimeout(() => card.remove(), 300);
+                // TENTATIVE 2 : On cherche la ligne (Vue Admin)
+                const row = document.getElementById('device-row-' + deviceId);
+
+                const elementToDelete = card || row;
+
+                if (elementToDelete) {
+                    elementToDelete.style.transition = "all 0.3s ease";
+                    elementToDelete.style.opacity = '0';
+                    elementToDelete.style.transform = "translateX(20px)";
+                    setTimeout(() => elementToDelete.remove(), 300);
+                }
             }
         });
 }
@@ -94,8 +99,14 @@ function deleteZoneAjax(zoneId) {
 
 
 function repairDeviceAjax(deviceId, deviceTypeCode) {
+    // On force la recherche des éléments car ils peuvent changer selon la page
     const modal = document.getElementById('gameModal');
     const iframe = document.getElementById('gameFrame');
+
+    if (!modal || !iframe) {
+        console.error("Éléments de jeu introuvables dans le DOM");
+        return;
+    }
 
     const games = {
         'CO2_SENSOR' : '/mission/game/co2',
@@ -107,10 +118,7 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
     const gameUrl = games[deviceTypeCode] || '/mission/game/radio';
 
     modal.style.display = 'flex';
-
     iframe.src = gameUrl + "?deviceId=" + deviceId;
-
-    console.log("Lancement du jeu (" + gameUrl + ") pour le device " + deviceId);
 }
 
 

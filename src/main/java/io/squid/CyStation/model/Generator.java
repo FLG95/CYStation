@@ -31,4 +31,14 @@ public class Generator extends Device {
         return DeviceCategory.GENERATOR.getDisplayName();
     }
 
+    @Override
+    public String getDeviceImage(){
+        return "https://www.ringpower.com/media/5ayhz1gv/generator_exterior_23.png?entropycrop=128&width=1000";
+    }
+
+    @Override
+    public String getTelemetryDisplay(){
+        return this.productionValue + "GW";
+    }
+
 }

@@ -63,4 +63,11 @@ public abstract class Device {
 
     @Transient
     public abstract String getDeviceDisplayName();
+
+    @Transient
+    public abstract String getDeviceImage();
+
+    @Transient
+    public abstract String getTelemetryDisplay();
+
 }

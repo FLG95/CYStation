@@ -32,4 +32,16 @@ public class Co2Sensor extends Sensor {
         return DeviceCategory.CO2_SENSOR.getDisplayName();
     }
 
+    @Override
+    public String getDeviceImage(){
+        return "https://cdn.shopify.com/s/files/1/0019/5952/files/CO2-Molecule-Image.jpg";
+    }
+
+    @Override
+    public String getTelemetryDisplay(){
+        return this.ppmLevel + "ppm";
+    }
+
+
+
 }
