@@ -11,7 +11,8 @@ public enum DeviceCategory {
     RADIO("Relais Radio", Radio::new),
     OXYGEN_SENSOR("Capteur Oxygène", OxygenSensor::new),
     RADIATION_SENSOR("Capteur de Radiation", RadiationSensor::new),
-    WATER_RECLAIMER("Recycleur d'eau", WaterReclaimer::new);
+    WATER_RECLAIMER("Recycleur d'eau", WaterReclaimer::new),
+    CAFE("Machine à café", CoffeeMachine::new);
 
     private final String displayName;
     private final Supplier<Device> instantiator;
