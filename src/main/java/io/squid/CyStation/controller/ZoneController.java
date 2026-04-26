@@ -196,6 +196,12 @@ public class ZoneController {
         return "engineer/radiation.html";
     }
 
+    @GetMapping("/mission/game/water")
+    public String showWaterGame() {
+
+        return "engineer/water.html";
+    }
+
 
     @GetMapping("/mission/zone/{id}")
     @PreAuthorize("isAuthenticated()")

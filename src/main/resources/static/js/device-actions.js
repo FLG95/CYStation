@@ -105,7 +105,8 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
         'RADAR': '/mission/game/radar',
         'RADIO': '/mission/game/radio',
         'OXYGEN_SENSOR': '/mission/game/o2',
-        'RADIATION_SENSOR': '/mission/game/radiation'
+        'RADIATION_SENSOR': '/mission/game/radiation',
+        'WATER_RECLAIMER': '/mission/game/water'
     };
 
     const gameUrl = games[deviceTypeCode] || '/mission/game/radio';
