@@ -9,6 +9,7 @@ import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.UserService;
 import io.squid.CyStation.service.ZoneService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -122,20 +123,35 @@ public class AdminController {
         return "admin/request"; // Assurez-vous que le nom correspond à votre fichier HTML
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{id}/process-deletion")
-    public ResponseEntity<?> processDeletion(@PathVariable Long id, @RequestParam boolean approved) {
-        Device device = deviceRepository.findById(id).orElseThrow();
 
-        if (approved) {
-            deviceRepository.delete(device);
-            return ResponseEntity.ok("Objet supprimé définitivement.");
-        } else {
-            device.setRequestStatus(RequestStatus.REJECTED);
-            device.setRequestedBy(null);
-            deviceRepository.save(device);
-            return ResponseEntity.ok("Suppression refusée, l'objet reste actif.");
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/request/process-deletion/{id}")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<?> processDeletion(@PathVariable Long id, @RequestParam boolean approved) {
+        try {
+            Device device = deviceRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Device introuvable"));
+
+            if (approved) {
+                if (device.getZone() != null) {
+                    device.getZone().getDevices().remove(device);
+                }
+
+                deviceRepository.delete(device);
+                return ResponseEntity.ok().build();
+            } else {
+                device.setRequestStatus(RequestStatus.REJECTED);
+                device.setRequestedBy(null);
+                deviceRepository.save(device);
+                return ResponseEntity.ok().build();
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erreur SQL : " + e.getMessage());
         }
     }
-
 }
+

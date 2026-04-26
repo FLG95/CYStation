@@ -27,7 +27,8 @@
 
 <main class="cnes-layout">
 
-    <section class="cnes-hero" id="hero-zone">
+    <section class="cnes-hero" id="hero-zone"
+             th:style="|background-image: url('${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80'}')|">
         <div class="cnes-hero-content">
             <span class="tag">Administration Secteur</span>
             <div class="header-with-actions">
@@ -67,7 +68,7 @@
                     <div class="status-led"
                          th:classappend="${device.status.name() == 'ONLINE' ? 'led-on' : 'led-off'}"></div>
 
-                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}">
+                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}" sec:authorize="hasRole('SCIENTIST')">
                         <button type="button"
                                 th:id="'btn-delete-' + ${device.id}"
                                 th:disabled="${device.requestStatus != null && device.requestStatus.name() == 'PENDING'}"
@@ -198,52 +199,45 @@
 
 
 <script>
-
     function confirmDeletionRequest(deviceId) {
-        Swal.fire({
-            title: 'Confirmer la demande ?',
-            text: "L'administrateur devra valider la suppression de ce module.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Oui, envoyer !',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                sendDeletionRequest(deviceId);
-            }
-        })
+        const text = "Confirmer la demande ?\nL'administrateur devra valider la suppression de ce module.";
+        if (confirm(text)) {
+            sendDeletionRequest(deviceId);
+        }
     }
 
     function sendDeletionRequest(deviceId) {
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const csrfTokenElement = document.querySelector('meta[name="_csrf"]');
+        const csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
+
+        if (!csrfTokenElement || !csrfHeaderElement) {
+            console.error("Erreur : Jetons CSRF introuvables dans le <head>");
+            alert("Erreur de sécurité : session expirée ou invalide.");
+            return;
+        }
+
+        const token = csrfTokenElement.content;
+        const header = csrfHeaderElement.content;
 
         fetch(`/mission/device/request-deletion/${deviceId}`, {
             method: 'POST',
-            headers: {[header]: token}
+            headers: {
+                [header]: token,
+                'Content-Type': 'application/json'
+            }
         })
             .then(response => {
                 if (response.ok) {
-                    Swal.fire('Transmis !', 'La demande est en attente de validation.', 'success');
-
-                    const btn = document.getElementById(`btn-delete-${deviceId}`);
-                    const btnText = document.getElementById(`text-btn-${deviceId}`);
-
-                    if (btn && btnText) {
-                        btn.disabled = true;
-                        btn.style.opacity = "0.5";
-                        btn.style.cursor = "not-allowed";
-                        btnText.innerText = "Suppression en attente...";
-                    }
+                    alert("Transmis ! La demande est en attente de validation.");
+                    location.reload();
                 } else {
-                    Swal.fire('Erreur', 'Impossible d\'envoyer la demande.', 'error');
+                    console.error("Erreur serveur:", response.status);
+                    alert("Erreur serveur : " + response.status);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                Swal.fire('Erreur', 'Une erreur réseau est survenue.', 'error');
+                alert("Erreur réseau.");
             });
     }
 
@@ -336,3 +330,6 @@
     }
 
 </script>
+
+</body>
+</html>
