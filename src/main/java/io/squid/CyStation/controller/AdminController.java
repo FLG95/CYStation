@@ -139,7 +139,7 @@ public class AdminController {
                     device.getZone().getDevices().remove(device);
                 }
 
-                deviceRepository.delete(device);
+                deviceService.deleteDevice(device.getId());
                 return ResponseEntity.ok().build();
             } else {
                 device.setRequestStatus(RequestStatus.REJECTED);
