@@ -4,6 +4,9 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+
+import java.util.Map;
 
 @Entity
 @DiscriminatorValue("Radio")
@@ -40,6 +43,14 @@ public class Radio extends Device{
     @Override
     public String getTelemetryDisplay(){
         return this.contact + "";
+    }
+
+    @Transient
+    @Override
+    public Map<String, Double> getTelemetryMetrics() {
+        return Map.of(
+                "CONTACT", (double) this.contact
+        );
     }
 
 }

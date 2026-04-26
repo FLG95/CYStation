@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
+import java.util.Map;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "device_type", discriminatorType = DiscriminatorType.STRING)
@@ -69,5 +71,8 @@ public abstract class Device {
 
     @Transient
     public abstract String getTelemetryDisplay();
+
+    @Transient
+    public abstract Map<String, Double> getTelemetryMetrics();
 
 }

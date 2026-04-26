@@ -5,6 +5,7 @@ import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
+import io.squid.CyStation.service.DeviceLogService;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,18 +24,28 @@ public class ZoneController {
     private final ZoneService zoneService;
     private final DeviceRepository deviceRepository;
     private final DeviceService deviceService;
+    private final DeviceLogService deviceLogService;
 
 
     public ZoneController(ZoneRepository zoneRepository,
                           ZoneService zoneService,
                           DeviceRepository deviceRepository,
-                          DeviceService deviceService) {
+                          DeviceService deviceService, DeviceLogService deviceLogService) {
         this.zoneRepository = zoneRepository;
         this.zoneService = zoneService;
         this.deviceRepository = deviceRepository;
         this.deviceService = deviceService;
+        this.deviceLogService = deviceLogService;
     }
 
+    @PostMapping("/admin/logs/clear")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String clearLogs(HttpServletRequest request) {
+        deviceLogService.clearAllLogs();
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/mission");
+    }
 
     @GetMapping("/mission")
     @PreAuthorize("isAuthenticated()")

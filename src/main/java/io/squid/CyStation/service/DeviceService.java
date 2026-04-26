@@ -19,11 +19,13 @@ public class DeviceService {
 
     private final DeviceRepository deviceRepository;
     private final ZoneRepository zoneRepository;
+    private final DeviceLogService deviceLogService;
 
 
-    public DeviceService(DeviceRepository deviceRepository, ZoneRepository zoneRepository) {
+    public DeviceService(DeviceRepository deviceRepository, ZoneRepository zoneRepository, DeviceLogService deviceLogService) {
         this.deviceRepository = deviceRepository;
         this.zoneRepository = zoneRepository;
+        this.deviceLogService = deviceLogService;
     }
 
 
@@ -36,6 +38,7 @@ public class DeviceService {
             if (device.getZone() != null) {
                 device.getZone().getDevices().remove(device);
             }
+            deviceLogService.logDeletion(device);
             deviceRepository.delete(device);
         }
     }
@@ -58,6 +61,8 @@ public class DeviceService {
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Device non trouvé avec l'id : " + id));
 
+        String oldStatus = device.getStatus().toString();
+
         if (device.getStatus() == DeviceStatus.MAINTENANCE) {
 
             return device.getStatus();
@@ -70,7 +75,7 @@ public class DeviceService {
         }
 
         deviceRepository.save(device);
-
+        deviceLogService.logStatusChange(device, oldStatus, device.getStatus().toString());
         return device.getStatus();
     }
 
@@ -80,6 +85,7 @@ public class DeviceService {
         if (device.getStatus() == DeviceStatus.MAINTENANCE) {
             device.setStatus(DeviceStatus.OFFLINE);
             deviceRepository.save(device);
+            deviceLogService.logRepair(device);
         }
         return device;
     }

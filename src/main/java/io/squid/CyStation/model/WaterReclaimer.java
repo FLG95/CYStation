@@ -4,6 +4,9 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+
+import java.util.Map;
 
 @Entity
 @DiscriminatorValue("WATER_RECLAIMER")
@@ -45,6 +48,15 @@ public class WaterReclaimer extends Device{
     @Override
     public String getTelemetryDisplay() {
         return String.format("Pureté: %.2f%% | Stock: %d L", this.purityLevel, this.fillLevel);
+    }
+
+    @Transient
+    @Override
+    public Map<String, Double> getTelemetryMetrics() {
+        return Map.of(
+                "PURITY_LEVEL", (double) this.purityLevel,
+                "FILL_OUTPUT", (double) this.fillLevel
+        );
     }
 
 }
