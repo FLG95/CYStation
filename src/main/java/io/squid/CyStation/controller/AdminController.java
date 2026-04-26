@@ -39,10 +39,9 @@ public class AdminController {
     @PostMapping("/users/add-exp")
     @ResponseBody
     public ResponseEntity<?> addExperience(@RequestParam Long id, @RequestParam int amount) {
-        User user = userService.findById(id);
-        user.setExperience(user.getExperience() + amount);
-        userService.save(user);
-        return ResponseEntity.ok(user.getExperience());
+
+        int newExp = userService.addExpAndLevelUp(id, amount);
+        return ResponseEntity.ok(newExp);
     }
 
     @GetMapping("/zone")

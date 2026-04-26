@@ -9,11 +9,28 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <script th:src="@{/js/admin/admin.js}" defer></script>
+
 </head>
 <body class="bg-dark">
 <div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout">
+
+    <nav class="admin-tabs">
+        <a th:href="@{/admin/users}"
+           th:classappend="${activeTab == 'users'} ? 'active' : ''"
+           class="tab-item">
+            Gestion Personnel
+        </a>
+        <a th:href="@{/admin/zones}"
+           th:classappend="${activeTab == 'zones'} ? 'active' : ''"
+           class="tab-item">
+            Infrastructure & Modules
+        </a>
+    </nav>
+
+
     <section class="section-header">
         <h1>Gestion du Personnel</h1>
         <p>Liste des opérateurs et scientifiques de la station.</p>
@@ -69,50 +86,6 @@
     </div>
 </main>
 
-<script>
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
 
-    function modifyExp(userId, amount) {
-        const formData = new FormData();
-        formData.append('id', userId);
-        formData.append('amount', amount);
-
-        fetch('/admin/users/add-exp', {
-            method: 'POST',
-            headers: {[header]: token},
-            body: formData
-        })
-            .then(res => res.json())
-            .then(newExp => {
-                document.getElementById('exp-' + userId).innerText = newExp;
-
-                let newRole = "ROLE_PASSENGER";
-                if (newExp >= 50) {
-                    newRole = "ROLE_SCIENTIST";
-                } else if (newExp >= 100) {
-                    newRole = "ROLE_ADMIN";
-                }
-
-                const roleBadge = document.getElementById('role-' + userId);
-                if (roleBadge) {
-                    roleBadge.innerText = newRole;
-
-                }
-            });
-    }
-
-    function deleteUser(userId) {
-        if (!confirm("Révoquer l'accès de cet utilisateur ?")) return;
-
-        fetch('/admin/users/delete/' + userId, {
-            method: 'POST',
-            headers: {[header]: token}
-        })
-            .then(res => {
-                if (res.ok) document.getElementById('user-row-' + userId).remove();
-            });
-    }
-</script>
 </body>
 </html>

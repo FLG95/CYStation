@@ -20,12 +20,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
     }
-
 
 
     public void save(User user) {
@@ -61,30 +60,31 @@ public class UserService {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
 
-        if (user != null) {
 
-            user.setFirstName(userForm.getFirstName());
-            user.setLastName(userForm.getLastName());
+        user.setFirstName(userForm.getFirstName());
+        user.setLastName(userForm.getLastName());
 
-            user.setProfilePicture(userForm.getProfilePicture());
+        user.setGender(userForm.getGender());
+        user.setBirthDate(userForm.getBirthDate());
 
-            userRepository.save(user);
-        }
+        user.setProfilePicture(userForm.getProfilePicture());
+
+        userRepository.save(user);
+
     }
 
     @Transactional
-    public void addExp(User user, int expToAdd){
-        user.setExperience(user.getExperience()+expToAdd);
+    public void addExp(User user, int expToAdd) {
+        user.setExperience(user.getExperience() + expToAdd);
 
-        if(user.getExperience()<= 0){
+        if (user.getExperience() <= 0) {
             user.setRole(Role.ROLE_PASSENGER);
-        }
-        else if(user.getExperience()>=50 && user.getExperience()<100){
+            user.setExperience(0);
+        } else if (user.getExperience() >= 50 && user.getExperience() < 100) {
             user.setRole(Role.ROLE_SCIENTIST);
-        }
-        else if (user.getExperience()>=100 && user.getExperience() < 999) {
+        } else if (user.getExperience() >= 100 && user.getExperience() < 999) {
             user.setRole(Role.ROLE_ADMIN);
-        }else if (user.getExperience() >= 999){
+        } else if (user.getExperience() >= 999) {
             user.setExperience(999);
         }
 
@@ -94,8 +94,7 @@ public class UserService {
     }
 
 
-
-    public void resetExp(User user){
+    public void resetExp(User user) {
         user.setExperience(0);
         user.setRole(Role.ROLE_PASSENGER);
 
@@ -132,6 +131,30 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
+
+
+    @Transactional
+    public int addExpAndLevelUp(Long id, int amount) {
+        User user = userRepository.findById(id).orElseThrow();
+
+        int totalExp = user.getExperience() + amount;
+        if (totalExp > 999) totalExp = 999;
+        if (totalExp < 0) totalExp = 0;
+        user.setExperience(totalExp);
+
+        if (totalExp >= 100) {
+            user.setRole(Role.ROLE_ADMIN);
+        } else if (totalExp >= 50) {
+            user.setRole(Role.ROLE_SCIENTIST);
+        } else {
+            user.setRole(Role.ROLE_PASSENGER);
+        }
+        userRepository.save(user);
+
+        return user.getExperience();
+    }
+
 }
 
 

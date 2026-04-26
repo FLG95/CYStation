@@ -158,6 +158,50 @@ body.bg-dark {
     padding: 2rem 0;
 }
 
+
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--color-4);
+    padding: 0 10px;
+}
+
+.tab-item {
+    padding: 12px 25px;
+    text-decoration: none;
+    color: var(--color-6);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tab-item:hover {
+    color: var(--color-10);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-item.active {
+    color: var(--color-9);
+    background: var(--color-2);
+    border: 1px solid var(--color-4);
+    border-bottom: 2px solid var(--color-9);
+    box-shadow: 0 -5px 15px rgba(0, 229, 255, 0.1);
+}
+
+.tab-icon {
+    font-size: 1.1rem;
+}
+
+
+
+
 .admin-table tbody tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.03);
 }
@@ -171,6 +215,8 @@ body.bg-dark {
     background-color: rgba(0, 255, 157, 0.05) !important;
     transition: background-color 0.2s ease;
 }
+
+
 
 .admin-table th:nth-child(1) { width: 50px; }
 .admin-table th:nth-child(2) { width: 220px; }
