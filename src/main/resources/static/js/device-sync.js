@@ -26,32 +26,37 @@ function connectWebSocket() {
 
 function updateDeviceUI(device) {
     const statusText = document.getElementById('status-text-' + device.id);
+    const led = document.getElementById('led-' + device.id);
     const btn = document.getElementById('btn-' + device.id);
     const repairBtn = document.getElementById('btn-repair-' + device.id);
 
+    const statusName = device.status.name || device.status;
+
     if (statusText) {
-        const statusName = device.status.name || device.status;
         statusText.textContent = device.status.displayValue || statusName;
         statusText.className = 'status-indicator ' + statusName;
+    }
 
-        if (statusName === 'MAINTENANCE') {
-            if (btn) btn.disabled = true;
-            if (repairBtn) {
-                repairBtn.style.display = 'inline-block'; // Pour le tableau
+    if (led) {
+        led.className = 'status-led ' + (statusName === 'ONLINE' ? 'led-on' : (statusName === 'MAINTENANCE' ? 'led-maintenance' : 'led-off'));
+    }
 
-                repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, '${device.deviceCategoryCode}')`);
-            }
-        } else {
-            if (btn) {
-                btn.disabled = false;
-                const isAdmin = btn.classList.contains('btn-action');
-                btn.textContent = (statusName === 'ONLINE') ? (isAdmin ? 'OFF' : 'Éteindre') : (isAdmin ? 'ON' : 'Allumer');
-                btn.className = isAdmin ?
-                    (statusName === 'ONLINE' ? 'btn-action btn-off' : 'btn-action btn-on') :
-                    (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on');
-            }
-            if (repairBtn) repairBtn.style.display = 'none';
+    if (statusName === 'MAINTENANCE') {
+        if (btn) btn.disabled = true;
+        if (repairBtn) {
+            repairBtn.style.display = 'inline-block';
+            repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, '${device.deviceCategoryCode}')`);
         }
+    } else {
+        if (btn) {
+            btn.disabled = false;
+            const isAdmin = btn.classList.contains('btn-action');
+            btn.textContent = (statusName === 'ONLINE') ? (isAdmin ? 'OFF' : 'Éteindre') : (isAdmin ? 'ON' : 'Allumer');
+            btn.className = isAdmin ?
+                (statusName === 'ONLINE' ? 'btn-action btn-off' : 'btn-action btn-on') :
+                (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on');
+        }
+        if (repairBtn) repairBtn.style.display = 'none';
     }
 }
 
