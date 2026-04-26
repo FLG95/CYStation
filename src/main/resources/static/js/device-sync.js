@@ -14,6 +14,10 @@ function connectWebSocket() {
             console.log("Update reçu :", device);
             updateDeviceUI(device);
         });
+        stompClient.subscribe('/topic/device-telemetry', function (response) {
+            const device = JSON.parse(response.body);
+            updateTelemetryUI(device);
+        });
     }, function(error) {
         console.log("Erreur WebSocket, tentative de reconnexion dans 5s...");
         setTimeout(connectWebSocket, 5000);
@@ -54,6 +58,21 @@ function updateDeviceUI(device) {
                 btn.className = 'btn-toggle on';
             }
             if (repairBtn) repairBtn.style.display = 'none';
+        }
+    }
+}
+
+function updateTelemetryUI(device) {
+    const telemetrySpan = document.getElementById('telemetry-text-' + device.id);
+    if (telemetrySpan && device.telemetryDisplay) {
+        telemetrySpan.textContent = device.telemetryDisplay;
+    }
+
+    const deviceCard = document.getElementById('device-card-' + device.id);
+    if (deviceCard && device.deviceImage) {
+        const img = deviceCard.querySelector('img');
+        if (img && img.src !== device.deviceImage) {
+            img.src = device.deviceImage;
         }
     }
 }
