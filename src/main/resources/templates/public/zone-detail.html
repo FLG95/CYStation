@@ -26,7 +26,8 @@
 
 <main class="cnes-layout">
 
-    <section class="cnes-hero" id="hero-zone">
+    <section class="cnes-hero" id="hero-zone"
+             th:style="|background-image: url('${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80'}')|">
         <div class="cnes-hero-content">
             <span class="tag">Administration Secteur</span>
             <div class="header-with-actions">
@@ -35,9 +36,7 @@
                     class="editable-zone-name"
                     th:onblur="|updateZoneAjax(${zone.id}, this, 'name')|">
                 </h1>
-
             </div>
-
             <p th:text="${zone.description != null ? zone.description : 'Ajouter une description...'}"
                contenteditable="true"
                class="editable-zone-desc"
@@ -65,7 +64,6 @@
                                 th:disabled="${device.requestStatus != null && device.requestStatus.name() == 'PENDING'}"
                                 th:onclick="|confirmDeletionRequest(${device.id})|"
                                 th:style="${device.requestStatus?.name() == 'PENDING'} ? 'opacity:0.5; cursor:not-allowed;' : ''">
-
                             <span th:id="'text-btn-' + ${device.id}"
                                   th:text="${device.requestStatus?.name() == 'PENDING'} ? 'En attente' : 'Demander la suppression'">
                             </span>
@@ -81,10 +79,8 @@
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px;">
                             <span style="color: var(--color-9); font-size: 0.9em; font-weight: bold; text-transform: uppercase;"
                                   th:text="${device.deviceDisplayName}"></span>
-
                             <span style="color: #00e5ff; font-weight: bold; font-size: 1.1em;"
                                   th:id="'telemetry-text-' + ${device.id}" th:text="${device.telemetryDisplay}"></span>
-
                             <span style="color: #ffffff; font-size: 0.85em;" th:id="'status-text-' + ${device.id}"
                                   th:text="'Statut: ' + ${device.status.displayValue}"></span>
                         </div>
@@ -102,7 +98,6 @@
                                     th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}"
                                     style="position: relative; z-index: 10; cursor: pointer;">
                             </button>
-
                             <button type="button"
                                     th:id="'btn-repair-' + ${device.id}"
                                     th:data-device-id="${device.id}"
@@ -161,13 +156,9 @@
 </div>
 
 <div th:replace="~{public/footer :: footer}"></div>
-</body>
-</html>
-
 
 <script>
     function confirmDeletionRequest(deviceId) {
-
         const text = "Confirmer la demande ?\nL'administrateur devra valider la suppression de ce module.";
         if (confirm(text)) {
             sendDeletionRequest(deviceId);
@@ -175,7 +166,6 @@
     }
 
     function sendDeletionRequest(deviceId) {
-
         const csrfTokenElement = document.querySelector('meta[name="_csrf"]');
         const csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
 
@@ -187,7 +177,6 @@
 
         const token = csrfTokenElement.content;
         const header = csrfHeaderElement.content;
-
 
         fetch(`/mission/device/request-deletion/${deviceId}`, {
             method: 'POST',
@@ -210,6 +199,7 @@
                 alert("Erreur réseau.");
             });
     }
-
-
 </script>
+
+</body>
+</html>

@@ -6,7 +6,6 @@
 }
 
 #hero-zone {
-    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
     text-align: left;
     align-items: flex-end;
     justify-content: flex-start;
@@ -179,7 +178,6 @@
 .btn-delete:hover {
     background: var(--color-11);
     color: white;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
 }
 
 .modal, .modal-overlay {
@@ -206,7 +204,6 @@
     max-width: 600px;
     position: relative;
     border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .close-btn, .close-modal {
@@ -264,7 +261,6 @@
 .cnes-btn:hover {
     background: var(--color-9);
     color: var(--color-1);
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
 }
 
 .btn-full {
@@ -291,3 +287,16 @@
 .btn-delete-request button:disabled {
     background: #6c757d;
 }
+
+.status-led {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: 20;
+}
+
+.status-led.led-on  { background: #00ff9d; }
+.status-led.led-off { background: #ef4444; }
