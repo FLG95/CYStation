@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Administration - Demandes de Suppression</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/admin/request.css}">
+
 </head>
 
 <body class="container mt-5">
@@ -13,25 +16,20 @@
 <div th:replace="~{public/header :: header}"></div>
 
 
-<main>
-
+<main class="cnes-layout">
     <nav class="admin-tabs">
-        <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''"
-           class="tab-item">Gestion Personnel</a>
-        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure
-            & Modules</a>
-        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes
-            de Suppression</a>
+        <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
+        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
-
 
     <h2 class="mb-4">Gestion des demandes de suppression</h2>
 
-    <div th:if="${pendingRequests.empty}" class="alert alert-info">
+    <div th:if="${pendingRequests == null or pendingRequests.empty}" class="alert alert-info">
         Aucune demande de suppression en attente.
     </div>
 
-    <table class="table table-striped table-hover" th:if="${!pendingRequests.empty}">
+    <table class="table table-striped table-hover" th:if="${pendingRequests != null and !pendingRequests.empty}">
         <thead class="table-dark">
         <tr>
             <th>ID</th>
@@ -42,33 +40,29 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="request : ${pendingRequests}">
-            <td th:text="${request.id}">1</td>
-            <td th:text="${request.name}">Document_Alpha.pdf</td>
+        <tr th:each="device : ${pendingRequests}" th:id="'row-' + ${device.id}">
+            <td th:text="${device.id}">1</td>
+            <td th:text="${device.name}">Module Alpha</td>
             <td>
-                <span class="badge bg-info text-dark" th:text="${request.requestedBy}">Nom du Scientifique</span>
+                <span class="badge bg-info text-dark" th:text="${device.requestedBy}">Nom</span>
             </td>
             <td>
                 <span class="badge bg-warning">EN ATTENTE</span>
             </td>
             <td class="text-center">
-                <form th:action="@{/process-deletion}" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${request.id}"/>
-                    <input type="hidden" name="approved" value="true"/>
-                    <button type="submit" class="btn btn-success btn-sm">Confirmer la suppression</button>
-                </form>
+                <button type="button" class="btn btn-success btn-sm"
+                        th:onclick="|adminProcessDeletion(${device.id}, true)|">
+                    Confirmer
+                </button>
 
-                <form th:action="@{/process-deletion}" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${request.id}"/>
-                    <input type="hidden" name="approved" value="false"/>
-                    <button type="submit" class="btn btn-danger btn-sm">Rejeter</button>
-                </form>
+                <button type="button" class="btn btn-danger btn-sm"
+                        th:onclick="|adminProcessDeletion(${device.id}, false)|">
+                    Rejeter
+                </button>
             </td>
         </tr>
         </tbody>
     </table>
-
-
 </main>
 
 
@@ -77,5 +71,36 @@
 
 </body>
 
+<script>
+
+    function adminProcessDeletion(deviceId, isApproved) {
+
+        if (!confirm(isApproved ? "Confirmer la suppression ?" : "Rejeter la demande ?")) return;
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        fetch(`/admin/request/process-deletion/${deviceId}?approved=${isApproved}`, {
+            method: 'POST',
+            headers: {
+                [header]: token
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    const row = document.getElementById(`row-${deviceId}`);
+                    if (row) row.remove();
+
+                    if (document.querySelectorAll('tbody tr').length === 0) {
+                        location.reload();
+                    }
+                } else {
+                    alert('Erreur serveur (Code: ' + response.status + ')');
+                }
+            })
+            .catch(error => alert('Erreur réseau'));
+    }
+
+</script>
 
 </html>

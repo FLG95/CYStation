@@ -15,7 +15,6 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/zone-detail.css}">
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/device-actions.js}" defer></script>
@@ -167,53 +166,50 @@
 
 
 <script>
-
     function confirmDeletionRequest(deviceId) {
-        Swal.fire({
-            title: 'Confirmer la demande ?',
-            text: "L'administrateur devra valider la suppression de ce module.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Oui, envoyer !',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                sendDeletionRequest(deviceId);
-            }
-        })
+
+        const text = "Confirmer la demande ?\nL'administrateur devra valider la suppression de ce module.";
+        if (confirm(text)) {
+            sendDeletionRequest(deviceId);
+        }
     }
 
     function sendDeletionRequest(deviceId) {
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        const csrfTokenElement = document.querySelector('meta[name="_csrf"]');
+        const csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
+
+        if (!csrfTokenElement || !csrfHeaderElement) {
+            console.error("Erreur : Jetons CSRF introuvables dans le <head>");
+            alert("Erreur de sécurité : session expirée ou invalide.");
+            return;
+        }
+
+        const token = csrfTokenElement.content;
+        const header = csrfHeaderElement.content;
+
 
         fetch(`/mission/device/request-deletion/${deviceId}`, {
             method: 'POST',
-            headers: {[header]: token}
+            headers: {
+                [header]: token,
+                'Content-Type': 'application/json'
+            }
         })
             .then(response => {
                 if (response.ok) {
-                    Swal.fire('Transmis !', 'La demande est en attente de validation.', 'success');
-
-                    const btn = document.getElementById(`btn-delete-${deviceId}`);
-                    const btnText = document.getElementById(`text-btn-${deviceId}`);
-
-                    if (btn && btnText) {
-                        btn.disabled = true;
-                        btn.style.opacity = "0.5";
-                        btn.style.cursor = "not-allowed";
-                        btnText.innerText = "Suppression en attente...";
-                    }
+                    alert("Transmis ! La demande est en attente de validation.");
+                    location.reload();
                 } else {
-                    Swal.fire('Erreur', 'Impossible d\'envoyer la demande.', 'error');
+                    console.error("Erreur serveur:", response.status);
+                    alert("Erreur serveur : " + response.status);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                Swal.fire('Erreur', 'Une erreur réseau est survenue.', 'error');
+                alert("Erreur réseau.");
             });
     }
+
 
 </script>

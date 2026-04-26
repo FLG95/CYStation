@@ -122,20 +122,22 @@ public class AdminController {
         return "admin/request"; // Assurez-vous que le nom correspond à votre fichier HTML
     }
 
+
+
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{id}/process-deletion")
+    @PostMapping("/request/process-deletion/{id}")
+    @ResponseBody
     public ResponseEntity<?> processDeletion(@PathVariable Long id, @RequestParam boolean approved) {
         Device device = deviceRepository.findById(id).orElseThrow();
 
         if (approved) {
-            deviceRepository.delete(device);
-            return ResponseEntity.ok("Objet supprimé définitivement.");
+            deviceService.deleteDevice(device.getId());
         } else {
             device.setRequestStatus(RequestStatus.REJECTED);
             device.setRequestedBy(null);
             deviceRepository.save(device);
-            return ResponseEntity.ok("Suppression refusée, l'objet reste actif.");
         }
+        return ResponseEntity.ok().build();
     }
-
 }
+
