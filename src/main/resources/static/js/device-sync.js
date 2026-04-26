@@ -22,36 +22,29 @@ function connectWebSocket() {
 
 function updateDeviceUI(device) {
     const statusText = document.getElementById('status-text-' + device.id);
-    const btn = document.getElementById('btn-' + device.id); // Bouton Allumer/Éteindre
+    const btn = document.getElementById('btn-' + device.id);
     const repairBtn = document.getElementById('btn-repair-' + device.id);
 
     if (statusText) {
-
-        statusText.textContent = device.status.displayValue || device.status;
-
         const statusName = device.status.name || device.status;
+        statusText.textContent = device.status.displayValue || statusName;
+        statusText.className = 'status-indicator ' + statusName;
 
         if (statusName === 'MAINTENANCE') {
-
             if (btn) btn.disabled = true;
             if (repairBtn) {
-                repairBtn.style.display = 'block';
-                repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, ${device.deviceTypeId})`);
+                repairBtn.style.display = 'inline-block'; // Pour le tableau
+
+                repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, '${device.deviceCategoryCode}')`);
             }
-        }
-        else if (statusName === 'ONLINE') {
+        } else {
             if (btn) {
                 btn.disabled = false;
-                btn.textContent = 'Éteindre';
-                btn.className = 'btn-toggle off';
-            }
-            if (repairBtn) repairBtn.style.display = 'none';
-        }
-        else if (statusName === 'OFFLINE') {
-            if (btn) {
-                btn.disabled = false;
-                btn.textContent = 'Allumer';
-                btn.className = 'btn-toggle on';
+                const isAdmin = btn.classList.contains('btn-action');
+                btn.textContent = (statusName === 'ONLINE') ? (isAdmin ? 'OFF' : 'Éteindre') : (isAdmin ? 'ON' : 'Allumer');
+                btn.className = isAdmin ?
+                    (statusName === 'ONLINE' ? 'btn-action btn-off' : 'btn-action btn-on') :
+                    (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on');
             }
             if (repairBtn) repairBtn.style.display = 'none';
         }
