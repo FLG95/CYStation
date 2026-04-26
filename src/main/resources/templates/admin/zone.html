@@ -23,6 +23,7 @@
     <nav class="admin-tabs">
         <a th:href="@{/admin/}" th:classappend="${activeTab == 'users'} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
         <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones' or activeTab == null} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
 
     <section class="section-header">
@@ -249,6 +250,9 @@
         });
     });
 </script>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
 
 </body>
 </html>

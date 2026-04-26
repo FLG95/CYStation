@@ -20,6 +20,7 @@
     <nav class="admin-tabs">
         <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
         <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
 
 
@@ -77,6 +78,9 @@
         </table>
     </div>
 </main>
+
+
+<div th:replace="~{public/footer :: footer}"></div>
 
 
 </body>
