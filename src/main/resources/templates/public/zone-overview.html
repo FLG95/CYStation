@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -9,7 +8,6 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/zone-overview.css}">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -17,48 +15,84 @@
     <script th:src="@{/js/device-actions.js}" defer></script>
     <script th:src="@{/js/device-sync.js}" defer></script>
 </head>
-<body>
+<body class="mission-page">
 
 <div th:replace="~{public/header :: header}"></div>
 
 <main class="cnes-layout">
+    <section class="cnes-section">
 
-    <section class="cnes-section bg-dark-alt">
-        <div class="section-header">
-            <a th:href="@{/zone-overview}" style="text-decoration: none; display: inline-block;">
-                <h2>Infrastructures du Complexe <span style="font-size: 0.5em; color: var(--color-7); vertical-align: middle;">► Gérer les modules</span></h2>
-            </a>
+        <div class="glass-header">
+            <div class="title-group">
+                <a th:href="@{/mission}" class="breadcrumb-link">
+                    <span class="breadcrumb-icon">✦</span>
+                    <h2>Infrastructures du Complexe</h2>
+                </a>
+                <span class="subtitle">➤ Gérer les modules de la station</span>
+            </div>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Localiser un module...">
+            </div>
         </div>
 
-        <div class="cnes-grid infrastructure-grid">
-            <article class="infra-card" th:each="zone : ${zones}">
-                <a th:href="@{/mission/zone/{id}(id=${zone.id})}" style="text-decoration: none; display: block; height: 100%;">
-
-                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=600&q=80" th:alt="${zone.name}">
+        <div class="cnes-grid news-grid" id="zonesGrid">
+            <article class="infra-card zone-item" th:each="zone : ${zones}">
+                <a th:href="@{/mission/zone/{id}(id=${zone.id})}" class="card-link">
+                    <div class="image-container">
+                        <img th:src="${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : '/img/default-zone.jpg'}"
+                             th:alt="${zone.name}">
+                        <div class="status-badge">Opérationnel</div>
+                    </div>
 
                     <div class="infra-overlay">
-                        <h3 th:text="${zone.name}">Nom de la Zone</h3>
-                        <p style="font-size: 0.8rem; color: var(--color-9); margin-top: 5px;"
-                           th:text="${#lists.size(zone.devices)} + ' modules détectés'">
-                        </p>
+                        <h3 class="zone-title" th:text="${zone.name}"></h3>
+                        <div class="zone-stats">
+                            <span class="stat-icon">⚙</span>
+                            <p class="zone-info" th:text="${#lists.size(zone.devices)} + ' modules détectés'"></p>
+                        </div>
+                        <div class="card-footer">
+                            <span>Accéder au terminal</span>
+                            <span class="arrow">→</span>
+                        </div>
                     </div>
                 </a>
             </article>
+        </div>
 
-            <div th:if="${#lists.isEmpty(zones)}" class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 20px;">
-            </div>
+        <div id="noResult" class="empty-state" style="display:none;">
+            <div class="empty-icon">⚠</div>
+            <p>Aucune zone ne correspond à votre recherche dans la base de données.</p>
         </div>
     </section>
-
 </main>
 
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const noResult    = document.getElementById('noResult');
+
+    function filterZones() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        const zones   = document.querySelectorAll('.zone-item');
+        let visible   = 0;
+
+        zones.forEach(zone => {
+            const name = (zone.querySelector('.zone-title')?.textContent || '').toLowerCase();
+
+            if (!keyword || name.includes(keyword)) {
+                zone.style.display = '';
+                visible++;
+            } else {
+                zone.style.display = 'none';
+            }
+        });
+
+        noResult.style.display = (visible === 0 && zones.length > 0) ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('keyup', filterZones);
+</script>
 <div th:replace="~{public/footer :: footer}"></div>
-
-
-
 </body>
-
-
 </html>
-
-

@@ -15,9 +15,11 @@ public class Zone {
     @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Device> devices = new ArrayList<>();
 
-
     @Column(length = 500)
     private String description;
+
+    @Column(length = 1000)
+    private String imageUrl;
 
     public Zone() {}
 
@@ -38,12 +40,17 @@ public class Zone {
     public List<Device> getDevices() { return devices; }
     public void setDevices(List<Device> devices) { this.devices = devices; }
 
-
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

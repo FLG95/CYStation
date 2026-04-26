@@ -22,7 +22,7 @@ public class SecurityConfig {
                         .frameOptions((frameOptions) -> frameOptions.sameOrigin())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**").permitAll()
+                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**", "/mission/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -32,8 +32,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());
-
-        
 
         return http.build();
     }

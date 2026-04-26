@@ -4,43 +4,35 @@
 <body>
 
 <header th:fragment="header" class="cnes-header">
-
     <div class="header-left">
         <div class="header-logo">
             <a th:href="@{/}">
                 <img th:src="@{/img/logo.png}" alt="CyStation Logo" style="height: 20px;">
             </a>
         </div>
-
         <nav class="header-nav">
             <ul>
                 <li><a th:href="@{/}">Accueil</a></li>
                 <li><a th:href="@{/about}">Information</a></li>
                 <li><a th:href="@{/articles}">Articles</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/profiles}">Membres de l'équipage</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/profiles}">Equipage</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/mission}">Zones</a></li>
             </ul>
         </nav>
     </div>
-
     <div class="header-actions">
         <a sec:authorize="isAnonymous()" th:href="@{/login}" class="cnes-btn-nav">Connexion</a>
         <a sec:authorize="isAnonymous()" th:href="@{/register}" class="cnes-btn-nav alt-btn">Inscription</a>
-
         <a sec:authorize="isAuthenticated()" th:href="@{/userInfo}" class="cnes-btn-nav alt-btn">Mon Profil</a>
-
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="cnes-btn-nav logout-btn">Déconnexion</button>
         </form>
-
-
         <a sec:authorize="hasRole('ADMIN')"
            th:href="@{/admin/}"
            class="cnes-btn-nav alt-btn">
             Administration
         </a>
-
     </div>
-
 </header>
 
 </body>

@@ -16,7 +16,7 @@ function modifyExp(userId, amount) {
             document.getElementById('exp-' + userId).innerText = newExp;
 
             let newRole = "ROLE_PASSENGER";
-            if (newExp >= 50) {
+            if (newExp >= 50 && newExp < 100) {
                 newRole = "ROLE_SCIENTIST";
             } else if (newExp >= 100) {
                 newRole = "ROLE_ADMIN";

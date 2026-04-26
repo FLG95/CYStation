@@ -47,6 +47,7 @@ public class AdminController {
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
+        model.addAttribute("activeTab", "zones"); // ← ajouter ça
         return "admin/zone";
     }
 
