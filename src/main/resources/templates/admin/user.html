@@ -18,12 +18,12 @@
 <main class="cnes-layout">
 
     <nav class="admin-tabs">
-        <a th:href="@{/admin/users}"
+        <a th:href="@{/admin/}"
            th:classappend="${activeTab == 'users'} ? 'active' : ''"
            class="tab-item">
             Gestion Personnel
         </a>
-        <a th:href="@{/admin/zones}"
+        <a th:href="@{/admin/zone}"
            th:classappend="${activeTab == 'zones'} ? 'active' : ''"
            class="tab-item">
             Infrastructure & Modules

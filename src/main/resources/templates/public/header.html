@@ -18,7 +18,6 @@
                 <li><a th:href="@{/about}">Information</a></li>
                 <li><a th:href="@{/articles}">Articles</a></li>
                 <li><a sec:authorize="isAuthenticated()" th:href="@{/profiles}">Membres de l'équipage</a></li>
-                <li><a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/zone}">Zones</a></li>
             </ul>
         </nav>
     </div>

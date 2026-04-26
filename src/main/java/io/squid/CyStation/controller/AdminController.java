@@ -1,6 +1,5 @@
 package io.squid.CyStation.controller;
 import io.squid.CyStation.enums.DeviceCategory;
-import io.squid.CyStation.model.User;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class AdminController {
     @GetMapping("/")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "admin/admin";
+        return "admin/user";
     }
 
     @PostMapping("/users/delete/{id}")
@@ -51,5 +50,11 @@ public class AdminController {
         return "admin/zone";
     }
 
+    @GetMapping("/user")
+    public String showUserPage(Model model) {
+        model.addAttribute("zones", zoneRepository.findAll());
+        model.addAttribute("deviceCategories", DeviceCategory.values());
+        return "admin/user";
+    }
 
 }
