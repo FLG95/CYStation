@@ -59,7 +59,7 @@
                     <div class="status-led"
                          th:classappend="${device.status.name() == 'ONLINE' ? 'led-on' : 'led-off'}"></div>
 
-                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}">
+                    <div class="btn-delete-request" th:id="'container-delete-' + ${device.id}" sec:authorize="hasRole('SCIENTIST')">
                         <button type="button"
                                 th:id="'btn-delete-' + ${device.id}"
                                 th:disabled="${device.requestStatus != null && device.requestStatus.name() == 'PENDING'}"
