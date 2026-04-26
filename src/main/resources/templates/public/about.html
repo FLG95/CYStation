@@ -9,6 +9,387 @@
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/about.css}">
+
+    <style>
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin-top: 40px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--color-7), transparent);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-7);
+            box-shadow: 0 0 12px rgba(70, 207, 179, 0.6);
+        }
+        .timeline-date {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-7);
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .timeline-item h4 {
+            font-size: 1.05rem;
+            color: var(--color-10);
+            margin: 0 0 6px;
+        }
+        .timeline-item p {
+            color: var(--color-10);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ===== SYSTEM STATUS GRID ===== */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .status-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(70, 207, 179, 0.15);
+            border-radius: 4px;
+            padding: 24px 20px;
+        }
+        .status-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .status-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-10);
+            opacity: 0.6;
+            font-weight: bold;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #46cfb3;
+            box-shadow: 0 0 8px rgba(70, 207, 179, 0.8);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.warning { background: #f0b429; box-shadow: 0 0 8px rgba(240,180,41,0.8); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .status-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--color-10);
+            line-height: 1;
+        }
+        .status-sub {
+            font-size: 0.78rem;
+            color: var(--color-10);
+            opacity: 0.5;
+            margin-top: 4px;
+        }
+        .progress-bar-wrap {
+            margin-top: 12px;
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--color-7), #2ee8c8);
+        }
+        .progress-bar-fill.warning { background: linear-gradient(90deg, #f0b429, #f7d070); }
+
+        /* ===== CREW EXTENDED ===== */
+        .crew-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .crew-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+            border: 1px solid rgba(70, 207, 179, 0.3);
+            border-radius: 2px;
+            color: var(--color-7);
+        }
+        .crew-stats-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .crew-stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .crew-stat-item span:first-child {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-10);
+        }
+        .crew-stat-item span:last-child {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-10);
+            opacity: 0.5;
+        }
+
+        /* ===== MODULE MAP ===== */
+        .module-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        .module-table thead th {
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-7);
+            border-bottom: 1px solid rgba(70,207,179,0.2);
+        }
+        .module-table tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--color-10);
+            opacity: 0.85;
+            vertical-align: top;
+        }
+        .module-table tbody tr:hover td { background: rgba(70,207,179,0.04); }
+        .module-name { font-weight: bold; opacity: 1 !important; }
+        .module-status-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+        .tag-ok { background: rgba(70,207,179,0.15); color: #46cfb3; }
+        .tag-warn { background: rgba(240,180,41,0.15); color: #f0b429; }
+        .tag-maint { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+
+        /* ===== ORBIT STATS GRID ===== */
+        .orbit-facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .orbit-fact {
+            text-align: center;
+            padding: 28px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(70,207,179,0.1);
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        .orbit-fact:hover { border-color: rgba(70,207,179,0.35); }
+        .orbit-fact .of-val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-7);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(70,207,179,0.25);
+        }
+        .orbit-fact .of-unit {
+            font-size: 0.8rem;
+            color: var(--color-7);
+            opacity: 0.6;
+            display: block;
+            margin-top: 2px;
+        }
+        .orbit-fact .of-label {
+            margin-top: 10px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--color-10);
+            opacity: 0.5;
+            font-weight: bold;
+        }
+
+        /* ===== SUBSYSTEM RADAR / MISSION CLOCK ===== */
+        .mission-clock-wrap {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        .mission-clock {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .clock-unit {
+            text-align: center;
+        }
+        .clock-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-10);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .clock-lbl {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-7);
+            display: block;
+            margin-top: 4px;
+        }
+        .clock-sep {
+            font-size: 2.8rem;
+            color: var(--color-7);
+            opacity: 0.4;
+            padding-top: 4px;
+            line-height: 1;
+        }
+        .mission-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        .mission-info h3 {
+            color: var(--color-10);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .mission-info p {
+            color: var(--color-10);
+            opacity: 0.65;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* ===== RESEARCH PROGRAMS ===== */
+        .research-list { margin-top: 30px; display: flex; flex-direction: column; gap: 16px; }
+        .research-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(70,207,179,0.1);
+            border-radius: 4px;
+            align-items: flex-start;
+        }
+        .research-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            background: rgba(70,207,179,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .research-body h4 {
+            color: var(--color-10);
+            margin: 0 0 6px;
+            font-size: 1rem;
+        }
+        .research-body p {
+            color: var(--color-10);
+            opacity: 0.6;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0 0 8px;
+        }
+        .research-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .research-tag {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border: 1px solid rgba(70,207,179,0.25);
+            color: var(--color-7);
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== SECTION LABELS ===== */
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .section-meta span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--color-7);
+            opacity: 0.7;
+        }
+        .section-meta::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(70,207,179,0.2);
+        }
+
+        /* ===== EVA LOG ===== */
+        .eva-log { margin-top: 30px; }
+        .eva-entry {
+            display: grid;
+            grid-template-columns: 90px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .eva-num {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-7);
+            font-weight: bold;
+        }
+        .eva-title { color: var(--color-10); font-size: 0.9rem; opacity: 0.85; }
+        .eva-duration { font-size: 0.8rem; color: var(--color-10); opacity: 0.45; white-space: nowrap; }
+
+        @media (max-width: 700px) {
+            .eva-entry { grid-template-columns: 1fr; gap: 4px; }
+            .mission-clock-wrap { gap: 30px; }
+            .clock-num { font-size: 2rem; }
+        }
+    </style>
 </head>
 
 <body>
@@ -17,6 +398,7 @@
 
 <main class="cnes-layout">
 
+    <!-- ===== HERO ===== -->
     <section class="cnes-hero" id="hero-about">
         <div class="cnes-hero-content">
             <span class="tag">Dossier de mission</span>
@@ -25,77 +407,404 @@
         </div>
     </section>
 
+
+    <!-- ===== MISSION CLOCK ===== -->
     <section class="cnes-section">
         <div class="section-header">
-            <h2>L'Équipage</h2>
+            <div class="section-meta"><span>Mission en cours</span></div>
+            <h2>Expédition CY-7 — Horloge Missionelle</h2>
+        </div>
+        <div class="mission-clock-wrap">
+            <div class="mission-clock">
+                <div class="clock-unit">
+                    <div class="clock-num" id="clock-d">127</div>
+                    <span class="clock-lbl">Jours</span>
+                </div>
+                <div class="clock-sep">:</div>
+                <div class="clock-unit">
+                    <div class="clock-num" id="clock-h">14</div>
+                    <span class="clock-lbl">Heures</span>
+                </div>
+                <div class="clock-sep">:</div>
+                <div class="clock-unit">
+                    <div class="clock-num" id="clock-m">37</div>
+                    <span class="clock-lbl">Minutes</span>
+                </div>
+                <div class="clock-sep">:</div>
+                <div class="clock-unit">
+                    <div class="clock-num" id="clock-s">04</div>
+                    <span class="clock-lbl">Secondes</span>
+                </div>
+            </div>
+            <div class="mission-info">
+                <h3>Expédition CY-7</h3>
+                <p>Lancée le 21 décembre 2024 depuis le Centre Spatial Guyanais (CSG) à Kourou. Durée nominale : 180 jours. Retour prévu le 18 juin 2025 via capsule Soyuz MS-28.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== ORBIT FACTS ===== -->
+    <section class="cnes-section bg-dark-alt">
+        <div class="section-header">
+            <div class="section-meta"><span>Paramètres orbitaux</span></div>
+            <h2>Dynamique Orbitale</h2>
+        </div>
+        <div class="orbit-facts">
+            <div class="orbit-fact">
+                <div class="of-val">27 600</div>
+                <span class="of-unit">km/h</span>
+                <div class="of-label">Vitesse de croisière</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">408</div>
+                <span class="of-unit">km</span>
+                <div class="of-label">Altitude moyenne</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">92</div>
+                <span class="of-unit">min</span>
+                <div class="of-label">Période orbitale</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">15.7</div>
+                <span class="of-unit">orbites/j</span>
+                <div class="of-label">Tours complets</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">51.6°</div>
+                <span class="of-unit"></span>
+                <div class="of-label">Inclinaison</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">7.66</div>
+                <span class="of-unit">km/s</span>
+                <div class="of-label">Vélocité absolue</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">16</div>
+                <span class="of-unit">levers/j</span>
+                <div class="of-label">Levers de soleil</div>
+            </div>
+            <div class="orbit-fact">
+                <div class="of-val">-157°C</div>
+                <span class="of-unit">→ +121°C</span>
+                <div class="of-label">Delta thermique</div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== ÉQUIPAGE ===== -->
+    <section class="cnes-section">
+        <div class="section-header">
+            <div class="section-meta"><span>Personnel navigant</span></div>
+            <h2>L'Équipage — Expédition CY-7</h2>
         </div>
         <div class="cnes-grid news-grid">
+
             <article class="cnes-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="Thomas Pesquet">
+                    <img src="https://journaldemickey.com/wp-content/uploads/2021/11/thomas-pesquet-1024x683.jpg" alt="Thomas Pesquet">
                 </div>
                 <div class="card-content">
                     <span class="card-date">Commandant de bord</span>
                     <h3>Thomas Pesquet</h3>
                     <p>Ingénieur aéronautique et pilote. Il supervise les opérations critiques, la navigation orbitale et les sorties extra-véhiculaires (EVA).</p>
+                    <div class="crew-meta">
+                        <span class="crew-badge">ESA</span>
+                        <span class="crew-badge">5ème mission</span>
+                        <span class="crew-badge">EVA certifié</span>
+                    </div>
+                    <div class="crew-stats-row">
+                        <div class="crew-stat-item">
+                            <span>568</span>
+                            <span>jours cumulés</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>12</span>
+                            <span>EVA réalisées</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>42h 18m</span>
+                            <span>hors capsule</span>
+                        </div>
+                    </div>
                 </div>
             </article>
 
             <article class="cnes-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80" alt="Dr. Sarah Jenkins">
+                    <img src="https://www.enseignementsup-recherche.gouv.fr/sites/default/files/styles/full_width/public/2025-04/mesr-sophie-adenot-2025-jpg-36637_0.jpg?itok=1xR7Z0CA" alt="Dr. Sophie Adenot">
                 </div>
                 <div class="card-content">
                     <span class="card-date">Spécialiste Scientifique</span>
-                    <h3>Dr. Sarah Jenkins</h3>
+                    <h3>Dr. Sophie Adenot</h3>
                     <p>Astrophysicienne. En charge des expérimentations en microgravité dans la serre hydroponique et le laboratoire de chimie.</p>
+                    <div class="crew-meta">
+                        <span class="crew-badge">NASA</span>
+                        <span class="crew-badge">4ème mission</span>
+                        <span class="crew-badge">Ph.D MIT</span>
+                    </div>
+                    <div class="crew-stats-row">
+                        <div class="crew-stat-item">
+                            <span>211</span>
+                            <span>jours cumulés</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>34</span>
+                            <span>expériences actives</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>7</span>
+                            <span>publications en cours</span>
+                        </div>
+                    </div>
                 </div>
             </article>
 
             <article class="cnes-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1573165231977-3f0e27935f2d?auto=format&fit=crop&w=800&q=80" alt="Marc-André Leclerc">
+                    <img src="https://img-4.linternaute.com/9GUaRbMfAx-BIo5NNAA7bChYdpU=/1500x/smart/a278d1821aa94e81bd75b87d06499c48/ccmcms-linternaute/11419033.jpg" alt="Neil Armstrong">
                 </div>
                 <div class="card-content">
                     <span class="card-date">Ingénieur Systèmes</span>
-                    <h3>Marc-André Leclerc</h3>
+                    <h3>Neil Armstrong</h3>
                     <p>Responsable du maintien des infrastructures critiques : le noyau énergétique, le support de vie O2 et les pare-feu du data center.</p>
+                    <div class="crew-meta">
+                        <span class="crew-badge">CSA</span>
+                        <span class="crew-badge">1ère mission</span>
+                        <span class="crew-badge">Robotique</span>
+                    </div>
+                    <div class="crew-stats-row">
+                        <div class="crew-stat-item">
+                            <span>127</span>
+                            <span>jours cumulés</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>99.8%</span>
+                            <span>uptime systèmes</span>
+                        </div>
+                        <div class="crew-stat-item">
+                            <span>4</span>
+                            <span>EVA planifiées</span>
+                        </div>
+                    </div>
                 </div>
             </article>
+
         </div>
     </section>
 
+
+    <!-- ===== VAISSEAU SPECS ===== -->
     <section class="cnes-section bg-dark-alt">
         <div class="section-header">
+            <div class="section-meta"><span>Architecture physique</span></div>
             <h2>Spécifications Techniques</h2>
         </div>
-
         <div class="ship-presentation">
             <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1000&q=80" alt="Vaisseau spatial en orbite">
             <div class="ship-text">
                 <p>CYStation est une plateforme modulaire de 450 tonnes, composée de 12 secteurs pressurisés interconnectés. Sa structure en treillis central supporte un réseau de panneaux solaires générant jusqu'à 120 kW d'énergie pure pour alimenter le noyau de fusion. Amarrée à 408 km d'altitude, elle effectue le tour de la Terre toutes les 90 minutes.</p>
+                <p style="margin-top:16px;">Le système de propulsion secondaire comprend 28 propulseurs Draco de 400 N chacun, utilisés pour les corrections d'orbite et les manœuvres de rendez-vous. L'enveloppe thermique multicouche assure la stabilité structurelle entre −157 °C et +121 °C, alternance inhérente de chaque orbite.</p>
             </div>
         </div>
 
         <div class="cnes-grid news-grid" style="margin-top: 40px;">
             <article class="cnes-card stat-card">
-                <h3>27 600 km/h</h3>
-                <p>Vitesse de croisière</p>
-            </article>
-            <article class="cnes-card stat-card">
-                <h3>408 km</h3>
-                <p>Altitude moyenne</p>
+                <h3>450 t</h3>
+                <p>Masse totale à vide</p>
             </article>
             <article class="cnes-card stat-card">
                 <h3>916 m³</h3>
                 <p>Volume pressurisé</p>
             </article>
+            <article class="cnes-card stat-card">
+                <h3>120 kW</h3>
+                <p>Puissance solaire nominale</p>
+            </article>
+            <article class="cnes-card stat-card">
+                <h3>109 m</h3>
+                <p>Envergure transversale</p>
+            </article>
+            <article class="cnes-card stat-card">
+                <h3>6 ports</h3>
+                <p>Amarrage simultané</p>
+            </article>
         </div>
     </section>
+    
+    <!-- ===== PROGRAMMES DE RECHERCHE ===== -->
+    <section class="cnes-section">
+        <div class="section-header">
+            <div class="section-meta"><span>Science en orbite</span></div>
+            <h2>Programmes de Recherche Actifs</h2>
+        </div>
+        <div class="research-list">
+            <div class="research-item">
+                <div class="research-icon">🧬</div>
+                <div class="research-body">
+                    <h4>BioMicro-7 — Comportement cellulaire en apesanteur</h4>
+                    <p>Étude longitudinale de la division cellulaire et de l'expression génomique chez 6 espèces de cultures in vitro exposées à la microgravité continue. Données transmises toutes les 6h au CNES Toulouse.</p>
+                    <div class="research-tags">
+                        <span class="research-tag">Biologie</span>
+                        <span class="research-tag">Génomique</span>
+                        <span class="research-tag">En cours — J+127</span>
+                    </div>
+                </div>
+            </div>
+            <div class="research-item">
+                <div class="research-icon">🌱</div>
+                <div class="research-body">
+                    <h4>AgroSpace-3 — Cultures vivrières en microgravité</h4>
+                    <p>Culture hydroponique de laitue, radis et blé nain sous spectre LED adaptatif. Objectif : valider l'autonomie alimentaire partielle pour les missions vers Mars (objectif 25% de l'apport calorique quotidien).</p>
+                    <div class="research-tags">
+                        <span class="research-tag">Agroalimentaire</span>
+                        <span class="research-tag">Hydroponique</span>
+                        <span class="research-tag">Phase 2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="research-item">
+                <div class="research-icon">⚗️</div>
+                <div class="research-body">
+                    <h4>MatForm-2 — Impression 3D de composites métalliques</h4>
+                    <p>Test de solidification d'alliages Ti-6Al-4V en conditions orbitales pour la fabrication in-situ de pièces de remplacement structurelles. Première mondiale : production d'un raccord fluidique opérationnel hors atmosphère.</p>
+                    <div class="research-tags">
+                        <span class="research-tag">Matériaux</span>
+                        <span class="research-tag">Fabrication additive</span>
+                        <span class="research-tag">Terminé — Archivage</span>
+                    </div>
+                </div>
+            </div>
+            <div class="research-item">
+                <div class="research-icon">🧠</div>
+                <div class="research-body">
+                    <h4>NeuroAdapt — Plasticité cognitive sous irradiation GCR</h4>
+                    <p>Évaluation neuro-cognitive hebdomadaire des 3 membres d'équipage via IRM portable et tests d'attention soutenue. Corrélation avec les flux de rayonnement galactique mesuré par le dosimètre DOSIS-4.</p>
+                    <div class="research-tags">
+                        <span class="research-tag">Neurosciences</span>
+                        <span class="research-tag">Radioprotection</span>
+                        <span class="research-tag">Continu</span>
+                    </div>
+                </div>
+            </div>
+            <div class="research-item">
+                <div class="research-icon">🌍</div>
+                <div class="research-body">
+                    <h4>GeoWatch-11 — Télédétection des changements climatiques</h4>
+                    <p>Acquisition quotidienne d'images multispectrales et thermiques sur 48 zones d'intérêt scientifique (glaciers, deltas, foyers d'incendies). Collaboration avec le programme Copernicus/Sentinel de l'ESA.</p>
+                    <div class="research-tags">
+                        <span class="research-tag">Télédétection</span>
+                        <span class="research-tag">Climatologie</span>
+                        <span class="research-tag">ESA / Copernicus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== EVA LOG ===== -->
+    <section class="cnes-section bg-dark-alt">
+        <div class="section-header">
+            <div class="section-meta"><span>Sorties extra-véhiculaires</span></div>
+            <h2>Journal des EVA — Expédition CY-7</h2>
+        </div>
+        <div class="eva-log">
+            <div class="eva-entry">
+                <div class="eva-num">EVA-01</div>
+                <div class="eva-title">Remplacement du régulateur thermique du module CY-POW (panneau S4-B)</div>
+                <div class="eva-duration">6h 42m — 14 jan. 2025</div>
+            </div>
+            <div class="eva-entry">
+                <div class="eva-num">EVA-02</div>
+                <div class="eva-title">Installation de l'antenne Ka-band secondaire et câblage coaxial RG-401</div>
+                <div class="eva-duration">7h 18m — 29 jan. 2025</div>
+            </div>
+            <div class="eva-entry">
+                <div class="eva-num">EVA-03</div>
+                <div class="eva-title">Inspection et réparation du blindage MMOD (débris micrométéoritiques) — secteur avant</div>
+                <div class="eva-duration">5h 54m — 18 fév. 2025</div>
+            </div>
+            <div class="eva-entry">
+                <div class="eva-num">EVA-04</div>
+                <div class="eva-title">Déploiement de l'expérience MISSE-17 sur la face extérieure du module CY-LAB-A</div>
+                <div class="eva-duration">8h 02m — 11 mar. 2025</div>
+            </div>
+            <div class="eva-entry">
+                <div class="eva-num">EVA-05 ✦</div>
+                <div class="eva-title">Remplacement du bras robotique ERA-2 — liaison électromécanique défaillante</div>
+                <div class="eva-duration">Planifiée — 02 mai 2025</div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== HISTORIQUE ===== -->
+    <section class="cnes-section">
+        <div class="section-header">
+            <div class="section-meta"><span>Chronologie</span></div>
+            <h2>Histoire de CYStation</h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Septembre 2018</div>
+                <h4>Décision de programme — Accord Multilatéral CY</h4>
+                <p>Signature de l'accord de coopération spatiale entre ESA, CNES, NASA et CSA pour la conception d'une station de nouvelle génération à architecture modulaire ouverte.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Mars 2020</div>
+                <h4>Début d'assemblage orbital — Mission CY-BUILD-1</h4>
+                <p>Lancement du premier module structurel CY-CORE à bord d'un Falcon Heavy Block 5. Déploiement des panneaux solaires de la première tranche énergétique (40 kW).</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Juillet 2021</div>
+                <h4>Première habitabilité permanente</h4>
+                <p>Arrivée de l'Expédition CY-1 : 3 astronautes prennent possession de la station pour une durée de 90 jours. Première nuit à bord le 14 juillet 2021.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Novembre 2022</div>
+                <h4>Expansion — Modules CY-LAB-A/B et CY-AGRO</h4>
+                <p>Livraison par cargo HTV-X des modules scientifiques. Capacité de recherche portée à 24 expériences simultanées. Premier légume récolté en orbite : roquette var. Outredgeous.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Avril 2023</div>
+                <h4>Inauguration du Data Center Orbital CY-DATA</h4>
+                <p>Mise en service du module informatique avec 4 PFlops de calcul embarqué, conçu pour l'inférence IA en temps réel et le traitement de données de télédétection.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Décembre 2024</div>
+                <h4>Lancement de l'Expédition CY-7 — Mission actuelle</h4>
+                <p>Thomas Pesquet, Dr. Sarah Jenkins et Marc-André Leclerc rejoignent la station depuis Kourou. Début d'une série d'expériences de préparation aux missions vers la Lune et Mars.</p>
+            </div>
+        </div>
+    </section>
+
 
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
+
+<script>
+    // Mission clock running from a fixed launch date
+    const launch = new Date('2024-12-21T06:34:00Z');
+    function updateClock() {
+        const now = new Date();
+        const diff = Math.max(0, now - launch);
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        document.getElementById('clock-d').textContent = String(days).padStart(3, '0');
+        document.getElementById('clock-h').textContent = String(hours).padStart(2, '0');
+        document.getElementById('clock-m').textContent = String(mins).padStart(2, '0');
+        document.getElementById('clock-s').textContent = String(secs).padStart(2, '0');
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>
 
 </body>
 </html>
