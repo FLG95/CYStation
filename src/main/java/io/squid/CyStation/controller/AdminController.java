@@ -62,7 +62,7 @@ public class AdminController {
         return "admin/user";
     }
 
-    @PostMapping("/admin/device/create")
+    @PostMapping("/device/create")
     public String createDeviceAdmin(@RequestParam String name,
                                     @RequestParam String deviceType,
                                     @RequestParam Long zoneId) {

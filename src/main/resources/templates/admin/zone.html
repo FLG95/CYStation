@@ -122,9 +122,7 @@
 
 </main>
 
-<!-- ══════════════════════════════════════════
-     Modals ajout de device (un par zone)
-     ══════════════════════════════════════════ -->
+
 <th:block th:each="zone : ${zones}">
     <div th:id="'addDeviceModal-' + ${zone.id}" class="modal-overlay" style="display: none;">
         <div class="modal-content cnes-form">
@@ -176,9 +174,7 @@
     </div>
 </th:block>
 
-<!-- ══════════════════════════════════════════
-     Modal création de zone
-     ══════════════════════════════════════════ -->
+
 <div id="createZoneModal" class="modal-overlay" style="display: none;">
     <div class="modal-content cnes-form">
         <span class="close-modal"
@@ -225,7 +221,6 @@
     </div>
 </div>
 
-<!-- Modal jeu -->
 <div id="gameModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">✕</span>
@@ -234,7 +229,7 @@
 </div>
 
 <script>
-    // Prévisualisation image en temps réel
+
     document.getElementById('zoneImageUrl').addEventListener('input', function () {
         const url = this.value.trim();
         const preview = document.getElementById('imagePreview');
