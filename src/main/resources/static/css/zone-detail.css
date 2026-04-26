@@ -3,8 +3,13 @@
     --color-7: #2d2d35;
     --color-9: #00e5ff;
     --color-11: #ef4444;
+    --led-green: #00ff9d;
+    --led-red: #ef4444;
 }
 
+/* =========================================================
+   HERO
+   ========================================================= */
 #hero-zone {
     text-align: left;
     align-items: flex-end;
@@ -43,6 +48,9 @@
     letter-spacing: 1px;
 }
 
+/* =========================================================
+   EDITABLE FIELDS
+   ========================================================= */
 .header-with-actions {
     display: flex;
     justify-content: space-between;
@@ -80,53 +88,120 @@
     background: rgba(0, 0, 0, 0.5);
 }
 
+/* =========================================================
+   STATUS LED — diode verte / rouge avec glow + pulse
+   ========================================================= */
+.status-led {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    z-index: 20;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ONLINE → vert brillant + halo pulsé */
+.status-led.led-on {
+    background: var(--led-green);
+    box-shadow:
+            0 0 4px var(--led-green),
+            0 0 10px var(--led-green),
+            0 0 20px rgba(0, 255, 157, 0.4);
+    animation: pulse-green 2s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 4px var(--led-green), 0 0 10px var(--led-green), 0 0 20px rgba(0,255,157,0.4); }
+    50%       { box-shadow: 0 0 6px var(--led-green), 0 0 18px var(--led-green), 0 0 32px rgba(0,255,157,0.6); }
+}
+
+/* OFFLINE → rouge sombre, pas d'animation */
+.status-led.led-off {
+    background: var(--led-red);
+    box-shadow:
+            0 0 3px var(--led-red),
+            0 0 8px rgba(239, 68, 68, 0.35);
+}
+
+/* MAINTENANCE → orange clignotant */
+.status-led.led-maintenance {
+    background: #f59e0b;
+    box-shadow: 0 0 4px #f59e0b, 0 0 12px rgba(245, 158, 11, 0.5);
+    animation: blink-orange 1s step-end infinite;
+}
+
+@keyframes blink-orange {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+/* =========================================================
+   DEVICE CONTROLS
+   ========================================================= */
 .device-controls {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 .btn-toggle {
-    padding: 10px 18px;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
     transition: background-color 0.3s, transform 0.1s;
 }
 
-.btn-toggle:active {
-    transform: scale(0.95);
-}
+.btn-toggle:active { transform: scale(0.95); }
 
-.btn-toggle.on {
-    background: var(--color-9);
-    color: #000;
-}
-
-.btn-toggle.off {
-    background: #444;
-    color: #fff;
-}
+.btn-toggle.on  { background: var(--color-9); color: #000; }
+.btn-toggle.off { background: #444; color: #fff; }
 
 .btn-repair {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 18px;
+    padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     transition: background-color 0.3s;
 }
 
-.btn-repair:hover {
-    background-color: #0056b3;
+.btn-repair:hover { background-color: #0056b3; }
+
+/* Bouton Historique */
+.btn-history {
+    background: rgba(108, 117, 125, 0.2);
+    color: #adb5bd;
+    border: 1px solid #495057;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
 }
 
+.btn-history:hover {
+    background: rgba(108, 117, 125, 0.4);
+    border-color: #adb5bd;
+    color: #fff;
+}
+
+/* =========================================================
+   ADD CARD
+   ========================================================= */
 .add-card {
     display: flex;
     align-items: center;
@@ -156,10 +231,28 @@
     transform: translateY(-5px);
 }
 
-.add-card h3 {
-    margin: 0;
-    line-height: 1.5;
+.add-card h3 { margin: 0; line-height: 1.5; }
+
+/* =========================================================
+   DELETE REQUEST BUTTON
+   ========================================================= */
+.btn-delete-request {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
 }
+
+.btn-delete-request button {
+    background: rgba(220, 53, 69, 0.8);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete-request button:disabled { background: #6c757d; }
 
 .btn-delete {
     background: rgba(239, 68, 68, 0.1);
@@ -175,12 +268,13 @@
     white-space: nowrap;
 }
 
-.btn-delete:hover {
-    background: var(--color-11);
-    color: white;
-}
+.btn-delete:hover { background: var(--color-11); color: white; }
 
-.modal, .modal-overlay {
+/* =========================================================
+   MODALS (base)
+   ========================================================= */
+.modal,
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -192,9 +286,7 @@
     backdrop-filter: blur(5px);
 }
 
-.modal:target {
-    display: flex;
-}
+.modal:target { display: flex; }
 
 .modal-content {
     background: #16161a;
@@ -206,7 +298,8 @@
     border-radius: 8px;
 }
 
-.close-btn, .close-modal {
+.close-btn,
+.close-modal {
     position: absolute;
     top: 15px; right: 20px;
     color: var(--color-9);
@@ -216,10 +309,239 @@
     transition: color 0.3s;
 }
 
-.close-btn:hover, .close-modal:hover {
-    color: #fff;
+.close-btn:hover,
+.close-modal:hover { color: #fff; }
+
+/* =========================================================
+   LOGS MODAL — refonte complète
+   ========================================================= */
+#logsModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.2s ease;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.logs-modal-panel {
+    background: #0f0f13;
+    border: 1px solid #1e1e2a;
+    border-top: 2px solid var(--color-9);
+    border-radius: 10px;
+    width: 92%;
+    max-width: 1060px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(0, 229, 255, 0.08), 0 20px 60px rgba(0,0,0,0.6);
+    animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(24px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* En-tête du modal */
+.logs-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 28px;
+    border-bottom: 1px solid #1e1e2a;
+    flex-shrink: 0;
+}
+
+.logs-modal-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.logs-modal-title h2 {
+    margin: 0;
+    color: var(--color-9);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.logs-modal-subtitle {
+    color: #4a4a5e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.logs-close-btn {
+    background: none;
+    border: 1px solid #2a2a3a;
+    color: #6a6a8a;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    line-height: 1;
+}
+
+.logs-close-btn:hover {
+    border-color: var(--color-11);
+    color: var(--color-11);
+    background: rgba(239, 68, 68, 0.08);
+}
+
+/* Barre de navigation */
+.logs-nav {
+    display: flex;
+    gap: 8px;
+    padding: 16px 28px;
+    border-bottom: 1px solid #1a1a24;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.logs-nav-btn {
+    background: transparent;
+    border: 1px solid #2a2a3a;
+    color: #6a6a8a;
+    padding: 7px 16px;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.logs-nav-btn:hover {
+    border-color: var(--color-9);
+    color: var(--color-9);
+    background: rgba(0, 229, 255, 0.05);
+}
+
+.logs-nav-btn.active {
+    border-color: var(--color-9);
+    color: var(--color-9);
+    background: rgba(0, 229, 255, 0.08);
+}
+
+/* Zone de contenu scrollable */
+.logs-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 28px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a3a transparent;
+}
+
+.logs-body::-webkit-scrollbar { width: 5px; }
+.logs-body::-webkit-scrollbar-track { background: transparent; }
+.logs-body::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
+
+/* Tableau de logs */
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 0.85rem;
+}
+
+.logs-table thead tr {
+    border-bottom: 1px solid #1e1e2e;
+}
+
+.logs-table th {
+    padding: 10px 14px;
+    color: #3a3a5a;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.logs-table tbody tr {
+    border-bottom: 1px solid #13131b;
+    transition: background 0.15s;
+}
+
+.logs-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+.logs-table td {
+    padding: 11px 14px;
+    vertical-align: middle;
+}
+
+/* Cellules spécifiques */
+.log-date  { color: #3a3a5e; font-size: 0.78rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.log-op    { color: var(--color-9); font-weight: 600; font-size: 0.82rem; }
+.log-sys   { color: #3a3a5e; font-style: italic; font-size: 0.78rem; }
+.log-metric { color: #7a7a9a; font-size: 0.8rem; }
+.log-old   { color: #e05252; font-size: 0.82rem; }
+.log-new   { color: #4ade80; font-weight: 600; font-size: 0.82rem; }
+
+/* Badge type d'événement */
+.log-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.log-badge.telemetry {
+    background: rgba(0, 229, 255, 0.08);
+    color: #3a8a9a;
+    border: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.log-badge.action {
+    background: rgba(245, 158, 11, 0.08);
+    color: #9a7a2a;
+    border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.log-badge.other {
+    background: rgba(255, 255, 255, 0.04);
+    color: #5a5a7a;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* État vide */
+.logs-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #3a3a5a;
+}
+
+.logs-empty-icon { font-size: 2rem; margin-bottom: 12px; opacity: 0.5; }
+.logs-empty p { text-transform: uppercase; letter-spacing: 1px; font-size: 0.82rem; }
+
+/* =========================================================
+   FORMS
+   ========================================================= */
 .cnes-form label {
     display: block;
     margin-bottom: 8px;
@@ -229,7 +551,8 @@
     text-transform: uppercase;
 }
 
-.cnes-form input[type="text"], .cnes-form select {
+.cnes-form input[type="text"],
+.cnes-form select {
     width: 100%;
     padding: 15px;
     background: rgba(0, 0, 0, 0.5);
@@ -240,7 +563,8 @@
     font-family: inherit;
 }
 
-.cnes-form input[type="text"]:focus, .cnes-form select:focus {
+.cnes-form input[type="text"]:focus,
+.cnes-form select:focus {
     outline: none;
     border-color: var(--color-9);
 }
@@ -258,45 +582,6 @@
     letter-spacing: 1px;
 }
 
-.cnes-btn:hover {
-    background: var(--color-9);
-    color: var(--color-1);
-}
+.cnes-btn:hover { background: var(--color-9); color: var(--color-1); }
 
-.btn-full {
-    width: 100%;
-    margin-top: 10px;
-}
-
-.btn-delete-request {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 20;
-}
-
-.btn-delete-request button {
-    background: rgba(220, 53, 69, 0.8);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-delete-request button:disabled {
-    background: #6c757d;
-}
-
-.status-led {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    z-index: 20;
-}
-
-.status-led.led-on  { background: #00ff9d; }
-.status-led.led-off { background: #ef4444; }
+.btn-full { width: 100%; margin-top: 10px; }
