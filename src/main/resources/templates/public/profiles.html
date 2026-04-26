@@ -1,60 +1,63 @@
 <!DOCTYPE html>
-
-<html lang="fr" xmlns:th="http://www.thymeleaf.org"></html>
-
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>CYStation - Équipage</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/profiles.css}">
-
 </head>
-
 <body>
 
 <div th:replace="~{public/header :: header}"></div>
 
+<main class="cnes-layout">
 
-<main>
-    <div class="container">
-        <h2>Membres de l'équipage</h2>
+    <section class="cnes-hero" id="hero-profiles">
+        <div class="cnes-hero-content">
+            <span class="tag">Base de données</span>
+            <h1>Effectif de la station</h1>
+            <p>Consultez les profils, les habilitations et l'expérience de l'ensemble de l'équipage actuellement à bord de CYStation.</p>
+        </div>
+    </section>
 
-        <div class="users-grid">
-            <div th:each="u : ${usersList}" class="user-card">
-                <div class="card-header">
-                    <span class="role-badge" th:text="${u.role.displayValue}">Rôle</span>
+    <section class="cnes-section">
+        <div class="section-header">
+            <h2>Membres de l'équipage</h2>
+        </div>
+
+        <div class="cnes-grid news-grid">
+            <article class="cnes-card" th:each="u : ${usersList}">
+                <div class="card-image">
+                    <img th:src="@{/images/avatars/{name}(name=${u.profilePicture})}" alt="Avatar de l'équipage">
                 </div>
 
-                <div class="card-body">
+                <div class="card-content">
+                    <span class="card-date" th:text="${u.role.displayValue}"></span>
+                    <h3 th:text="${u.firstName + ' ' + u.lastName}"></h3>
+                    <p class="profile-email" th:text="${u.email}"></p>
 
-                    <img th:src="@{/images/avatars/{name}(name=${u.profilePicture})}"
-                         alt="Avatar de l'équipage"
-                         class="header-avatar-img">
-
-                    <h3 th:text="${u.firstName + ' ' + u.lastName}">Prénom Nom</h3>
-                    <p>Email : <span th:text="${u.email}">email@cyss.space</span></p>
-
-                    <label>Rôle : <span th:text="${u.role}"> </span></label>
-
-                    <div class="exp-bar-container">
-                        <label>Expérience : <span th:text="${u.experience}"> 0 </span> EXP</label>
+                    <div class="exp-container">
+                        <div class="exp-header">
+                            <span>Expérience</span>
+                            <span class="exp-value" th:text="${u.experience} + ' EXP'"></span>
+                        </div>
                         <div class="progress">
                             <div class="progress-bar" th:style="'width: ' + ${u.experience % 100} + '%'"></div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card-footer">
-                    <a th:href="@{/profile/{email}(email=${u.email})}" class="btn-view">Voir Profil</a>
+                    <a th:href="@{/profile/{email}(email=${u.email})}" class="profile-btn">Voir Profil</a>
                 </div>
-            </div>
+            </article>
         </div>
-    </div>
+    </section>
+
 </main>
 
 <div th:replace="~{public/footer :: footer}"></div>
 
 </body>
-</l>
+</html>
