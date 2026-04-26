@@ -10,9 +10,11 @@ import io.squid.CyStation.service.ZoneService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 public class ZoneController {
@@ -35,6 +37,7 @@ public class ZoneController {
 
 
     @GetMapping("/mission")
+    @PreAuthorize("isAuthenticated()")
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
@@ -43,6 +46,7 @@ public class ZoneController {
 
 
     @PostMapping("/mission/zone/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public String createZone(@RequestParam String name,
                              @RequestParam String description,
                              HttpServletRequest request) { // Ajout de la requête
@@ -82,22 +86,12 @@ public class ZoneController {
         return ResponseEntity.ok("Zone mise à jour avec succès");
     }
 
-    @PostMapping("/admin/device/create")
-    public String createDeviceAdmin(@RequestParam String name,
-                                    @RequestParam String deviceType,
-                                    @RequestParam Long zoneId) {
-        try {
-            Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
-            newDevice.setName(name);
-            deviceService.addDeviceToZone(newDevice, zoneId);
-        } catch (IllegalArgumentException e) {
-            return "redirect:/admin/zone?error";
-        }
-        return "redirect:/admin/zone";
-    }
+
 
 
     @PostMapping("/mission/device/create")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
+
     public String createDevice(@RequestParam String name,
                                @RequestParam String deviceType,
                                @RequestParam Long zoneId,
@@ -122,6 +116,7 @@ public class ZoneController {
 
 
     @PostMapping("/mission/device/toggle/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     @ResponseBody
     public DeviceStatus toggleDevice(@PathVariable Long id) {
 
@@ -129,6 +124,7 @@ public class ZoneController {
     }
 
     @PostMapping("/mission/device/repair/{id}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public Device repairDevice(@PathVariable Long id) {
 
@@ -138,6 +134,7 @@ public class ZoneController {
 
 
     @PostMapping("/mission/device/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     @ResponseBody
     public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
         if (deviceRepository.existsById(id)) {
@@ -148,6 +145,7 @@ public class ZoneController {
     }
 
     @PostMapping("/mission/zone/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteZone(@PathVariable Long id) {
         zoneService.deleteZone(id);
@@ -156,6 +154,7 @@ public class ZoneController {
 
 
     @GetMapping("/mission/game/co2")
+    @PreAuthorize("isAuthenticated()")
     public String showCo2Game() {
 
         return "engineer/co2sensor.html";
@@ -163,12 +162,14 @@ public class ZoneController {
 
 
     @GetMapping("/mission/game/reactor")
+    @PreAuthorize("isAuthenticated()")
     public String showReactorGame() {
 
         return "engineer/reactor.html";
     }
 
     @GetMapping("/mission/game/radar")
+    @PreAuthorize("isAuthenticated()")
     public String showRadarGame() {
 
         return "engineer/radar.html";
@@ -176,12 +177,14 @@ public class ZoneController {
 
 
     @GetMapping("/mission/game/radio")
+    @PreAuthorize("isAuthenticated()")
     public String showRadioGame() {
 
         return "engineer/radio.html";
     }
 
     @GetMapping("/mission/game/o2")
+    @PreAuthorize("isAuthenticated()")
     public String showO2Game() {
 
         return "engineer/hydroponic.html";
@@ -189,6 +192,7 @@ public class ZoneController {
 
 
     @GetMapping("/mission/zone/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String viewZone(@PathVariable Long id, Model model) {
 
         Zone zone = zoneRepository.findById(id).orElseThrow();
@@ -199,6 +203,7 @@ public class ZoneController {
     }
 
     @PostMapping("/admin/zone/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public String createZoneAdmin(@RequestParam String name,
                                   @RequestParam(required = false) String description,
                                   @RequestParam(required = false) String imageUrl,

@@ -1,6 +1,8 @@
 package io.squid.CyStation.controller;
 import io.squid.CyStation.enums.DeviceCategory;
+import io.squid.CyStation.model.Device;
 import io.squid.CyStation.repository.ZoneRepository;
+import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class AdminController {
 
     @Autowired
     ZoneRepository zoneRepository;
+
+    @Autowired
+    DeviceService deviceService;
 
 
     @GetMapping("/")
@@ -47,7 +52,6 @@ public class AdminController {
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
-        model.addAttribute("activeTab", "zones"); // ← ajouter ça
         return "admin/zone";
     }
 
@@ -56,6 +60,20 @@ public class AdminController {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
         return "admin/user";
+    }
+
+    @PostMapping("/admin/device/create")
+    public String createDeviceAdmin(@RequestParam String name,
+                                    @RequestParam String deviceType,
+                                    @RequestParam Long zoneId) {
+        try {
+            Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
+            newDevice.setName(name);
+            deviceService.addDeviceToZone(newDevice, zoneId);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/admin/zone?error";
+        }
+        return "redirect:/admin/zone";
     }
 
 }

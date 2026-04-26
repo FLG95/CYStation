@@ -2,6 +2,7 @@ package io.squid.CyStation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
@@ -22,7 +24,7 @@ public class SecurityConfig {
                         .frameOptions((frameOptions) -> frameOptions.sameOrigin())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**", "/mission/**").permitAll()
+                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

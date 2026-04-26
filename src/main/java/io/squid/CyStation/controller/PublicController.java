@@ -3,7 +3,6 @@ package io.squid.CyStation.controller;
 import io.squid.CyStation.model.Article;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.ArticleService;
-import io.squid.CyStation.service.ZoneService;
 import org.springframework.stereotype.Controller;
 import java.util.List;
 import org.springframework.ui.Model;
@@ -15,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 
 @Controller
-public class MainController {
+public class PublicController {
 
     private final ArticleService articleService;
     private final ZoneRepository zoneRepository;
 
-    public MainController(ArticleService articleService, ZoneRepository zoneRepository) {
+    public PublicController(ArticleService articleService, ZoneRepository zoneRepository) {
         this.articleService = articleService;
         this.zoneRepository = zoneRepository;
     }
