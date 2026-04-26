@@ -7,6 +7,7 @@ import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,21 +43,24 @@ public class ZoneController {
 
 
     @PostMapping("/mission/zone/create")
-    public String createZone(@RequestParam String name, @RequestParam String description) {
+    public String createZone(@RequestParam String name,
+                             @RequestParam String description,
+                             HttpServletRequest request) { // Ajout de la requête
 
         if (zoneRepository.findZoneByName(name) != null) {
 
-            return "redirect:/mission?error";
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/mission") + "?error";
 
         } else {
-
             Zone newZone = new Zone();
             newZone.setName(name);
             newZone.setDescription(description);
             zoneService.save(newZone);
 
-            return "redirect:/mission";
+            String referer = request.getHeader("Referer");
 
+            return "redirect:" + (referer != null ? referer : "/mission");
         }
     }
 
@@ -82,21 +86,24 @@ public class ZoneController {
     @PostMapping("/mission/device/create")
     public String createDevice(@RequestParam String name,
                                @RequestParam String deviceType,
-                               @RequestParam Long zoneId) {
+                               @RequestParam Long zoneId,
+                               HttpServletRequest request) {
 
         try {
             Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
-
             newDevice.setName(name);
             newDevice.setStatus(DeviceStatus.ONLINE);
 
             deviceService.addDeviceToZone(newDevice, zoneId);
 
         } catch (IllegalArgumentException e) {
-            return "redirect:/mission/zone/" + zoneId + "?error=invalid_device_type";
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/mission/zone/" + zoneId);
         }
 
-        return "redirect:/mission/zone/" + zoneId;
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + (referer != null ? referer : "/mission/zone/" + zoneId);
     }
 
 
