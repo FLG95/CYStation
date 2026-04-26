@@ -1,0 +1,169 @@
+:root {
+    --console-bg: #1a1a18;
+    --console-border: #3a3a28;
+    --lcd-bg: #0a0a08;
+    --lcd-green: #aaff00;
+    --lcd-amber: #ffcc00;
+    --lcd-red: #ff4422;
+    --engraved: #8a8a6a;
+    --screw-color: #4a4a38;
+    --safe-green: rgba(100,255,50,0.25);
+    --safe-green-border: rgba(100,255,50,0.5);
+}
+
+body { margin: 0; background: #111; font-family: 'Courier New', monospace; color: #ccc; }
+
+.cnes-layout { display: flex; justify-content: center; padding: 20px; min-height: 100vh; background: #111; }
+.cnes-section { width: 100%; max-width: 660px; }
+
+.section-header h2 { color: var(--lcd-green); font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 12px; opacity: 0.7; }
+
+.radiation-header-info { margin-bottom: 18px; }
+.warning-label { background: #cc2200; color: #fff; font-size: 0.65rem; letter-spacing: 0.15em; padding: 3px 8px; text-transform: uppercase; border-radius: 2px; }
+.radiation-title { color: #e8e8c0; font-size: 1.3rem; margin: 8px 0 6px; letter-spacing: 0.05em; }
+.radiation-desc { color: #888870; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.radiation-desc strong { color: var(--lcd-green); }
+
+/* Console */
+.machine-console {
+    background: var(--console-bg);
+    border: 2px solid var(--console-border);
+    border-radius: 6px;
+    padding: 28px 24px 24px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(180,255,0,0.04), inset 0 0 20px rgba(0,0,0,0.5);
+    transition: box-shadow 0.4s, border-color 0.4s;
+}
+.machine-console.success { box-shadow: 0 0 40px rgba(100,255,50,0.2), inset 0 0 20px rgba(0,0,0,0.5); border-color: #88ff00; }
+.machine-console.danger  { box-shadow: 0 0 30px rgba(255,50,0,0.25), inset 0 0 20px rgba(0,0,0,0.5); border-color: #ff4422; }
+
+/* Screws */
+.screw { width: 10px; height: 10px; background: var(--screw-color); border-radius: 50%; position: absolute; box-shadow: inset 1px 1px 2px rgba(255,255,255,0.1), inset -1px -1px 2px rgba(0,0,0,0.5); }
+.screw::after { content:''; position:absolute; top:50%; left:50%; width:6px; height:1px; background:rgba(0,0,0,0.4); transform:translate(-50%,-50%) rotate(45deg); }
+.top-left    { top:8px; left:8px; }
+.top-right   { top:8px; right:8px; }
+.bottom-left  { bottom:8px; left:8px; }
+.bottom-right { bottom:8px; right:8px; }
+
+/* LCD */
+.lcd-screen {
+    background: var(--lcd-bg);
+    border: 1px solid #1a1a10;
+    border-radius: 3px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
+}
+#status-text { color: var(--lcd-red); font-weight: bold; margin-bottom: 4px; transition: color 0.3s; }
+.rad-readout { color: #666650; font-size: 0.68rem; }
+#rad-value { color: var(--lcd-amber); font-weight: bold; transition: color 0.3s; }
+#rad-value.safe { color: var(--lcd-green); }
+
+/* Gauge bar */
+.rad-gauge-wrapper { margin-bottom: 20px; }
+.rad-gauge-bar {
+    position: relative;
+    height: 14px;
+    background: #0d0d08;
+    border-radius: 7px;
+    border: 1px solid #2a2a18;
+    overflow: visible;
+    margin-bottom: 4px;
+}
+.rad-safe-zone {
+    position: absolute;
+    top: 0; height: 100%;
+    left: 40%; width: 20%;
+    background: var(--safe-green);
+    border-left: 1px solid var(--safe-green-border);
+    border-right: 1px solid var(--safe-green-border);
+    border-radius: 3px;
+}
+.rad-needle {
+    position: absolute;
+    top: -5px;
+    width: 6px; height: 24px;
+    background: var(--lcd-red);
+    border-radius: 3px;
+    transform: translateX(-50%);
+    transition: left 0.35s cubic-bezier(.4,0,.2,1), background 0.3s;
+    box-shadow: 0 0 8px currentColor;
+}
+.rad-needle.safe { background: var(--lcd-green); }
+
+.rad-gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.55rem;
+    color: #555540;
+    padding: 0 2px;
+}
+
+/* Shields grid */
+.shields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.shield-item {
+    background: #141410;
+    border: 1px solid #2a2a1a;
+    border-radius: 4px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.3s, background 0.3s;
+}
+.shield-item.active { border-color: #88ff00; background: #141a0d; }
+
+.shield-icon { font-size: 1.4rem; color: #333320; transition: color 0.3s; }
+.shield-item.active .shield-icon { color: #88ff00; }
+
+.engraved-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--engraved);
+    text-transform: uppercase;
+    line-height: 1.6;
+}
+.shield-power { color: #aacc44; font-size: 0.65rem; }
+
+/* Hardware switch */
+.hardware-switch { position: relative; display: inline-block; width: 44px; height: 22px; cursor: pointer; }
+.hardware-switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: #222210;
+    border: 1px solid #3a3a20;
+    border-radius: 22px;
+    transition: background 0.3s;
+}
+.switch-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; top: 2px;
+    background: #555540;
+    border-radius: 50%;
+    transition: transform 0.3s, background 0.3s;
+}
+.hardware-switch input:checked + .switch-slider { background: #1a2a08; border-color: #88ff00; }
+.hardware-switch input:checked + .switch-slider::before { transform: translateX(22px); background: #aaff00; box-shadow: 0 0 6px #aaff00; }
+
+/* Submit */
+.hardware-btn {
+    display: block; width: 100%; padding: 12px;
+    background: #141a08;
+    border: 2px solid #4a6a18;
+    color: var(--lcd-green);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; border-radius: 3px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.hardware-btn:hover { background: #1e2a0e; box-shadow: 0 0 12px rgba(150,255,0,0.2); }

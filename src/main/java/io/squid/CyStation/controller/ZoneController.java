@@ -187,6 +187,12 @@ public class ZoneController {
         return "engineer/hydroponic.html";
     }
 
+    @GetMapping("/mission/game/radiation")
+    public String showRadiationGame() {
+
+        return "engineer/radiation.html";
+    }
+
 
     @GetMapping("/mission/zone/{id}")
     public String viewZone(@PathVariable Long id, Model model) {

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - Capteur Radiation</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/radiation.css}">
+</head>
+<body>
+
+<main class="cnes-layout">
+    <section class="cnes-section radiation-section">
+        <div class="section-header radiation-section-header">
+            <h2>Ingénierie & Sécurité</h2>
+        </div>
+
+        <div class="radiation-header-info">
+            <span class="warning-label">Danger Radiologique</span>
+            <h3 class="radiation-title">Équilibrage des Blindages</h3>
+            <p class="radiation-desc">
+                Le niveau de radiation du module est critique. Activez ou désactivez les blindages pour maintenir
+                le niveau dans la zone sécurisée (entre <strong>40</strong> et <strong>60</strong> μSv/h).
+                Chaque blindage absorbe une quantité différente de radiation.
+            </p>
+        </div>
+
+        <div class="radiation-container">
+            <div class="machine-console" id="radiation-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <!-- LCD -->
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : NIVEAU CRITIQUE</div>
+                    <div class="rad-readout">
+                        RADIATION : <span id="rad-value">---</span> μSv/h
+                        &nbsp;|&nbsp; ZONE SÉCURISÉE : 40 – 60 μSv/h
+                    </div>
+                </div>
+
+                <!-- Gauge -->
+                <div class="rad-gauge-wrapper">
+                    <div class="rad-gauge-bar">
+                        <div class="rad-safe-zone"></div>
+                        <div class="rad-needle" id="rad-needle"></div>
+                    </div>
+                    <div class="rad-gauge-labels">
+                        <span>0</span>
+                        <span>25</span>
+                        <span>50</span>
+                        <span>75</span>
+                        <span>100</span>
+                    </div>
+                </div>
+
+                <!-- Shields grid -->
+                <div class="shields-grid">
+
+                    <div class="shield-item">
+                        <div class="shield-icon">▣</div>
+                        <label class="engraved-label">BLINDAGE ALPHA<br><span class="shield-power">−18 μSv/h</span></label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="shield-checkbox" data-absorption="18">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="shield-item">
+                        <div class="shield-icon">▣</div>
+                        <label class="engraved-label">BLINDAGE BETA<br><span class="shield-power">−12 μSv/h</span></label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="shield-checkbox" data-absorption="12">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="shield-item">
+                        <div class="shield-icon">▣</div>
+                        <label class="engraved-label">BLINDAGE GAMMA<br><span class="shield-power">−22 μSv/h</span></label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="shield-checkbox" data-absorption="22">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="shield-item">
+                        <div class="shield-icon">▣</div>
+                        <label class="engraved-label">BLINDAGE DELTA<br><span class="shield-power">−8 μSv/h</span></label>
+                        <label class="hardware-switch">
+                            <input type="checkbox" class="shield-checkbox" data-absorption="8">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <button id="submitBtn" class="hardware-btn submit-btn" style="display:none;">CONFIRMER LA STABILISATION</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const BASE_RADIATION = 100; // μSv/h sans aucun blindage
+    const SAFE_MIN = 40;
+    const SAFE_MAX = 60;
+
+    const checkboxes   = document.querySelectorAll('.shield-checkbox');
+    const radValueEl   = document.getElementById('rad-value');
+    const statusText   = document.getElementById('status-text');
+    const needle       = document.getElementById('rad-needle');
+    const submitBtn    = document.getElementById('submitBtn');
+    const radInterface = document.getElementById('radiation-interface');
+
+    function computeRadiation() {
+        let absorbed = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) absorbed += parseInt(cb.dataset.absorption);
+        });
+        return Math.max(0, BASE_RADIATION - absorbed);
+    }
+
+    function updateUI() {
+        const level  = computeRadiation();
+        const isSafe = level >= SAFE_MIN && level <= SAFE_MAX;
+
+        radValueEl.innerText = level;
+        radValueEl.classList.toggle('safe', isSafe);
+
+        // Aiguille : 0–100 μSv/h → 0–100%
+        needle.style.left = Math.min(100, level) + '%';
+        needle.classList.toggle('safe', isSafe);
+
+        // Visuel des blindages
+        checkboxes.forEach(cb => {
+            cb.closest('.shield-item').classList.toggle('active', cb.checked);
+        });
+
+        if (isSafe) {
+            statusText.innerText = 'ÉTAT : NIVEAU STABILISÉ';
+            statusText.style.color = '#aaff00';
+            radInterface.classList.add('success');
+            radInterface.classList.remove('danger');
+            submitBtn.style.display = 'block';
+        } else {
+            radInterface.classList.remove('success');
+            submitBtn.style.display = 'none';
+
+            if (level < SAFE_MIN) {
+                statusText.innerText = 'ÉTAT : ABSORPTION EXCESSIVE';
+                statusText.style.color = '#ffcc00';
+                radInterface.classList.remove('danger');
+            } else {
+                statusText.innerText = 'ÉTAT : NIVEAU CRITIQUE';
+                statusText.style.color = '#ff4422';
+                radInterface.classList.add('danger');
+            }
+        }
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateUI));
+    updateUI();
+
+    submitBtn.addEventListener('click', () => {
+        const token  = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId  = urlParams.get('deviceId');
+
+        const signalParent = () => {
+            console.log("Radiation stabilisée, envoi du signal pour le device:", deviceId);
+            window.parent.postMessage({ type: 'MINIGAME_WIN', deviceId: deviceId }, '*');
+        };
+
+        fetch('/user/updateExp?amount=30', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', [header]: token }
+        })
+            .then(() => signalParent())
+            .catch(err => { console.error("Erreur réseau XP:", err); signalParent(); });
+    });
+</script>
+
+</body>
+</html>
