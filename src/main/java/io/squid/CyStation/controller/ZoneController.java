@@ -201,7 +201,7 @@ public class ZoneController {
     @PreAuthorize("isAuthenticated()")
     public String showCo2Game() {
 
-        return "engineer/co2sensor.html";
+        return "engineer/co2sensor";
     }
 
 
@@ -209,14 +209,14 @@ public class ZoneController {
     @PreAuthorize("isAuthenticated()")
     public String showReactorGame() {
 
-        return "engineer/reactor.html";
+        return "engineer/reactor";
     }
 
     @GetMapping("/mission/game/radar")
     @PreAuthorize("isAuthenticated()")
     public String showRadarGame() {
 
-        return "engineer/radar.html";
+        return "engineer/radar";
     }
 
 
@@ -224,26 +224,26 @@ public class ZoneController {
     @PreAuthorize("isAuthenticated()")
     public String showRadioGame() {
 
-        return "engineer/radio.html";
+        return "engineer/radio";
     }
 
     @GetMapping("/mission/game/o2")
     @PreAuthorize("isAuthenticated()")
     public String showO2Game() {
 
-        return "engineer/hydroponic.html";
+        return "engineer/hydroponic";
     }
 
     @GetMapping("/mission/game/radiation")
     public String showRadiationGame() {
 
-        return "engineer/radiation.html";
+        return "engineer/radiation";
     }
 
     @GetMapping("/mission/game/water")
     public String showWaterGame() {
 
-        return "engineer/water.html";
+        return "engineer/water";
     }
 
 
