@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SimulationService {
@@ -24,7 +25,10 @@ public class SimulationService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @Scheduled(fixedRate = 40000)
+    @Autowired
+    private DeviceLogService deviceLogService;
+
+    @Scheduled(initialDelay = 7000, fixedRate = 40000)
     @Transactional
     public void actualiserStatusMachines() {
         List<Zone> zones = zoneRepository.findAll();
@@ -47,25 +51,40 @@ public class SimulationService {
         }
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     @Transactional
     public void actualiserTelemetrieMachines() {
         List<Device> devices = deviceRepository.findAll();
         boolean dbNeedsUpdate = false;
 
         for (Device device : devices) {
-            if (device.getStatus() == DeviceStatus.ONLINE) {
-                boolean isUpdated = device.updateTelemetry();
+            try {
+                if (device.getStatus() == DeviceStatus.ONLINE) {
+
+                    Map<String, Double> oldMetrics = device.getTelemetryMetrics();
+
+                    boolean isUpdated = device.updateTelemetry();
 
 
-                if (isUpdated) {
-                    dbNeedsUpdate = true;
-                    messagingTemplate.convertAndSend("/topic/device-telemetry", device);
+                    if (isUpdated) {
+                        Map<String, Double> newMetrics = device.getTelemetryMetrics();
+
+                        for (String metricName : newMetrics.keySet()) {
+                            Double oldVal = oldMetrics.get(metricName);
+                            Double newVal = newMetrics.get(metricName);
+
+                            if (oldVal == null || !oldVal.equals(newVal)) {
+                                deviceLogService.logTelemetry(device, metricName, oldVal, newVal);
+                            }
+                        }
+                        dbNeedsUpdate = true;
+                        messagingTemplate.convertAndSend("/topic/device-telemetry", device);
+                    }
+
                 }
+            } catch (Exception e) {
+                System.err.println("Erreur de télémétrie sur l'appareil ID " + device.getId() + " — " + e.getMessage());
             }
-        }
-        if (dbNeedsUpdate) {
-            deviceRepository.saveAllAndFlush(devices);
         }
     }
 

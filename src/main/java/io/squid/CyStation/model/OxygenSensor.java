@@ -3,6 +3,9 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+
+import java.util.Map;
 
 @Entity
 @DiscriminatorValue("OXYGEN_SENSOR")
@@ -40,6 +43,14 @@ public class OxygenSensor extends Sensor{
     @Override
     public String getTelemetryDisplay(){
         return this.o2Percentage + "%";
+    }
+
+    @Transient
+    @Override
+    public Map<String, Double> getTelemetryMetrics() {
+        return Map.of(
+                "O2_PERCENTAGE", (double) this.o2Percentage
+        );
     }
 
 }

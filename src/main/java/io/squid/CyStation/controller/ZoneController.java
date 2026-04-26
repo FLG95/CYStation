@@ -6,6 +6,7 @@ import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
+import io.squid.CyStation.service.DeviceLogService;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.ZoneService;
 import jakarta.persistence.EntityManager;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +35,7 @@ public class ZoneController {
     private final ZoneService zoneService;
     private final DeviceRepository deviceRepository;
     private final DeviceService deviceService;
+    private final DeviceLogService deviceLogService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -44,13 +47,30 @@ public class ZoneController {
     public ZoneController(ZoneRepository zoneRepository,
                           ZoneService zoneService,
                           DeviceRepository deviceRepository,
-                          DeviceService deviceService) {
+                          DeviceService deviceService, DeviceLogService deviceLogService) {
         this.zoneRepository = zoneRepository;
         this.zoneService = zoneService;
         this.deviceRepository = deviceRepository;
         this.deviceService = deviceService;
+        this.deviceLogService = deviceLogService;
     }
 
+    @PostMapping("/admin/logs/clear")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String clearLogs(HttpServletRequest request) {
+        deviceLogService.clearAllLogs();
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/mission");
+    }
+
+    @GetMapping("/mission/device/{id}/logs")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public ResponseEntity<List<DeviceLog>> getDeviceLogs(@PathVariable Long id) {
+        List<DeviceLog> logs = deviceLogService.getLogsByDeviceId(id);
+        return ResponseEntity.ok(logs);
+    }
 
     @GetMapping("/mission")
     @PreAuthorize("isAuthenticated()")

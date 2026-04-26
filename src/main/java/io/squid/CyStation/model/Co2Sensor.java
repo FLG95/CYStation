@@ -4,6 +4,9 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+
+import java.util.Map;
 
 @Entity
 @DiscriminatorValue("CO2_SENSOR")
@@ -42,6 +45,11 @@ public class Co2Sensor extends Sensor {
         return this.ppmLevel + "ppm";
     }
 
+    @Transient
+    @Override
+    public Map<String, Double> getTelemetryMetrics() {
+        return Map.of("CO2_PPM", (double) this.ppmLevel);
+    }
 
 
 }

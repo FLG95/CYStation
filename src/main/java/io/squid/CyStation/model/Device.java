@@ -5,6 +5,8 @@ import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.RequestStatus;
 import jakarta.persistence.*;
 
+import java.util.Map;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "device_type", discriminatorType = DiscriminatorType.STRING)
@@ -13,8 +15,6 @@ public abstract class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-
     private DeviceStatus status;
 
     @ManyToOne
@@ -25,7 +25,7 @@ public abstract class Device {
     @Enumerated(EnumType.STRING)
     @Column(name = "request_status")
     private RequestStatus requestStatus;
-    
+
     private String requestedBy;
 
     public Device() {
@@ -94,4 +94,7 @@ public abstract class Device {
     public void setRequestedBy(String requestedBy) {
         this.requestedBy = requestedBy;
     }
+    @Transient
+    public abstract Map<String, Double> getTelemetryMetrics();
+
 }

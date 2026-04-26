@@ -4,6 +4,9 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.DeviceCategory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+
+import java.util.Map;
 
 @Entity
 @DiscriminatorValue("CoffeeMachine")
@@ -20,9 +23,7 @@ public class CoffeeMachine extends Device{
 
     @Override
     public boolean updateTelemetry() {
-        // Simule une pureté qui fluctue légèrement entre 95% et 100%
         this.setPurityLevel(95.0 + (Math.random() * 5.0));
-        // Simule un niveau de cuve aléatoire entre 0 et 1000 litres
         this.setFillLevel((int) (Math.random() * 1000));
         return true;
     }
@@ -45,6 +46,15 @@ public class CoffeeMachine extends Device{
     @Override
     public String getTelemetryDisplay() {
         return String.format("Pureté: %.2f%% | Stock: %d L", this.purityLevel, this.fillLevel);
+    }
+
+    @Transient
+    @Override
+    public Map<String, Double> getTelemetryMetrics() {
+        return Map.of(
+                "PURITY_LEVEL", (double) this.purityLevel,
+                "FILL_OUTPUT", (double) this.fillLevel
+        );
     }
 
 }
