@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Ingénierie - Capteur CO2</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/co2sensor.css}">
+</head>
+<body>
+
+<main class="cnes-layout">
+    <section class="cnes-section co2-section">
+        <div class="section-header co2-section-header">
+            <h2>Ingénierie & Environnement</h2>
+        </div>
+
+        <div class="co2-header-info">
+            <span class="warning-label">Recalibration Requise</span>
+            <h3 class="co2-title">Calibration des Capteurs CO₂</h3>
+            <p class="co2-desc">Les 3 capteurs de surveillance atmosphérique sont déréglés. Ajustez manuellement
+                chaque potentiomètre pour atteindre le niveau cible (± 5 ppm) afin de stabiliser l'atmosphère du module.</p>
+        </div>
+
+        <div class="co2-container">
+            <div class="machine-console" id="co2-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : CAPTEURS DÉRÉGLÉS</div>
+                    <div class="progress-display">CAPTEURS CALIBRÉS : <span id="calibrated-count">0</span> / 3</div>
+                </div>
+
+                <div class="sensors-grid">
+
+                    <div class="sensor-item" id="sensor-0">
+                        <label class="engraved-label">CAPTEUR ALPHA — CO₂ (ppm)</label>
+                        <div class="sensor-readout">
+                            <span class="current-label">ACTUEL</span>
+                            <span class="current-value" id="current-0">---</span>
+                            <span class="target-label">CIBLE</span>
+                            <span class="target-value" id="target-0">---</span>
+                        </div>
+                        <div class="gauge-bar-container">
+                            <div class="gauge-zone" id="zone-0"></div>
+                            <div class="gauge-cursor" id="cursor-0"></div>
+                        </div>
+                        <div class="slider-track-bg">
+                            <input type="range" class="co2-slider" id="slider-0" min="300" max="1200" value="750">
+                        </div>
+                        <div class="sensor-status" id="sstatus-0">⬤ NON CALIBRÉ</div>
+                    </div>
+
+                    <div class="sensor-item" id="sensor-1">
+                        <label class="engraved-label">CAPTEUR BETA — CO₂ (ppm)</label>
+                        <div class="sensor-readout">
+                            <span class="current-label">ACTUEL</span>
+                            <span class="current-value" id="current-1">---</span>
+                            <span class="target-label">CIBLE</span>
+                            <span class="target-value" id="target-1">---</span>
+                        </div>
+                        <div class="gauge-bar-container">
+                            <div class="gauge-zone" id="zone-1"></div>
+                            <div class="gauge-cursor" id="cursor-1"></div>
+                        </div>
+                        <div class="slider-track-bg">
+                            <input type="range" class="co2-slider" id="slider-1" min="300" max="1200" value="750">
+                        </div>
+                        <div class="sensor-status" id="sstatus-1">⬤ NON CALIBRÉ</div>
+                    </div>
+
+                    <div class="sensor-item" id="sensor-2">
+                        <label class="engraved-label">CAPTEUR GAMMA — CO₂ (ppm)</label>
+                        <div class="sensor-readout">
+                            <span class="current-label">ACTUEL</span>
+                            <span class="current-value" id="current-2">---</span>
+                            <span class="target-label">CIBLE</span>
+                            <span class="target-value" id="target-2">---</span>
+                        </div>
+                        <div class="gauge-bar-container">
+                            <div class="gauge-zone" id="zone-2"></div>
+                            <div class="gauge-cursor" id="cursor-2"></div>
+                        </div>
+                        <div class="slider-track-bg">
+                            <input type="range" class="co2-slider" id="slider-2" min="300" max="1200" value="750">
+                        </div>
+                        <div class="sensor-status" id="sstatus-2">⬤ NON CALIBRÉ</div>
+                    </div>
+
+                </div>
+
+                <button id="submitBtn" class="hardware-btn submit-btn" style="display:none;">VALIDER LA CALIBRATION</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const TOLERANCE = 5;   // ±5 ppm
+    const MIN = 300;
+    const MAX = 1200;
+
+    // Random targets for each sensor
+    const targets = [0, 1, 2].map(() => Math.round(MIN + Math.random() * (MAX - MIN)));
+
+    const calibrated = [false, false, false];
+
+    const statusText    = document.getElementById('status-text');
+    const calibCount    = document.getElementById('calibrated-count');
+    const submitBtn     = document.getElementById('submitBtn');
+    const co2Interface  = document.getElementById('co2-interface');
+
+    // Init display
+    targets.forEach((t, i) => {
+        document.getElementById(`target-${i}`).innerText = t + ' ppm';
+        updateSensor(i);
+    });
+
+    // Gauge zone positions (% of bar width)
+    function ppmToPercent(ppm) {
+        return ((ppm - MIN) / (MAX - MIN)) * 100;
+    }
+
+    function updateGauge(i) {
+        const zonePct  = ppmToPercent(targets[i]);
+        const tolPct   = (TOLERANCE / (MAX - MIN)) * 100;
+        const cursorPct = ppmToPercent(parseInt(document.getElementById(`slider-${i}`).value));
+
+        const zone   = document.getElementById(`zone-${i}`);
+        const cursor = document.getElementById(`cursor-${i}`);
+
+        zone.style.left  = (zonePct - tolPct) + '%';
+        zone.style.width = (tolPct * 2) + '%';
+        cursor.style.left = cursorPct + '%';
+
+        const isOk = Math.abs(parseInt(document.getElementById(`slider-${i}`).value) - targets[i]) <= TOLERANCE;
+        cursor.classList.toggle('ok', isOk);
+    }
+
+    function updateSensor(i) {
+        const slider = document.getElementById(`slider-${i}`);
+        const val    = parseInt(slider.value);
+        const diff   = Math.abs(val - targets[i]);
+        const isOk   = diff <= TOLERANCE;
+
+        const currentEl = document.getElementById(`current-${i}`);
+        const sstatusEl = document.getElementById(`sstatus-${i}`);
+        const sensorEl  = document.getElementById(`sensor-${i}`);
+
+        currentEl.innerText = val + ' ppm';
+        currentEl.classList.toggle('ok', isOk);
+
+        updateGauge(i);
+
+        if (isOk && !calibrated[i]) {
+            calibrated[i] = true;
+            sstatusEl.innerText = '⬤ CALIBRÉ';
+            sstatusEl.classList.add('ok');
+            sensorEl.classList.add('calibrated');
+            checkVictory();
+        } else if (!isOk && calibrated[i]) {
+            calibrated[i] = false;
+            sstatusEl.innerText = '⬤ NON CALIBRÉ';
+            sstatusEl.classList.remove('ok');
+            sensorEl.classList.remove('calibrated');
+            submitBtn.style.display = 'none';
+            co2Interface.classList.remove('success');
+            updateStatus();
+        }
+
+        calibCount.innerText = calibrated.filter(Boolean).length;
+        updateStatus();
+    }
+
+    function updateStatus() {
+        const n = calibrated.filter(Boolean).length;
+        if (n === 0) {
+            statusText.innerText = 'ÉTAT : CAPTEURS DÉRÉGLÉS';
+            statusText.style.color = '#ff3333';
+        } else if (n < 3) {
+            statusText.innerText = `ÉTAT : ${n} CAPTEUR(S) STABILISÉ(S)`;
+            statusText.style.color = '#ffaa00';
+        }
+    }
+
+    function checkVictory() {
+        if (calibrated.every(Boolean)) {
+            co2Interface.classList.add('success');
+            statusText.innerText = 'ÉTAT : ATMOSPHÈRE STABILISÉE';
+            statusText.style.color = '#00ff88';
+            submitBtn.style.display = 'block';
+        }
+    }
+
+    // Bind sliders
+    [0, 1, 2].forEach(i => {
+        const slider = document.getElementById(`slider-${i}`);
+        slider.addEventListener('input', () => updateSensor(i));
+        // Init gauge
+        updateGauge(i);
+    });
+
+    // Submit
+    submitBtn.addEventListener('click', () => {
+        const token  = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId  = urlParams.get('deviceId');
+
+        const signalParent = () => {
+            console.log("CO2 calibré, envoi du signal pour le device:", deviceId);
+            window.parent.postMessage({ type: 'MINIGAME_WIN', deviceId: deviceId }, '*');
+        };
+
+        fetch('/user/updateExp?amount=30', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', [header]: token }
+        })
+            .then(() => signalParent())
+            .catch(err => { console.error("Erreur réseau XP:", err); signalParent(); });
+    });
+</script>
+
+</body>
+</html>

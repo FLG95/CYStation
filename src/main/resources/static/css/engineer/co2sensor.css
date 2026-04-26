@@ -1,0 +1,176 @@
+
+    /* ── Variables & reset ── */
+:root {
+    --console-bg: #1a1f1a;
+    --console-border: #3a4a3a;
+    --lcd-bg: #0a120a;
+    --lcd-green: #00ff88;
+    --lcd-amber: #ffaa00;
+    --lcd-red: #ff3333;
+    --engraved: #8a9a8a;
+    --slider-track: #2a3a2a;
+    --screw-color: #4a5a4a;
+}
+
+body { margin: 0; background: #111; font-family: 'Courier New', monospace; color: #ccc; }
+
+.cnes-layout { display: flex; justify-content: center; align-items: flex-start; padding: 20px; min-height: 100vh; background: #111; }
+.cnes-section { width: 100%; max-width: 680px; }
+.section-header h2 { color: var(--lcd-green); font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 12px; opacity: 0.7; }
+
+.co2-header-info { margin-bottom: 18px; }
+.warning-label { background: #ff4400; color: #fff; font-size: 0.65rem; letter-spacing: 0.15em; padding: 3px 8px; text-transform: uppercase; border-radius: 2px; }
+.co2-title { color: #e0f0e0; font-size: 1.3rem; margin: 8px 0 6px; letter-spacing: 0.05em; }
+.co2-desc { color: #889988; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+
+/* ── Machine console ── */
+.machine-console {
+    background: var(--console-bg);
+    border: 2px solid var(--console-border);
+    border-radius: 6px;
+    padding: 28px 24px 24px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,255,100,0.05), inset 0 0 20px rgba(0,0,0,0.5);
+    transition: box-shadow 0.4s;
+}
+.machine-console.success { box-shadow: 0 0 40px rgba(0,255,100,0.25), inset 0 0 20px rgba(0,0,0,0.5); border-color: #00ff88; }
+.machine-console.error-flash { box-shadow: 0 0 30px rgba(255,50,50,0.3), inset 0 0 20px rgba(0,0,0,0.5); }
+
+/* Screws */
+.screw { width: 10px; height: 10px; background: var(--screw-color); border-radius: 50%; position: absolute; box-shadow: inset 1px 1px 2px rgba(255,255,255,0.15), inset -1px -1px 2px rgba(0,0,0,0.5); }
+.screw::after { content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 1px; background: rgba(0,0,0,0.4); transform: translate(-50%,-50%) rotate(45deg); }
+.top-left    { top: 8px; left: 8px; }
+.top-right   { top: 8px; right: 8px; }
+.bottom-left  { bottom: 8px; left: 8px; }
+.bottom-right { bottom: 8px; right: 8px; }
+
+/* ── LCD Screen ── */
+.lcd-screen {
+    background: var(--lcd-bg);
+    border: 1px solid #1a2a1a;
+    border-radius: 3px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
+}
+#status-text { color: var(--lcd-amber); font-weight: bold; margin-bottom: 4px; }
+.progress-display { color: #557755; font-size: 0.7rem; }
+
+/* ── Sensors grid ── */
+.sensors-grid { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+
+.sensor-item {
+    background: #141a14;
+    border: 1px solid #2a3a2a;
+    border-radius: 4px;
+    padding: 14px 16px;
+    transition: border-color 0.3s, background 0.3s;
+}
+.sensor-item.calibrated { border-color: #00aa55; background: #0d1a10; }
+.sensor-item.off-target  { border-color: #333; }
+
+.engraved-label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--engraved);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Readout row */
+.sensor-readout {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.7rem;
+}
+.current-label, .target-label { color: #556655; font-size: 0.6rem; letter-spacing: 0.1em; }
+.current-value { color: var(--lcd-amber); font-size: 1.1rem; font-weight: bold; min-width: 50px; transition: color 0.2s; }
+.current-value.ok { color: var(--lcd-green); }
+.target-value { color: #88aa88; font-size: 0.85rem; margin-left: auto; }
+
+/* Gauge bar */
+.gauge-bar-container {
+    position: relative;
+    height: 6px;
+    background: #0d150d;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    border: 1px solid #1a2a1a;
+    overflow: visible;
+}
+/* green zone */
+.gauge-zone {
+    position: absolute;
+    top: 0; height: 100%;
+    background: rgba(0,255,100,0.25);
+    border-radius: 3px;
+    border: 1px solid rgba(0,255,100,0.4);
+}
+/* cursor (current value indicator) */
+.gauge-cursor {
+    position: absolute;
+    top: -4px;
+    width: 4px;
+    height: 14px;
+    background: var(--lcd-amber);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: left 0.05s, background 0.2s;
+    box-shadow: 0 0 4px currentColor;
+}
+.gauge-cursor.ok { background: var(--lcd-green); }
+
+/* Slider */
+.slider-track-bg { margin-bottom: 8px; }
+.co2-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--slider-track);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+.co2-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    background: #4a6a4a;
+    border-radius: 50%;
+    border: 2px solid #6a9a6a;
+    box-shadow: 0 0 6px rgba(0,255,100,0.2);
+    cursor: grab;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.co2-slider::-webkit-slider-thumb:active { cursor: grabbing; background: #3a8a5a; box-shadow: 0 0 10px rgba(0,255,100,0.5); }
+
+/* Sensor status badge */
+.sensor-status {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: #664444;
+    transition: color 0.3s;
+}
+.sensor-status.ok { color: #00cc66; }
+
+/* ── Submit button ── */
+.hardware-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #1a2a1a;
+    border: 2px solid #3a6a3a;
+    color: var(--lcd-green);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.hardware-btn:hover { background: #223322; box-shadow: 0 0 12px rgba(0,255,100,0.2); }

@@ -144,7 +144,7 @@ public class ZoneController {
     @GetMapping("/mission/game/co2")
     public String showCo2Game() {
 
-        return "engineer/hydroponic.html";
+        return "engineer/co2sensor.html";
     }
 
 
@@ -165,6 +165,12 @@ public class ZoneController {
     public String showRadioGame() {
 
         return "engineer/radio.html";
+    }
+
+    @GetMapping("/mission/game/o2")
+    public String showO2Game() {
+
+        return "engineer/hydroponic.html";
     }
 
 
