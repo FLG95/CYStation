@@ -25,14 +25,12 @@ public class ZoneController {
     public ZoneController(ZoneRepository zoneRepository,
                           ZoneService zoneService,
                           DeviceRepository deviceRepository,
-                          DeviceService deviceService){
+                          DeviceService deviceService) {
         this.zoneRepository = zoneRepository;
         this.zoneService = zoneService;
         this.deviceRepository = deviceRepository;
         this.deviceService = deviceService;
     }
-
-
 
 
     @GetMapping("/zone-overview")
@@ -41,7 +39,6 @@ public class ZoneController {
         model.addAttribute("deviceCategories", DeviceCategory.values());
         return "public/zone-overview";
     }
-
 
 
     @PostMapping("/mission/zone/create")
@@ -82,9 +79,10 @@ public class ZoneController {
     }
 
 
-
     @PostMapping("/mission/device/create")
-    public String createDevice(@RequestParam String name, @RequestParam String deviceType, @RequestParam Long zoneId) {
+    public String createDevice(@RequestParam String name,
+                               @RequestParam String deviceType,
+                               @RequestParam Long zoneId) {
 
         try {
             Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
@@ -95,11 +93,10 @@ public class ZoneController {
             deviceService.addDeviceToZone(newDevice, zoneId);
 
         } catch (IllegalArgumentException e) {
-            // Redirection propre si la catégorie n'existe pas dans l'Enum
-            return "redirect:/mission?error=invalid_device_type";
+            return "redirect:/mission/zone/" + zoneId + "?error=invalid_device_type";
         }
 
-        return "redirect:/mission";
+        return "redirect:/mission/zone/" + zoneId;
     }
 
 
@@ -162,6 +159,7 @@ public class ZoneController {
 
         return "engineer/radio.html";
     }
+
 
     @GetMapping("/mission/zone/{id}")
     public String viewZone(@PathVariable Long id, Model model) {
