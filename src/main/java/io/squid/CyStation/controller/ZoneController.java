@@ -180,11 +180,8 @@ public class ZoneController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
-        if (deviceRepository.existsById(id)) {
             deviceService.deleteDevice(id);
             return ResponseEntity.ok("DELETED");
-        }
-        return ResponseEntity.status(404).body("NOT_FOUND");
     }
 
 

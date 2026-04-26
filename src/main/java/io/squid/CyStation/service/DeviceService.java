@@ -4,6 +4,7 @@ import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.User;
 import io.squid.CyStation.model.Zone;
+import io.squid.CyStation.repository.DeviceLogRepository;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import jakarta.transaction.Transactional;
@@ -20,26 +21,27 @@ public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final ZoneRepository zoneRepository;
     private final DeviceLogService deviceLogService;
+    private final DeviceLogRepository deviceLogRepository;
 
-
-    public DeviceService(DeviceRepository deviceRepository, ZoneRepository zoneRepository, DeviceLogService deviceLogService) {
+    public DeviceService(DeviceRepository deviceRepository, ZoneRepository zoneRepository, DeviceLogService deviceLogService, DeviceLogRepository deviceLogRepository) {
         this.deviceRepository = deviceRepository;
         this.zoneRepository = zoneRepository;
         this.deviceLogService = deviceLogService;
+        this.deviceLogRepository = deviceLogRepository;
     }
 
 
     @Transactional
     public void deleteDevice(Long id) {
-
         Device device = deviceRepository.findById(id).orElse(null);
-        if (device != null) {
 
+        if (device != null) {
             if (device.getZone() != null) {
                 device.getZone().getDevices().remove(device);
             }
-            deviceLogService.logDeletion(device);
+            deviceLogRepository.deleteByDeviceId(id);
             deviceRepository.delete(device);
+            deviceRepository.flush();
         }
     }
 

@@ -25,4 +25,13 @@ public interface DeviceLogRepository extends JpaRepository<DeviceLog, Long> {
 
     List<DeviceLog> findTop50ByEventTypeNotOrderByTimestampDesc(String excludedEventType);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM DeviceLog d WHERE d.device.id = :deviceId")
+    void deleteByDeviceId(@Param("deviceId") Long deviceId);
+
+    @Modifying
+    @Query("UPDATE DeviceLog d SET d.device = null WHERE d.device.id = :deviceId")
+    void detachLogsFromDevice(@Param("deviceId") Long deviceId);
+
 }
