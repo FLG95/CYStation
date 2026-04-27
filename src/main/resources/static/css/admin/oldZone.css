@@ -10,6 +10,8 @@
     transition: all 0.3s ease;
     min-height: 200px;
     position: relative;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .add-card:hover {
@@ -55,10 +57,12 @@
 
 .modal-content {
     background: var(--color-1);
-    padding: 40px;
+    padding: 30px 20px;
     border: 1px solid var(--color-7);
-    min-width: 350px;
+    width: 95%;
+    max-width: 1000px;
     position: relative;
+    box-sizing: border-box;
 }
 
 .close-btn {
@@ -67,171 +71,73 @@
     right: 15px;
     cursor: pointer;
     color: #ffffff;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     text-decoration: none;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cnes-form label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: var(--color-9);
     font-weight: bold;
+    font-size: 0.9rem;
 }
 
 .cnes-form input[type="text"],
 .cnes-form select {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: rgba(0, 0, 0, 0.8);
     border: 1px solid var(--color-7);
     color: #ffffff;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     box-sizing: border-box;
     font-size: 1rem;
-}
-
-.btn-full {
-    width: 100%;
-}
-
-.modal-large {
-    width: 90%;
-    max-width: 1000px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.add-card {
-    text-decoration: none;
-    cursor: pointer;
-    border: 2px dashed var(--color-7);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
-    min-height: 200px;
-    position: relative;
-}
-
-.add-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--color-9);
-}
-
-.admin-overlay {
-    opacity: 1 !important;
-    background: rgba(0,0,0,0.4) !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-}
-
-.empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-    color: #ffffff;
-    opacity: 0.8;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal:target {
-    display: flex;
-}
-
-.modal-content {
-    background: var(--color-1);
-    padding: 40px;
-    border: 1px solid var(--color-7);
-    min-width: 350px;
-    position: relative;
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    cursor: pointer;
-    color: #ffffff;
-    font-size: 1.2rem;
-    text-decoration: none;
-}
-
-.cnes-form label {
-    display: block;
-    margin-bottom: 10px;
-    color: var(--color-9);
-    font-weight: bold;
-}
-
-.cnes-form input[type="text"],
-.cnes-form select {
-    width: 100%;
-    padding: 12px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border: 1px solid var(--color-7);
-    color: #ffffff;
-    margin-bottom: 25px;
-    box-sizing: border-box;
-    font-size: 1rem;
-}
-
-.btn-full {
-    width: 100%;
-}
-
-.modal-large {
-    width: 90%;
-    max-width: 1000px;
-    max-height: 90vh;
-    overflow-y: auto;
+    min-height: 44px;
 }
 
 .cnes-btn {
     background: transparent;
     border: 1px solid var(--color-9);
     color: var(--color-9);
-    padding: 15px;
+    padding: 14px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: inset 0 0 0 transparent;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .cnes-btn:hover {
     background: var(--color-9);
     color: var(--color-1);
     box-shadow: 0 0 20px var(--color-9);
-    transform: translateY(-2px);
 }
 
-.cnes-btn:active {
-    transform: translateY(0);
+.btn-full {
+    width: 100%;
+}
+
+.modal-large {
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 body:has(.modal:target) {
     overflow: hidden;
 }
-
 
 .error-message {
     background-color: rgba(239, 68, 68, 0.1);
@@ -239,18 +145,18 @@ body:has(.modal:target) {
     color: #fca5a5;
     padding: 15px;
     margin: 20px 0px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     border-radius: 4px;
 }
-
 
 .btn-repair {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
+    min-height: 44px;
 }
 
 .btn-repair:hover {
@@ -270,40 +176,67 @@ body:has(.modal:target) {
     z-index: 9999;
 }
 
-.modal-content {
-    background: #1a1a1a;
-    padding: 30px;
-    border-radius: 12px;
-    border: 2px solid #444;
-    width: 90%;
-    max-width: 1000px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    position: relative;
-}
-
 iframe {
     background: white;
+    width: 100%;
+    height: 300px;
+    border: none;
 }
-
-
-
 
 .close-modal {
-    position: absolute; top: 10px; right: 20px;
-    color: white; font-size: 30px; cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
 .device-type-badge {
-    background: rgba(0, 212, 255, 0.15); /* Bleu CNES transparent */
+    background: rgba(0, 212, 255, 0.15);
     color: #00d4ff;
     border: 1px solid rgba(0, 212, 255, 0.5);
-    padding: 2px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: bold;
     text-transform: uppercase;
     vertical-align: middle;
     letter-spacing: 0.5px;
 }
 
+/* Desktop Styles */
+@media (min-width: 768px) {
+    .modal-content {
+        padding: 40px;
+        width: 90%;
+        min-width: 350px;
+    }
+
+    .cnes-form label {
+        font-size: 1rem;
+    }
+
+    .cnes-btn {
+        width: auto;
+        padding: 15px 30px;
+    }
+
+    .btn-full {
+        width: 100%;
+    }
+
+    iframe {
+        height: 600px;
+    }
+
+    .device-type-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+    }
+}

@@ -23,25 +23,32 @@ body.bg-dark {
    Layout
 ────────────────────────────────────────────── */
 .cnes-layout {
-    width: 90%;
+    width: 95%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 100px 0 2rem 0;
+    padding: 80px 0 2rem 0;
 }
 
 /* ──────────────────────────────────────────────
-   Tabs (identiques à zone.css)
+   Tabs
 ────────────────────────────────────────────── */
 .admin-tabs {
     display: flex;
     gap: 5px;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     border-bottom: 2px solid var(--color-4);
-    padding: 0 10px;
+    padding: 0 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.admin-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .tab-item {
-    padding: 12px 24px;
+    padding: 14px 20px;
     text-decoration: none;
     color: var(--color-6);
     font-weight: 600;
@@ -53,6 +60,10 @@ body.bg-dark {
     border-bottom: none;
     border-radius: 6px 6px 0 0;
     transition: all 0.2s ease;
+    white-space: nowrap;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
 }
 
 .tab-item:hover {
@@ -72,16 +83,16 @@ body.bg-dark {
    Section header
 ────────────────────────────────────────────── */
 .section-header {
-    margin-bottom: 2rem;
-    padding: 0 10px;
+    margin-bottom: 1.5rem;
+    padding: 0 5px;
 }
 
 .section-header h1,
 .section-header h2,
 .cnes-layout > h2 {
     color: var(--color-10);
-    margin: 0 0 2rem 0;
-    font-size: 2rem;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
@@ -89,11 +100,11 @@ body.bg-dark {
 .section-header p {
     color: var(--color-6);
     margin-top: 0.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 /* ──────────────────────────────────────────────
-   Empty state (remplace alert Bootstrap)
+   Empty state
 ────────────────────────────────────────────── */
 .alert,
 .alert-info {
@@ -101,31 +112,32 @@ body.bg-dark {
     border: 1px solid var(--color-5);
     border-radius: 8px;
     color: var(--color-6);
-    padding: 20px 24px;
-    font-size: 0.9rem;
+    padding: 16px 20px;
+    font-size: 0.85rem;
     letter-spacing: 0.5px;
 }
 
 /* ──────────────────────────────────────────────
-   Table (reprend admin-table de zone.css)
+   Table
 ────────────────────────────────────────────── */
-.table,
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    color: var(--color-10);
-}
-
-/* Wrapper identique à .admin-table-container */
 .table-responsive,
 .admin-table-container {
     background: var(--color-2);
     border: 1px solid var(--color-5);
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 2rem;
+}
+
+.table,
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    color: var(--color-10);
+    min-width: 600px;
 }
 
 .table thead th,
@@ -133,9 +145,9 @@ body.bg-dark {
 .admin-table th {
     background: var(--color-3) !important;
     color: var(--color-9) !important;
-    padding: 16px 20px;
+    padding: 12px 15px;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     letter-spacing: 1px;
     border-bottom: 2px solid var(--color-5) !important;
     border-color: var(--color-5) !important;
@@ -143,31 +155,15 @@ body.bg-dark {
 
 .table td,
 .admin-table td {
-    padding: 16px 20px;
+    padding: 12px 15px;
     border-bottom: 1px solid transparent;
     vertical-align: middle;
     color: var(--color-10);
     background: transparent;
 }
 
-/* Supprimer les styles Bootstrap qui cassent le thème */
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-    background-color: rgba(255, 255, 255, 0.02) !important;
-    color: var(--color-10) !important;
-}
-
-.table-striped > tbody > tr:nth-of-type(even) > * {
-    background-color: transparent !important;
-    color: var(--color-10) !important;
-}
-
-.table-hover > tbody > tr:hover > * {
-    background-color: rgba(255, 255, 255, 0.04) !important;
-    color: var(--color-10) !important;
-}
-
 /* ──────────────────────────────────────────────
-   Badges (reprend badge / device-type-badge)
+   Badges
 ────────────────────────────────────────────── */
 .badge,
 .device-type-badge {
@@ -178,23 +174,21 @@ body.bg-dark {
     font-weight: bold;
     letter-spacing: 0.5px;
     border: 1px solid;
+    display: inline-block;
 }
 
-/* EN ATTENTE → jaune */
 .badge.bg-warning {
     background: transparent !important;
     color: #ffcc00 !important;
     border-color: #ffcc00 !important;
 }
 
-/* Nom demandeur → couleur accent */
 .badge.bg-info {
     background: transparent !important;
     color: var(--color-9) !important;
     border-color: var(--color-9) !important;
 }
 
-/* Surcharge générique Bootstrap */
 .badge.bg-success {
     background: transparent !important;
     color: #00ff9d !important;
@@ -208,11 +202,11 @@ body.bg-dark {
 }
 
 /* ──────────────────────────────────────────────
-   Boutons d'action (reprend btn-action de zone.css)
+   Boutons d'action
 ────────────────────────────────────────────── */
 .btn-action,
 .btn.btn-sm {
-    padding: 6px 12px;
+    padding: 10px 14px;
     border-radius: 4px;
     border: 1px solid transparent;
     cursor: pointer;
@@ -222,9 +216,15 @@ body.bg-dark {
     text-transform: uppercase;
     background: transparent;
     font-family: inherit;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    text-decoration: none;
 }
 
-/* Confirmer → vert */
 .btn.btn-success,
 .btn-on {
     color: #00ff9d;
@@ -238,7 +238,6 @@ body.bg-dark {
     color: var(--color-1) !important;
 }
 
-/* Rejeter → rouge */
 .btn.btn-danger,
 .btn-delete {
     color: var(--color-11);
@@ -252,7 +251,6 @@ body.bg-dark {
     color: var(--color-1) !important;
 }
 
-/* Cellule actions centrée */
 .text-center {
     text-align: center;
 }
@@ -265,10 +263,52 @@ body.bg-dark {
 }
 
 /* ──────────────────────────────────────────────
-   Colonnes
+   Desktop Styles
 ────────────────────────────────────────────── */
-.table th:nth-child(1) { width: 8%; }
-.table th:nth-child(2) { width: 32%; }
-.table th:nth-child(3) { width: 20%; }
-.table th:nth-child(4) { width: 15%; }
-.table th:nth-child(5) { width: 25%; }
+@media (min-width: 768px) {
+    .cnes-layout {
+        width: 90%;
+        padding: 100px 0 2rem 0;
+    }
+
+    .admin-tabs {
+        padding: 0 10px;
+        overflow-x: visible;
+    }
+
+    .tab-item {
+        padding: 12px 24px;
+        min-height: auto;
+    }
+
+    .section-header h1,
+    .section-header h2,
+    .cnes-layout > h2 {
+        font-size: 2rem;
+    }
+
+    .table,
+    .admin-table {
+        min-width: 100%;
+    }
+
+    .table thead th,
+    .admin-table th,
+    .table td,
+    .admin-table td {
+        padding: 16px 20px;
+    }
+
+    .btn-action,
+    .btn.btn-sm {
+        padding: 6px 12px;
+        min-height: auto;
+        min-width: auto;
+    }
+
+    .table th:nth-child(1) { width: 8%; }
+    .table th:nth-child(2) { width: 32%; }
+    .table th:nth-child(3) { width: 20%; }
+    .table th:nth-child(4) { width: 15%; }
+    .table th:nth-child(5) { width: 25%; }
+}

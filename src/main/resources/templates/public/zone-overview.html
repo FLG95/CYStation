@@ -2,6 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>CYStation - Mission</title>
@@ -131,11 +132,10 @@
     }
 
     function openGlobalLogs() {
-        currentOpenDeviceId = null;
         document.getElementById('btn-live').innerText = '► Live — Station Entière';
         document.getElementById('logsModal').style.display = 'flex';
         document.querySelectorAll('.logs-nav-btn').forEach((b,i) => b.classList.toggle('active', i === 0));
-        refreshCurrentDeviceLogs();
+        refreshGlobalLogs();
     }
 
     function refreshGlobalLogs() {

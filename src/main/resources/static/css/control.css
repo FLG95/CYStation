@@ -1,25 +1,27 @@
-/* --- STRUCTURE PLEIN ÉCRAN POUR LE CONTRÔLE --- */
+/* --- STRUCTURE MOBILE-FIRST POUR LE CONTRÔLE --- */
 .control-full-page {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
     min-height: calc(100vh - 140px); /* Ajusté pour le header/footer */
 }
 
 .control-split-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column-reverse; /* Menu en haut ou en bas ? Habituellement menu en haut pour mobile, mais split original avait image à droite */
     width: 100%;
     flex: 1;
 }
 
-/* --- PANNEAU LATÉRAL GAUCHE (MENU) --- */
+/* --- PANNEAU LATÉRAL (MENU) --- */
 .control-menu-side {
-    width: 280px; /* Largeur fixe pour faire un vrai panneau latéral */
+    width: 100%;
     background-color: var(--color-2);
     display: flex;
     flex-direction: column;
-    padding: 40px 20px;
+    padding: 20px 15px;
+    box-sizing: border-box;
 }
 
 .menu-wrapper {
@@ -30,29 +32,32 @@
 .control-menu {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .control-btn {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
+    min-height: 44px;
     background-color: transparent;
     color: var(--color-7);
-    padding: 12px 15px;
-    border: 1px solid var(--color-7); /* Bordure affinée */
+    padding: 10px 15px;
+    border: 1px solid var(--color-7);
     font-weight: bold;
     text-transform: uppercase;
-    text-align: left; /* Alignement à gauche pour l'aspect menu */
+    text-align: left;
     text-decoration: none;
     cursor: pointer;
     transition: 0.3s ease;
     font-size: 0.9rem;
+    box-sizing: border-box;
 }
 
 .control-btn:hover {
     background-color: var(--color-7);
     color: var(--color-1);
-    padding-left: 20px; /* Petit effet de décalage au survol */
+    padding-left: 20px;
 }
 
 /* Style spécifique pour le bouton d'administration */
@@ -66,57 +71,56 @@
     color: var(--color-1);
 }
 
-/* --- CÔTÉ DROIT (IMAGE) --- */
+/* --- CÔTÉ IMAGE --- */
 .control-image-side {
-    flex: 1;
+    width: 100%;
+    min-height: 200px;
     background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
     background-size: cover;
-    border-left: 2px solid var(--color-4);
-}
-
-/* --- RESPONSIVITÉ --- */
-@media (max-width: 992px) {
-    .control-split-container {
-        flex-direction: column-reverse;
-    }
-    .control-menu-side {
-        width: 100%; /* Le panneau prend toute la largeur sur petit écran */
-        border-right: none;
-    }
-    .control-image-side {
-        min-height: 30vh;
-        border-left: none;
-        border-bottom: 2px solid var(--color-4);
-    }
-}
-
-@media (max-width: 600px) {
-    .control-image-side {
-        display: none;
-    }
-}
-
-.control-image-side {
-    flex: 1;
-    background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
-    background-size: cover;
-    border-left: 2px solid var(--color-4);
-
-    overflow-y: auto;
-    position: relative;
-}
-
-
-.control-image-side {
-    flex: 1;
-    background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
-    background-size: cover;
-    border-left: 2px solid var(--color-4);
-    overflow-y: auto;
+    border-bottom: 2px solid var(--color-4);
     position: relative;
 }
 
 .control-image-side.content-loaded {
     background: var(--color-2);
     background-image: none;
+    min-height: auto;
+}
+
+/* --- RESPONSIVITÉ DESKTOP --- */
+@media (min-width: 992px) {
+    .control-full-page {
+        flex-direction: row;
+    }
+
+    .control-split-container {
+        flex-direction: row;
+    }
+
+    .control-menu-side {
+        width: 280px;
+        padding: 40px 20px;
+        border-right: none;
+    }
+
+    .control-image-side {
+        flex: 1;
+        min-height: auto;
+        border-bottom: none;
+        border-left: 2px solid var(--color-4);
+        overflow-y: auto;
+    }
+
+    .control-menu {
+        gap: 15px;
+    }
+
+    .control-btn {
+        padding: 12px 15px;
+    }
+}
+
+/* Cache l'image sur très petits écrans si nécessaire (optionnel selon le design original) */
+@media (max-width: 400px) {
+    /* .control-image-side { display: none; } */
 }
