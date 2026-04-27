@@ -5,6 +5,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Administration - Infrastructures</title>
+    <link rel="icon" type="image/png" th:href="@{/img/meatlogo.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -23,12 +24,18 @@
     <nav class="admin-tabs">
         <a th:href="@{/admin/}" th:classappend="${activeTab == 'users'} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
         <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones' or activeTab == null} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/articles}" th:classappend="${activeTab == 'articles'} ? 'active' : ''" class="tab-item">Articles</a>
         <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
 
-    <section class="section-header">
-        <h1>Infrastructure & Modules</h1>
-        <p>Configuration avancée des infrastructures de la station.</p>
+    <section class="section-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h1>Infrastructure & Modules</h1>
+            <p>Configuration avancée des infrastructures de la station.</p>
+        </div>
+        <button onclick="document.getElementById('createZoneModal').style.display='flex'" class="cnes-btn" style="margin-top: 0.5rem; white-space: nowrap;">
+            ＋ Initialiser une zone
+        </button>
     </section>
 
     <div class="admin-table-container">
@@ -115,11 +122,20 @@
         </table>
     </div>
 
-    <div style="margin-top: 20px; text-align: right;">
-        <button onclick="document.getElementById('createZoneModal').style.display='flex'" class="cnes-btn">
-            Initialiser une nouvelle zone
-        </button>
-    </div>
+    <!-- Section Maintenance BDD (déplacée depuis admin users) -->
+    <section class="section-header" style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2>Maintenance de la Base de Données</h2>
+            <p>Attention — Cette action effacera définitivement l'historique de télémétrie et d'état des machines.</p>
+        </div>
+        <form th:action="@{/admin/logs/clear}" method="post"
+              onsubmit="return confirm('Es-tu sûr de vouloir effacer l\'intégralité des logs ? Cette action est irréversible.');">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="btn-action btn-delete" style="padding: 12px 24px; font-size: 1rem;">
+                <i class="fas fa-trash"></i> Purger tous les logs
+            </button>
+        </form>
+    </section>
 
 </main>
 
@@ -230,7 +246,6 @@
 </div>
 
 <script>
-
     document.getElementById('zoneImageUrl').addEventListener('input', function () {
         const url = this.value.trim();
         const preview = document.getElementById('imagePreview');
@@ -252,7 +267,6 @@
 </script>
 
 <div th:replace="~{public/footer :: footer}"></div>
-
 
 </body>
 </html>

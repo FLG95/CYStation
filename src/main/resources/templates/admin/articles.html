@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Administration - Articles</title>
+    <link rel="icon" type="image/png" th:href="@{/img/meatlogo.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <script th:src="@{/js/admin/article.js}" defer></script>
+</head>
+<body class="bg-dark">
+<div th:replace="~{public/header :: header}"></div>
+
+<main class="cnes-layout">
+
+    <nav class="admin-tabs">
+        <a th:href="@{/admin/}" th:classappend="${activeTab == 'users'} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
+        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/articles}" th:classappend="${activeTab == 'articles' or activeTab == null} ? 'active' : ''" class="tab-item">Articles</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
+    </nav>
+
+    <section class="section-header">
+        <h1>Gestion des Articles</h1>
+        <p>Liste de tous les articles publiés sur la plateforme.</p>
+    </section>
+
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre & Sous-titre</th>
+                <th>Date</th>
+                <th>Types</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="article : ${articles}" th:id="'article-row-' + ${article.id}">
+                <td th:text="${article.id}">1</td>
+
+                <td>
+                    <div class="user-info">
+                        <span class="username" th:text="${article.title}">Titre de l'article</span>
+                        <small class="user-email" th:text="${article.subtitle}">Sous-titre</small>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="birth-info">
+                        <span th:text="${article.date != null ? #temporals.format(article.date, 'dd/MM/yyyy') : 'N/A'}">01/01/2000</span>
+                        <small class="gender-label" th:text="${article.date != null ? #temporals.format(article.date, 'HH:mm') : ''}">12:00</small>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="types-cell">
+                        <span th:each="type : ${article.typeList}"
+                              class="role-badge"
+                              th:text="${type}">type</span>
+                        <span th:if="${article.typeList.isEmpty()}" class="user-email">—</span>
+                    </div>
+                </td>
+
+                <td class="actions-cell">
+                    <button class="btn-action btn-delete" th:onclick="|deleteArticle(${article.id})|">
+                        Supprimer <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(articles)}">
+                <td colspan="5" style="text-align:center; color: var(--color-6); padding: 2rem;">
+                    Aucun article trouvé.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<div th:replace="~{public/footer :: footer}"></div>
+
+</body>
+</html>
