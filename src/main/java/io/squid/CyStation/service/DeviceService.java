@@ -45,15 +45,24 @@ public class DeviceService {
         Device device = deviceRepository.findById(id).orElse(null);
 
         if (device != null) {
-            if (device.getZone() != null) {
-                device.getZone().getDevices().remove(device);
-            }
+            Zone zone = device.getZone();
+
             deviceLogRepository.deleteByDeviceId(id);
+
+            if (zone != null) {
+                zone.getDevices().remove(device);
+                device.setZone(null);
+            }
+
+
             deviceRepository.delete(device);
             deviceRepository.flush();
+
+            if (zone != null) {
+                handleBlackout(zone);
+            }
         }
     }
-
 
     @Transactional
     public void addDeviceToZone(Device device, Long zoneId) {
@@ -156,7 +165,5 @@ public class DeviceService {
         }
         return device;
     }
-
-
 
 }

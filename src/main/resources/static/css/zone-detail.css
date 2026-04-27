@@ -146,6 +146,20 @@
 
 
 
+.status-indicator {
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+
+.status-indicator.ONLINE { color: #00ff9d; }
+.status-indicator.OFFLINE { color: #ff3e3e; }
+.status-indicator.MAINTENANCE { color: #ffcc00; }
+
+
+
 .status-led.led-on { background: var(--led-green); box-shadow: 0 0 10px var(--led-green); animation: pulse-green 2s ease-in-out infinite; }
 .status-led.led-off { background: var(--led-red); }
 .status-led.led-maintenance { background: #f59e0b; animation: blink-orange 1s step-end infinite; }
@@ -234,7 +248,24 @@
     text-decoration: none;
 }
 
-/* --- FORMS INSIDE MODALS --- */
+.btn-delete-request {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+}
+
+.btn-delete-request button {
+    background: rgba(220, 53, 69, 0.8);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete-request button:disabled { background: #6c757d; }
+
 .cnes-form label {
     display: block;
     margin-bottom: 8px;

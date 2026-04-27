@@ -31,6 +31,15 @@ public abstract class Device {
 
     private String requestedBy;
 
+
+    public Device() {
+    public Device(int consumption) {
+
+        this.consumption = consumption;
+        this.status = DeviceStatus.MAINTENANCE;
+
+    }
+
     public Device(int consumption) {
 
         this.consumption = consumption;

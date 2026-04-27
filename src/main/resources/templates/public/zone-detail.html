@@ -95,13 +95,15 @@
                         </button>
                     </div>
 
-                    <div class="btn-delete-request" th:id="'container-sabotage-' + ${device.id}"
+                    <div class="btn-delete-request" th:id="'container-maintenance-' + ${device.id}"
                          sec:authorize="hasRole('ADMIN')">
                         <button type="button"
-                                th:id="'btn-sabotage-' + ${device.id}"
-                                th:onclick="|maintenanceDeviceAjax(${device.id})|">
-                             <span th:id="'text-maintenance-' + ${device.id}">
-                                 Mettre en maintenance
+                                th:id="'btn-maintenance-' + ${device.id}"
+                                th:disabled="${device.status?.name() == 'MAINTENANCE'}"
+                                th:onclick="|maintenanceDeviceAjax(${device.id})|"
+                                th:style="${device.status?.name() == 'MAINTENANCE'} ? 'opacity:0.5; cursor:not-allowed;' : ''">
+                            <span th:id="'text-maintenance-' + ${device.id}"
+                                th:text="${device.status?.name() == 'MAINTENANCE'} ? 'Déjà en maintenance' : 'Mettre en maintenance'">
                             </span>
                         </button>
                     </div>
@@ -119,8 +121,10 @@
                             <span style="color: #00e5ff; font-weight: bold; font-size: 1.1em;"
                                   th:id="'telemetry-text-' + ${device.id}" th:text="${device.telemetryDisplay}"></span>
 
-                            <span style="color: #ffffff; font-size: 0.85em;" th:id="'status-text-' + ${device.id}"
-                                  th:text="'Statut: ' + ${device.status.displayValue}"></span>
+                            <span th:id="'status-text-' + ${device.id}"
+                                  th:class="'status-indicator ' + ${device.status.name()}"
+                                  th:text="${device.status.displayValue}">
+</span>
                         </div>
                         <h3 class="article-title" th:text="${device.name}"
                             style="color: white; margin: 0; font-size: 1.4rem;"></h3>
@@ -174,7 +178,6 @@
 
 </main>
 
-<!-- Modal ajout device -->
 <div th:id="'addDeviceModal-' + ${zone.id}" class="modal">
     <div class="modal-content cnes-form">
         <a href="#!" class="close-btn">&times;</a>
@@ -199,7 +202,7 @@
     </div>
 </div>
 
-<!-- Modal jeu -->
+
 <div id="gameModal" class="modal-overlay">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -207,9 +210,7 @@
     </div>
 </div>
 
-<!-- =====================================================
-     LOGS MODAL — structure avec classes CSS propres
-     ===================================================== -->
+
 <div id="logsModal" class="modal-overlay">
     <div class="logs-modal-panel">
 

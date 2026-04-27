@@ -203,6 +203,12 @@ public class AdminController {
         messagingTemplate.convertAndSend("/topic/device-status", device);
         deviceService.notifyEnergyUpdate(device.getZone());
 
+        if (device instanceof Generator) {
+            ((Generator) device).setProduction(0);
+            deviceRepository.save(device);
+            deviceService.handleBlackout(device.getZone());
+        }
+
         return ResponseEntity.ok("Module mit en maintenance avec succès");
     }
 

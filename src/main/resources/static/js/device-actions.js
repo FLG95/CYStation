@@ -39,11 +39,9 @@ function deleteDeviceAjax(deviceId) {
     })
         .then(response => {
             if (response.ok) {
-                // TENTATIVE 1 : On cherche la carte (Vue Index)
-                const card = document.getElementById('device-card-' + deviceId);
-                // TENTATIVE 2 : On cherche la ligne (Vue Admin)
-                const row = document.getElementById('device-row-' + deviceId);
 
+                const card = document.getElementById('device-card-' + deviceId);
+                const row = document.getElementById('device-row-' + deviceId);
                 const elementToDelete = card || row;
 
                 if (elementToDelete) {
@@ -52,6 +50,8 @@ function deleteDeviceAjax(deviceId) {
                     elementToDelete.style.transform = "translateX(20px)";
                     setTimeout(() => elementToDelete.remove(), 300);
                 }
+
+
             }
         });
 }
@@ -135,8 +135,6 @@ function confirmRepairOnServer(deviceId) {
     const token = document.querySelector('meta[name="_csrf"]').content;
     const header = document.querySelector('meta[name="_csrf_header"]').content;
 
-    console.log("Envoi de la confirmation de réparation pour l'ID :", deviceId);
-
     fetch('/mission/device/repair/' + deviceId, {
         method: 'POST',
         headers: { [header]: token }
@@ -146,13 +144,32 @@ function confirmRepairOnServer(deviceId) {
             return response.json();
         })
         .then(deviceData => {
-            console.log("Données reçues du serveur :", deviceData);
 
-            if (deviceData && deviceData.id) {
-                updateDeviceUI(deviceData);
-            } else {
-                console.error("Le serveur a répondu, mais l'objet device est invalide :", deviceData);
+            const repairBtn = document.getElementById('btn-repair-' + deviceId);
+            if (repairBtn) repairBtn.remove();
+
+            const btnMaint = document.getElementById('btn-maintenance-' + deviceId);
+            const spanMaint = document.getElementById('text-maintenance-' + deviceId);
+
+            if (btnMaint) {
+                btnMaint.disabled = false;
+                btnMaint.style.opacity = '1';
+                btnMaint.style.cursor = 'pointer';
+                if (spanMaint) spanMaint.textContent = 'Mettre en maintenance';
             }
+
+            const toggleBtn = document.getElementById('btn-' + deviceId);
+            if (toggleBtn) {
+                toggleBtn.disabled = false;
+            }
+
+            const led = document.getElementById('led-' + deviceId);
+            if (led) {
+                led.classList.remove('led-maintenance');
+                led.classList.add('led-off');
+            }
+
+            console.log("Réparation terminée et interface mise à jour.");
         })
         .catch(err => console.error("Erreur lors du fetch de réparation :", err));
 }
@@ -202,7 +219,21 @@ function maintenanceDeviceAjax(deviceId) {
         headers: { [header]: token }
     })
         .then(response => {
-            if (!response.ok) alert("Erreur lors du sabotage");
+            if (response.ok) {
+                const btnMaint = document.getElementById('btn-maintenance-' + deviceId);
+                const spanMaint = document.getElementById('text-maintenance-' + deviceId);
+
+                if (btnMaint) {
+                    btnMaint.disabled = true;
+                    btnMaint.style.opacity = '0.5';
+                    btnMaint.style.cursor = 'not-allowed';
+                    if (spanMaint) spanMaint.textContent = 'Déjà en maintenance';
+                }
+                location.reload();
+
+            } else {
+                alert("Erreur lors de la mise en maintenance");
+            }
         });
 }
 

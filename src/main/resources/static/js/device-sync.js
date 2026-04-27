@@ -32,22 +32,21 @@ function updateDeviceUI(device) {
     const btn = document.getElementById('btn-' + device.id);
     const repairBtn = document.getElementById('btn-repair-' + device.id);
     const telemetrySpan = document.getElementById('telemetry-text-' + device.id);
+    const maintBtn = document.getElementById('btn-maintenance-' + device.id);
+    const maintSpan = document.getElementById('text-maintenance-' + device.id);
+
     const statusName = device.status.name || device.status;
     const displayLabel = device.status.displayValue || statusName;
 
     if (statusText) {
-        statusText.textContent = 'Statut: ' + displayLabel;
+        statusText.textContent = displayLabel;
+        statusText.className = 'status-indicator ' + statusName;
     }
 
     if (telemetrySpan) {
-        if (device.telemetryDisplay) {
-            telemetrySpan.textContent = device.telemetryDisplay;
-        } else {
-            // Fallback si telemetryDisplay est vide : on affiche la conso ou prod
-            const val = (device.deviceCategoryCode === 'GEN') ? device.production : device.consumption;
-            telemetrySpan.textContent = (statusName === 'ONLINE' ? val : 0) + ' GW';
-        }
+        telemetrySpan.textContent = device.telemetryDisplay || '0 GW';
     }
+
 
     if (led) {
         led.className = 'status-led ' + (
@@ -58,6 +57,14 @@ function updateDeviceUI(device) {
 
     if (statusName === 'MAINTENANCE') {
         if (btn) btn.disabled = true;
+
+        if (maintBtn) {
+            maintBtn.disabled = true;
+            maintBtn.style.opacity = '0.5';
+            maintBtn.style.cursor = 'not-allowed';
+            if (maintSpan) maintSpan.textContent = 'Déjà en maintenance';
+        }
+
         if (repairBtn) {
             repairBtn.style.display = 'inline-block';
             repairBtn.setAttribute('onclick', `repairDeviceAjax(${device.id}, '${device.deviceCategoryCode}')`);
@@ -65,13 +72,18 @@ function updateDeviceUI(device) {
     } else {
         if (btn) {
             btn.disabled = false;
-
-            const isToggleStyle = btn.classList.contains('btn-toggle');
             btn.textContent = (statusName === 'ONLINE') ? 'Éteindre' : 'Allumer';
-            btn.className = isToggleStyle ?
-                (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on') :
-                btn.className;
+            btn.className = btn.classList.contains('btn-toggle') ?
+                (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on') : btn.className;
         }
+
+        if (maintBtn) {
+            maintBtn.disabled = false;
+            maintBtn.style.opacity = '1';
+            maintBtn.style.cursor = 'pointer';
+            if (maintSpan) maintSpan.textContent = 'Mettre en maintenance';
+        }
+
         if (repairBtn) repairBtn.style.display = 'none';
     }
 }
