@@ -97,7 +97,6 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
         'OXYGEN_SENSOR': '/mission/game/o2',
         'RADIATION_SENSOR': '/mission/game/radiation',
         'WATER_RECLAIMER': '/mission/game/water',
-        'CAFE': '/mission/game/water'
         'COFFEE': '/mission/game/coffee'
 
     };
