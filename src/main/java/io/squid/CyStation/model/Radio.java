@@ -37,7 +37,7 @@ public class Radio extends Device{
 
     @Override
     public String getDeviceImage(){
-        return "https://cdn.shopify.com/s/files/1/0019/5952/files/CO2-Molecule-Image.jpg";
+        return "https://orbitaltoday.com/wp-content/uploads/2025/02/radio_signal_from_space_1.jpg";
     }
 
     @Override

@@ -35,7 +35,7 @@ public class RadiationSensor extends Sensor{
 
     @Override
     public String getDeviceImage(){
-        return "https://cdn.shopify.com/s/files/1/0019/5952/files/CO2-Molecule-Image.jpg";
+        return "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2012/07/space_radiation_affects_satellites/11258256-2-eng-GB/Space_radiation_affects_satellites_pillars.jpg";
     }
 
     @Override
