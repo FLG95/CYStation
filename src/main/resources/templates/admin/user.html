@@ -18,10 +18,13 @@
 <main class="cnes-layout">
 
     <nav class="admin-tabs">
-        <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
-        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''"
+           class="tab-item">Gestion Personnel</a>
+        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure
+            & Modules</a>
         <a th:href="@{/admin/articles}" th:classappend="${activeTab == 'articles'} ? 'active' : ''" class="tab-item">Articles</a>
-        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes
+            de Suppression</a>
     </nav>
 
     <section class="section-header">
@@ -38,6 +41,7 @@
                 <th>Naissance</th>
                 <th>Rôle</th>
                 <th>Expérience</th>
+                <th>Statut</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -68,10 +72,25 @@
                     </span>
                 </td>
 
+                <td>
+                    <span th:id="'status-badge-' + ${user.id}"
+                        class="role-badge"
+                        th:classappend="${user.enable} ? 'status-active' : 'status-disabled'"
+                        th:text="${user.enable ? 'Actif' : 'Désactivé'}">
+
+                    </span>
+                </td>
+
                 <td class="actions-cell">
+                    <button class="btn-action"
+                            th:classappend="${user.enable} ? 'btn-warning' : 'btn-success'"
+                            th:onclick="|toggleUserStatus(${user.id})|"
+                            th:text="${user.enable ? 'Désactiver' : 'Activer'}">
+                    </button>
                     <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50</button>
                     <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, -50)|">-50</button>
-                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer <i class="fas fa-trash"></i></button>
+                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer <i
+                            class="fas fa-trash"></i></button>
                 </td>
             </tr>
             </tbody>
