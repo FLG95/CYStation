@@ -1,9 +1,10 @@
 package io.squid.CyStation.service;
 
-import io.squid.CyStation.model.User;
+import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.Zone;
+import io.squid.CyStation.repository.DeviceLogRepository;
 import io.squid.CyStation.repository.ZoneRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 public class ZoneService {
 
     private final ZoneRepository zoneRepository;
+    private final DeviceLogRepository deviceLogRepository;
 
-    public ZoneService( ZoneRepository zoneRepository){
+    public ZoneService( ZoneRepository zoneRepository, DeviceLogRepository deviceLogRepository){
         this.zoneRepository = zoneRepository;
+        this.deviceLogRepository = deviceLogRepository;
     }
 
 
@@ -24,11 +27,15 @@ public class ZoneService {
     }
 
 
-    public void deleteZone(Long id){
+    @Transactional
+    public void deleteZone(Long id) {
+        Zone zone = zoneRepository.findById(id).orElse(null);
+        if (zone == null) return;
 
-        Zone zone = zoneRepository.findById(id).orElseThrow(() -> new RuntimeException("Zone introuvable"));;
-
+        for (Device device : zone.getDevices()) {
+            deviceLogRepository.deleteByDeviceId(device.getId());
+        }
+        deviceLogRepository.flush();
         zoneRepository.delete(zone);
-
     }
 }
