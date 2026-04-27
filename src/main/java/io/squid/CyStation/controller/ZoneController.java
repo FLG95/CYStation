@@ -232,12 +232,14 @@ public class ZoneController {
     }
 
     @GetMapping("/mission/game/radiation")
+    @PreAuthorize("isAuthenticated()")
     public String showRadiationGame() {
 
         return "engineer/radiation";
     }
 
     @GetMapping("/mission/game/water")
+    @PreAuthorize("isAuthenticated()")
     public String showWaterGame() {
 
         return "engineer/water";
