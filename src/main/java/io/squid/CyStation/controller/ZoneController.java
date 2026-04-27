@@ -243,6 +243,12 @@ public class ZoneController {
         return "engineer/water";
     }
 
+    @GetMapping("/mission/game/coffee")
+    public String showCoffeeGame() {
+
+        return "engineer/coffee";
+    }
+
 
     @GetMapping("/mission/zone/{id}")
     @Transactional

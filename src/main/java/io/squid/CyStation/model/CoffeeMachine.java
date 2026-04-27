@@ -9,52 +9,51 @@ import jakarta.persistence.Transient;
 import java.util.Map;
 
 @Entity
-@DiscriminatorValue("CoffeeMachine")
-public class CoffeeMachine extends Device{
+@DiscriminatorValue("COFFEE")
+public class CoffeeMachine extends Device {
 
-    private double purityLevel;
-    private int fillLevel;
+    private int cupsServed;      // nombre de cafés servis
+    private int waterLevel;      // niveau d'eau en mL
 
-    public double getPurityLevel() { return purityLevel; }
-    public void setPurityLevel(double purityLevel) { this.purityLevel = purityLevel; }
+    public int getCupsServed() { return cupsServed; }
+    public void setCupsServed(int cupsServed) { this.cupsServed = cupsServed; }
 
-    public int getFillLevel() { return fillLevel; }
-    public void setFillLevel(int fillLevel) { this.fillLevel = fillLevel; }
+    public int getWaterLevel() { return waterLevel; }
+    public void setWaterLevel(int waterLevel) { this.waterLevel = waterLevel; }
 
     @Override
     public boolean updateTelemetry() {
-        this.setPurityLevel(95.0 + (Math.random() * 5.0));
-        this.setFillLevel((int) (Math.random() * 1000));
+        this.setCupsServed((int)(Math.random() * 50));       // 0 à 50 cafés servis
+        this.setWaterLevel(200 + (int)(Math.random() * 800)); // 200 à 1000 mL
         return true;
     }
 
     @Override
     public String getDeviceCategoryCode() {
-        return DeviceCategory.CAFE.name();
+        return DeviceCategory.COFFEE.name();
     }
 
     @Override
     public String getDeviceDisplayName() {
-        return DeviceCategory.CAFE.getDisplayName();
+        return DeviceCategory.COFFEE.getDisplayName();
     }
 
     @Override
-    public String getDeviceImage(){
+    public String getDeviceImage() {
         return "https://creapills.com/wp-content/uploads/2023/07/lg-machine-a-cafe-apollo-11-2-1160x770.jpeg";
     }
 
     @Override
     public String getTelemetryDisplay() {
-        return String.format("Pureté: %.2f%% | Stock: %d L", this.purityLevel, this.fillLevel);
+        return String.format("Cafés servis : %d | Eau : %d mL", this.cupsServed, this.waterLevel);
     }
 
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
         return Map.of(
-                "PURITY_LEVEL", (double) this.purityLevel,
-                "FILL_OUTPUT", (double) this.fillLevel
+                "CUPS_SERVED", (double) this.cupsServed,
+                "WATER_LEVEL", (double) this.waterLevel
         );
     }
-
 }

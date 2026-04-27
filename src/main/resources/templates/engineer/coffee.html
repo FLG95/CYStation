@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module - Machine à Café</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/engineer/coffee.css}">
+</head>
+<body>
+
+<main class="cnes-layout">
+    <section class="cnes-section coffee-section">
+        <div class="section-header coffee-section-header">
+            <h2>Ingénierie & Bien-être</h2>
+        </div>
+
+        <div class="coffee-header-info">
+            <span class="warning-label">Calibration Caféine</span>
+            <h3 class="coffee-title">Machine à Café — Récupération du Flux</h3>
+            <p class="coffee-desc">
+                La buse de la machine est déréglée et projette du café partout.
+                Déplacez la tasse avec <strong>← →</strong> ou la souris pour récupérer
+                <strong id="goal-display">10</strong> gouttes avant qu'elles ne se perdent dans l'espace.
+            </p>
+        </div>
+
+        <div class="coffee-container">
+            <div class="machine-console" id="coffee-interface">
+                <div class="screw top-left"></div>
+                <div class="screw top-right"></div>
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+
+                <div class="lcd-screen display-panel">
+                    <div id="status-text">ÉTAT : FLUX INCONTRÔLÉ</div>
+                    <div class="coffee-progress">GOUTTES RÉCUPÉRÉES : <span id="drop-count">0</span> / <span id="drop-goal">10</span></div>
+                </div>
+
+                <canvas id="game-canvas"></canvas>
+
+                <div class="controls-hint">
+                    <span>◀ ▶ clavier &nbsp;|&nbsp; souris / tactile</span>
+                </div>
+
+                <button id="submitBtn" class="hardware-btn submit-btn" style="display:none;">CAFÉ PRÊT — CONFIRMER</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const GOAL = 10;
+    const canvas    = document.getElementById('game-canvas');
+    const ctx       = canvas.getContext('2d');
+    const statusEl  = document.getElementById('status-text');
+    const countEl   = document.getElementById('drop-count');
+    const submitBtn = document.getElementById('submitBtn');
+    const iface     = document.getElementById('coffee-interface');
+
+    // Sizing
+    function resize() {
+        const w = canvas.parentElement.clientWidth - 48;
+        canvas.width  = w;
+        canvas.height = Math.round(w * 0.55);
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); });
+
+    // ── Game state ──
+    let caught   = 0;
+    let gameOver = false;
+
+    // Cup
+    const cup = {
+        w: 54, h: 32,
+        x: 0, y: 0,   // set in loop
+        speed: 7
+    };
+
+    // Drops
+    let drops = [];
+    let frameCount = 0;
+
+    // Input
+    const keys = {};
+    window.addEventListener('keydown', e => keys[e.key] = true);
+    window.addEventListener('keyup',   e => keys[e.key] = false);
+
+    // Mouse / touch
+    let mouseX = null;
+    canvas.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+    });
+    canvas.addEventListener('mouseleave', () => mouseX = null);
+    canvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);
+    }, { passive: false });
+
+    // Init cup position
+    cup.x = canvas.width / 2 - cup.w / 2;
+    cup.y = canvas.height - cup.h - 8;
+
+    // ── Drop factory ──
+    function spawnDrop() {
+        drops.push({
+            x: Math.random() * (canvas.width - 20) + 10,
+            y: -10,
+            r: 7 + Math.random() * 6,
+            speed: 1.8 + Math.random() * 2.2,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: 0.04 + Math.random() * 0.03
+        });
+    }
+
+    // ── Draw helpers ──
+    function drawBackground() {
+        ctx.fillStyle = '#0d0700';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Subtle steam lines from top
+        ctx.strokeStyle = 'rgba(180,100,30,0.06)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 6; i++) {
+            const x = (canvas.width / 7) * (i + 1);
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+    }
+
+    function drawDrop(d) {
+        // Teardrop shape
+        ctx.save();
+        ctx.translate(d.x, d.y);
+
+        // Glow
+        const grd = ctx.createRadialGradient(0, 0, 1, 0, 0, d.r * 2);
+        grd.addColorStop(0, 'rgba(200,120,40,0.4)');
+        grd.addColorStop(1, 'rgba(200,120,40,0)');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(0, 0, d.r * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Drop body
+        ctx.beginPath();
+        ctx.arc(0, 0, d.r, 0, Math.PI * 2);
+        const grad = ctx.createRadialGradient(-d.r*0.3, -d.r*0.3, 1, 0, 0, d.r);
+        grad.addColorStop(0, '#e09050');
+        grad.addColorStop(0.6, '#c07030');
+        grad.addColorStop(1, '#7a3a10');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Highlight
+        ctx.beginPath();
+        ctx.arc(-d.r*0.3, -d.r*0.3, d.r*0.25, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,220,150,0.5)';
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    function drawCup() {
+        const x = cup.x, y = cup.y, w = cup.w, h = cup.h;
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(x + w/2, y + h + 4, w/2, 5, 0, 0, Math.PI*2);
+        ctx.fill();
+
+        // Cup body (trapezoid)
+        ctx.beginPath();
+        ctx.moveTo(x + 4, y);
+        ctx.lineTo(x + w - 4, y);
+        ctx.lineTo(x + w, y + h);
+        ctx.lineTo(x, y + h);
+        ctx.closePath();
+        const cupGrad = ctx.createLinearGradient(x, y, x+w, y);
+        cupGrad.addColorStop(0, '#d4b880');
+        cupGrad.addColorStop(0.4, '#e8d5b0');
+        cupGrad.addColorStop(1, '#c4a860');
+        ctx.fillStyle = cupGrad;
+        ctx.fill();
+        ctx.strokeStyle = '#8a6030';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Coffee inside
+        ctx.beginPath();
+        ctx.moveTo(x + 6, y + 6);
+        ctx.lineTo(x + w - 6, y + 6);
+        ctx.lineTo(x + w - 2, y + h - 3);
+        ctx.lineTo(x + 2, y + h - 3);
+        ctx.closePath();
+        ctx.fillStyle = caught > 0 ? '#6b3310' : '#1a0d04';
+        ctx.fill();
+
+        // Liquid level fill based on progress
+        if (caught > 0) {
+            const fillH = Math.min((caught / GOAL) * (h - 10), h - 10);
+            ctx.beginPath();
+            ctx.moveTo(x + 6, y + h - 3 - fillH);
+            ctx.lineTo(x + w - 6, y + h - 3 - fillH);
+            ctx.lineTo(x + w - 2, y + h - 3);
+            ctx.lineTo(x + 2, y + h - 3);
+            ctx.closePath();
+            const liqGrad = ctx.createLinearGradient(x, y+h-3-fillH, x, y+h-3);
+            liqGrad.addColorStop(0, '#c07030');
+            liqGrad.addColorStop(1, '#6b3310');
+            ctx.fillStyle = liqGrad;
+            ctx.fill();
+        }
+
+        // Handle
+        ctx.beginPath();
+        ctx.arc(x + w + 6, y + h/2, 10, -Math.PI*0.6, Math.PI*0.6);
+        ctx.strokeStyle = '#b08040';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Rim
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + w, y);
+        ctx.strokeStyle = '#a08040';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    function drawUI() {
+        // Progress bar at top
+        const barW = canvas.width - 20;
+        const barH = 6;
+        const barX = 10, barY = 8;
+        ctx.fillStyle = '#1a0d04';
+        ctx.beginPath();
+        ctx.roundRect(barX, barY, barW, barH, 3);
+        ctx.fill();
+
+        const fill = (caught / GOAL) * barW;
+        if (fill > 0) {
+            const g = ctx.createLinearGradient(barX, 0, barX + fill, 0);
+            g.addColorStop(0, '#7a3a10');
+            g.addColorStop(1, '#e08030');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.roundRect(barX, barY, fill, barH, 3);
+            ctx.fill();
+        }
+
+        ctx.strokeStyle = '#3a2010';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(barX, barY, barW, barH, 3);
+        ctx.stroke();
+    }
+
+    // ── Collision ──
+    function checkCatch() {
+        drops = drops.filter(d => {
+            // Cup top edge collision
+            if (
+                d.y + d.r >= cup.y &&
+                d.y - d.r <= cup.y + cup.h &&
+                d.x >= cup.x + 2 &&
+                d.x <= cup.x + cup.w - 2
+            ) {
+                caught++;
+                countEl.innerText = caught;
+                splashEffect(d.x, cup.y);
+
+                if (caught >= GOAL) victory();
+                return false;
+            }
+            // Off screen
+            if (d.y - d.r > canvas.height) return false;
+            return true;
+        });
+    }
+
+    // Splash particles
+    let splashes = [];
+    function splashEffect(x, y) {
+        for (let i = 0; i < 6; i++) {
+            const angle = -Math.PI + Math.random() * Math.PI;
+            splashes.push({
+                x, y,
+                vx: Math.cos(angle) * (1 + Math.random() * 3),
+                vy: Math.sin(angle) * (1 + Math.random() * 2) - 2,
+                life: 1, r: 2 + Math.random() * 3
+            });
+        }
+    }
+
+    function updateSplashes() {
+        splashes = splashes.filter(s => {
+            s.x  += s.vx;
+            s.y  += s.vy;
+            s.vy += 0.2;
+            s.life -= 0.06;
+            if (s.life > 0) {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r * s.life, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(192,112,48,${s.life * 0.8})`;
+                ctx.fill();
+            }
+            return s.life > 0;
+        });
+    }
+
+    // ── Victory ──
+    function victory() {
+        gameOver = true;
+        statusEl.innerText  = 'ÉTAT : CAFÉ RÉCUPÉRÉ ☕';
+        statusEl.style.color = '#cc8833';
+        iface.classList.add('success');
+        submitBtn.style.display = 'block';
+    }
+
+    // ── Main loop ──
+    function loop() {
+        if (gameOver) {
+            drawBackground();
+            drawUI();
+            drops.forEach(drawDrop);
+            drawCup();
+            updateSplashes();
+            return;
+        }
+
+        // Move cup
+        if (mouseX !== null) {
+            cup.x += (mouseX - cup.w / 2 - cup.x) * 0.18;
+        }
+        if (keys['ArrowLeft']  || keys['a'] || keys['A']) cup.x -= cup.speed;
+        if (keys['ArrowRight'] || keys['d'] || keys['D']) cup.x += cup.speed;
+        cup.x = Math.max(0, Math.min(canvas.width - cup.w - 12, cup.x));
+        cup.y = canvas.height - cup.h - 8;
+
+        // Spawn drops
+        frameCount++;
+        const spawnRate = Math.max(30, 70 - caught * 3); // gets faster as you catch more
+        if (frameCount % spawnRate === 0) spawnDrop();
+
+        // Update drops
+        drops.forEach(d => {
+            d.wobble += d.wobbleSpeed;
+            d.x += Math.sin(d.wobble) * 0.5;
+            d.y += d.speed;
+        });
+
+        checkCatch();
+
+        // Draw
+        drawBackground();
+        drawUI();
+        drops.forEach(drawDrop);
+        updateSplashes();
+        drawCup();
+
+        requestAnimationFrame(loop);
+    }
+
+    // Spawn first drop immediately
+    spawnDrop();
+    requestAnimationFrame(loop);
+
+    // ── Submit ──
+    submitBtn.addEventListener('click', () => {
+        const token  = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId  = urlParams.get('deviceId');
+
+        const signalParent = () => {
+            console.log("Café récupéré, envoi du signal pour le device:", deviceId);
+            window.parent.postMessage({ type: 'MINIGAME_WIN', deviceId: deviceId }, '*');
+        };
+
+        const expAmount = 10;
+
+        fetch('/user/updateExp?amount=' + expAmount, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', [header]: token }
+        })
+            .then(() => signalParent())
+            .catch(err => { console.error("Erreur réseau XP:", err); signalParent(); });
+    });
+</script>
+
+</body>
+</html>
