@@ -54,6 +54,10 @@
                             <label for="birthDate">Date de naissance</label>
                             <input type="date" id="birthDate" th:field="*{birthDate}"
                                    th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"/>
+                            <p th:if="${#fields.hasErrors('birthDate')}"
+                               th:errors="*{birthDate}"
+                               style="color: #ef4444; font-size: 0.8rem; margin-top: 5px;">
+                            </p>
                         </div>
                     </div>
 

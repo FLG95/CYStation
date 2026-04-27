@@ -2,6 +2,7 @@ package io.squid.CyStation.model;
 import io.squid.CyStation.enums.Gender;
 import io.squid.CyStation.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -25,6 +26,7 @@ public class User {
     private String profilePicture = "default-avatar.png";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "La date de naissance doit être dans le passé")
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)

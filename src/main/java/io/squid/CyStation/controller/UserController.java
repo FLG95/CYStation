@@ -5,9 +5,11 @@ import io.squid.CyStation.repository.UserRepository;
 import io.squid.CyStation.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,15 +31,17 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user) {
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result) {
 
-        if(userRepository.findUserByEmail(user.getEmail()).isPresent()) {
-            return "redirect:/register?error";
+        if (user.getBirthDate() != null && !user.isAdult()) {
+            result.rejectValue("birthDate", "error.user", "Interdit aux mineurs.");
         }
-        else {
-            userService.save(user);
-            return "redirect:/login";
+        if (result.hasErrors()) {
+            return "public/register";
         }
+
+        userService.save(user);
+        return "redirect:/login";
     }
 
     @GetMapping("/register")
