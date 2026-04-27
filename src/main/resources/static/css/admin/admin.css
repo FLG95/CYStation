@@ -192,7 +192,6 @@ body.bg-dark {
     align-items: center;
 }
 
-/* Badges multiples pour les types d'articles */
 .types-cell {
     display: flex;
     flex-wrap: wrap;

@@ -29,9 +29,6 @@ public class UserService {
 
     public void save(User user) {
 
-        if (!user.isAdult()) {
-            // fait quelque chose
-        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_PASSENGER);
@@ -153,6 +150,15 @@ public class UserService {
         userRepository.save(user);
 
         return user.getExperience();
+    }
+
+    public boolean toggleUserStatus(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        user.setEnable(!user.isEnable());
+        userRepository.save(user);
+        return user.isEnable();
     }
 
 }

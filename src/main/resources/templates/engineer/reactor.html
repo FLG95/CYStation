@@ -121,7 +121,7 @@
     submitBtn.addEventListener('click', () => {
         const token = document.querySelector('meta[name="_csrf"]').content;
         const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const expAmount = 50;
+        const expAmount = 30;
 
         const urlParams = new URLSearchParams(window.location.search);
         const deviceId = urlParams.get('deviceId');

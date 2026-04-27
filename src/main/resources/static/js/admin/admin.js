@@ -44,3 +44,23 @@ function deleteUser(userId) {
             if (res.ok) document.getElementById('user-row-' + userId).remove();
         });
 }
+
+
+function toggleUserStatus(userId) {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+    fetch(`/admin/user/${userId}/toggle-status`, {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+        .then(response => response.json())
+        .then(isEnabled => {
+
+            location.reload();
+
+        })
+        .catch(error => console.error('Erreur:', error));
+}

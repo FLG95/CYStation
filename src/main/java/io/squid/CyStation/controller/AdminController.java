@@ -13,6 +13,7 @@ import io.squid.CyStation.service.ZoneService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -162,6 +163,18 @@ public class AdminController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erreur SQL : " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/user/{id}/toggle-status")
+    @ResponseBody
+    public ResponseEntity<?> toggleStatus(@PathVariable Long id) {
+        try {
+            boolean newState = userService.toggleUserStatus(id);
+            return ResponseEntity.ok(newState);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur");
         }
     }
 }

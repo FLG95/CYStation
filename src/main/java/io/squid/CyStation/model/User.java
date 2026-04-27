@@ -22,6 +22,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean enable = false;
 
     private String profilePicture = "default-avatar.png";
 
@@ -137,4 +138,11 @@ public class User {
         return Period.between(this.birthDate, LocalDate.now()).getYears() >= 18;
     }
 
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 }

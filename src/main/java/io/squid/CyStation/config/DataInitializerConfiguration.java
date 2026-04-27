@@ -70,7 +70,7 @@ class DataInitializerConfiguration {
                     "Gères les divers aspects administratif de la station", "https://images.stockcake.com/public/a/2/5/a257662f-f153-4457-a2c9-f667532b07ac_large/futuristic-control-room-stockcake.jpg");
 
             if (bioLab.getDevices() == null || bioLab.getDevices().isEmpty()) {
-                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device radioactivity = DeviceCategory.RADIATION_SENSOR.createInstance();
                 cafe.setName("Machine à Café");
                 radioactivity.setName("Radiation de l'échantillon");
@@ -79,13 +79,13 @@ class DataInitializerConfiguration {
             }
 
             if (adminRoom.getDevices() == null || adminRoom.getDevices().isEmpty()) {
-                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device cafe = DeviceCategory.COFFEE.createInstance();
                 cafe.setName("Machine à Café");
                 deviceService.addDeviceToZone(cafe, adminRoom.getId());
             }
 
             if (cafeteriaRoom.getDevices() == null || cafeteriaRoom.getDevices().isEmpty()) {
-                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device booze = DeviceCategory.BOOZE.createInstance();
                 cafe.setName("Machine à Café");
                 booze.setName("Frigo à bière");
@@ -94,7 +94,7 @@ class DataInitializerConfiguration {
             }
 
             if (navigationRoom.getDevices() == null || navigationRoom.getDevices().isEmpty()) {
-                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device radio = DeviceCategory.RADIO.createInstance();
                 Device radar = DeviceCategory.RADAR.createInstance();
                 cafe.setName("Machine à Café");
@@ -123,7 +123,7 @@ class DataInitializerConfiguration {
             if (communicationRoom.getDevices() == null || communicationRoom.getDevices().isEmpty()) {
                 Device radio = DeviceCategory.RADIO.createInstance();
                 Device radar = DeviceCategory.RADAR.createInstance();
-                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device cafe = DeviceCategory.COFFEE.createInstance();
                 radar.setName("Radar");
                 radio.setName("Radio Orbital");
                 cafe.setName("Machine à Café");
