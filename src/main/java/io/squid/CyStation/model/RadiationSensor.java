@@ -35,7 +35,7 @@ public class RadiationSensor extends Sensor{
 
     @Override
     public String getDeviceImage(){
-        return "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2012/07/space_radiation_affects_satellites/11258256-2-eng-GB/Space_radiation_affects_satellites_pillars.jpg";
+        return "https://www.hamamatsu.com/content/dam/hamamatsu-photonics/sites/images/00_Application/08_Security/08%20Radiation%20detectors-th_xx,0.jpg";
     }
 
     @Override
