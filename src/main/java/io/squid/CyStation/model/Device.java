@@ -26,10 +26,15 @@ public abstract class Device {
     @Column(name = "request_status")
     private RequestStatus requestStatus;
 
+
+    private int consumption = 10;
+
     private String requestedBy;
 
-    public Device() {
+    public Device(int consumption) {
 
+        this.consumption = consumption;
+        this.status = DeviceStatus.MAINTENANCE;
     }
 
     public Long getId() {
@@ -105,4 +110,20 @@ public abstract class Device {
         return this.getClass().getSimpleName();
     }
 
+
+    public int getConsumptionValue() {
+        if (this.status == DeviceStatus.ONLINE) {
+            return this.consumption;
+        }
+        return 0;
+    }
+
+    public void setConsumptionValue(int consumption) {
+        this.consumption = consumption;
+    }
+
+    public int getProductionValue() {
+        return 0;
+    }
+    
 }

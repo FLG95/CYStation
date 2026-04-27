@@ -1,5 +1,6 @@
 package io.squid.CyStation.model;
 
+import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -53,4 +54,20 @@ public class Zone {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+
+    public double getTotalProduction() {
+        return devices.stream()
+                .filter(d -> d instanceof Generator)
+                .mapToDouble(d -> ((Generator) d).getProductionValue())
+                .sum();
+    }
+
+    public double getTotalConsumption() {
+        return devices.stream()
+                .mapToDouble(Device::getConsumptionValue)
+                .sum();
+    }
+
+
 }

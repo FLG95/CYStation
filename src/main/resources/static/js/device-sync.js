@@ -5,18 +5,20 @@ function connectWebSocket() {
     stompClient = Stomp.over(socket);
 
 
-
     stompClient.connect({}, function (frame) {
         console.log('Connecté au WebSocket : ' + frame);
 
         stompClient.subscribe('/topic/device-status', function (response) {
             const device = JSON.parse(response.body);
-            console.log("Update reçu :", device);
             updateDeviceUI(device);
         });
         stompClient.subscribe('/topic/device-telemetry', function (response) {
             const device = JSON.parse(response.body);
             updateTelemetryUI(device);
+        });
+        stompClient.subscribe('/topic/energy-update', function (response) {
+            const energyData = JSON.parse(response.body);
+            updateEnergyUI(energyData);
         });
     }, function(error) {
         console.log("Erreur WebSocket, tentative de reconnexion dans 5s...");
@@ -29,16 +31,29 @@ function updateDeviceUI(device) {
     const led = document.getElementById('led-' + device.id);
     const btn = document.getElementById('btn-' + device.id);
     const repairBtn = document.getElementById('btn-repair-' + device.id);
-
+    const telemetrySpan = document.getElementById('telemetry-text-' + device.id);
     const statusName = device.status.name || device.status;
+    const displayLabel = device.status.displayValue || statusName;
 
     if (statusText) {
-        statusText.textContent = device.status.displayValue || statusName;
-        statusText.className = 'status-indicator ' + statusName;
+        statusText.textContent = 'Statut: ' + displayLabel;
+    }
+
+    if (telemetrySpan) {
+        if (device.telemetryDisplay) {
+            telemetrySpan.textContent = device.telemetryDisplay;
+        } else {
+            // Fallback si telemetryDisplay est vide : on affiche la conso ou prod
+            const val = (device.deviceCategoryCode === 'GEN') ? device.production : device.consumption;
+            telemetrySpan.textContent = (statusName === 'ONLINE' ? val : 0) + ' GW';
+        }
     }
 
     if (led) {
-        led.className = 'status-led ' + (statusName === 'ONLINE' ? 'led-on' : (statusName === 'MAINTENANCE' ? 'led-maintenance' : 'led-off'));
+        led.className = 'status-led ' + (
+            statusName === 'ONLINE' ? 'led-on' :
+                (statusName === 'MAINTENANCE' ? 'led-maintenance' : 'led-off')
+        );
     }
 
     if (statusName === 'MAINTENANCE') {
@@ -50,13 +65,29 @@ function updateDeviceUI(device) {
     } else {
         if (btn) {
             btn.disabled = false;
-            const isAdmin = btn.classList.contains('btn-action');
-            btn.textContent = (statusName === 'ONLINE') ? (isAdmin ? 'OFF' : 'Éteindre') : (isAdmin ? 'ON' : 'Allumer');
-            btn.className = isAdmin ?
-                (statusName === 'ONLINE' ? 'btn-action btn-off' : 'btn-action btn-on') :
-                (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on');
+
+            const isToggleStyle = btn.classList.contains('btn-toggle');
+            btn.textContent = (statusName === 'ONLINE') ? 'Éteindre' : 'Allumer';
+            btn.className = isToggleStyle ?
+                (statusName === 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on') :
+                btn.className;
         }
         if (repairBtn) repairBtn.style.display = 'none';
+    }
+}
+
+function updateEnergyUI(data) {
+    const prodElem = document.getElementById('prod-' + data.zoneId);
+    const consElem = document.getElementById('cons-' + data.zoneId);
+    const barElem = document.getElementById('bar-' + data.zoneId);
+
+    if (prodElem) prodElem.textContent = data.production;
+    if (consElem) consElem.textContent = data.consumption;
+
+    if (barElem) {
+        const percentage = data.production > 0 ? (data.consumption / data.production) * 100 : 0;
+        barElem.style.width = Math.min(percentage, 100) + '%';
+        barElem.style.backgroundColor = percentage > 100 ? '#ff1744' : (percentage > 85 ? '#ff9100' : '#00e5ff');
     }
 }
 
@@ -64,14 +95,6 @@ function updateTelemetryUI(device) {
     const telemetrySpan = document.getElementById('telemetry-text-' + device.id);
     if (telemetrySpan && device.telemetryDisplay) {
         telemetrySpan.textContent = device.telemetryDisplay;
-    }
-
-    const deviceCard = document.getElementById('device-card-' + device.id);
-    if (deviceCard && device.deviceImage) {
-        const img = deviceCard.querySelector('img');
-        if (img && img.src !== device.deviceImage) {
-            img.src = device.deviceImage;
-        }
     }
 }
 

@@ -100,10 +100,10 @@
             statusText.innerText = "ÉTAT : DÉSYNCHRONISÉ";
         }
 
-        const remaining = Math.max(0, 5 - (timeInside / 1000)).toFixed(1);
+        const remaining = Math.max(0, 2 - (timeInside / 1000)).toFixed(1);
         timerDisplay.innerText = remaining;
 
-        if (timeInside >= 5000 && !targetReached) {
+        if (timeInside >= 2000 && !targetReached) {
             victory();
         }
     }

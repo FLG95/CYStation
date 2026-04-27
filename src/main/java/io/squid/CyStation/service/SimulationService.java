@@ -35,18 +35,43 @@ public class SimulationService {
         boolean hasChanges = false;
 
         for (Zone zone : zones) {
-            for (Device device : zone.getDevices()) {
-                if (device.getStatus() == DeviceStatus.ONLINE && Math.random() < 0.05) {
-                    device.setStatus(DeviceStatus.MAINTENANCE);
-                    hasChanges = true;
+            double totalProduction = 0;
+            double totalConsumption = 0;
 
-                    messagingTemplate.convertAndSend("/topic/device-status", device);
+
+            for (Device device : zone.getDevices()) {
+                if (device instanceof Generator generator) {
+
+                    totalProduction += generator.getProductionValue();
+                } else {
+
+                    totalConsumption += device.getConsumptionValue();
+                }
+            }
+
+
+            if (totalProduction < totalConsumption) {
+                for (Device device : zone.getDevices()) {
+
+                    if (device.getStatus() == DeviceStatus.ONLINE) {
+                        device.setStatus(DeviceStatus.OFFLINE);
+                        hasChanges = true;
+                        messagingTemplate.convertAndSend("/topic/device-status", device);
+                    }
+                }
+            } else {
+
+                for (Device device : zone.getDevices()) {
+                    if (device.getStatus() == DeviceStatus.ONLINE && Math.random() < 0.05) {
+                        device.setStatus(DeviceStatus.MAINTENANCE);
+                        hasChanges = true;
+                        messagingTemplate.convertAndSend("/topic/device-status", device);
+                    }
                 }
             }
         }
 
         if (hasChanges) {
-
             zoneRepository.saveAllAndFlush(zones);
         }
     }

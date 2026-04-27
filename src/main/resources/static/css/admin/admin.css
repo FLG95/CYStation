@@ -32,13 +32,13 @@ body.bg-dark {
     border-bottom: 2px solid var(--color-4);
     padding: 0 5px;
     overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
 }
 
 .admin-tabs::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
 }
 
 .tab-item {
@@ -58,7 +58,6 @@ body.bg-dark {
     min-height: 44px;
     display: flex;
     align-items: center;
-    box-sizing: border-box;
 }
 
 .tab-item:hover {
@@ -115,7 +114,7 @@ body.bg-dark {
     border-collapse: collapse;
     text-align: left;
     color: var(--color-10);
-    min-width: 600px; /* Force scroll on small screens */
+    min-width: 600px;
 }
 
 .admin-table th {
@@ -134,73 +133,25 @@ body.bg-dark {
     vertical-align: middle;
 }
 
-.admin-table tbody tr {
-    background-color: transparent;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.username {
-    font-weight: 600;
-    color: var(--color-10);
-    font-size: 0.9rem;
-}
-
-.user-email {
-    color: var(--color-6);
-    font-size: 0.8rem;
-}
-
-.birth-info {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.85rem;
-    gap: 2px;
-}
-
-.gender-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: var(--color-6);
-    letter-spacing: 1px;
-}
-
+.username { font-weight: 600; color: var(--color-10); font-size: 0.95rem; }
+.user-email { color: var(--color-6); font-size: 0.85rem; }
 .role-badge {
     background: var(--color-4);
     color: var(--color-9);
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
-    font-size: 0.7rem;
-    border: 1px solid var(--color-6);
+    font-size: 0.75rem;
+    border: 1px solid var(--color-5);
     text-transform: uppercase;
     font-weight: bold;
 }
+.xp-value { color: var(--color-9); font-weight: bold; font-size: 1rem; }
 
-.xp-value {
-    color: var(--color-9);
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.actions-cell {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.types-cell {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-}
+.actions-cell { display: flex; gap: 8px; align-items: center; }
 
 .btn-action {
     padding: 10px 14px;
+    min-height: 44px;
     border-radius: 4px;
     border: 1px solid transparent;
     cursor: pointer;
@@ -209,34 +160,26 @@ body.bg-dark {
     transition: all 0.2s ease;
     text-transform: uppercase;
     background: transparent;
-    min-height: 44px;
-    min-width: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.btn-exp {
-    color: var(--color-7);
-    border-color: var(--color-7);
-}
+.btn-exp { color: var(--color-7); border-color: var(--color-7); }
+.btn-exp:hover { background: var(--color-7); color: var(--color-1); }
+.btn-delete { color: var(--color-11); border-color: var(--color-11); }
+.btn-delete:hover { background: var(--color-11); color: var(--color-1); }
 
-.btn-exp:hover {
-    background: var(--color-7);
-    color: var(--color-1);
-}
+.status-active { background-color: var(--color-12); color: white; }
+.status-disabled { background-color: var(--color-11); color: white; }
 
-.btn-delete {
-    color: var(--color-11);
-    border-color: var(--color-11);
-}
+.btn-success { color: var(--color-12); border-color: var(--color-12); }
+.btn-success:hover { background: var(--color-12); color: var(--color-1); }
 
-.btn-delete:hover {
-    background: var(--color-11);
-    color: var(--color-1);
-}
+.btn-warning { color: #f39c12; border-color:#f39c12; }
+.btn-warning:hover { background: #f39c12;);  color: var(--color-1); }
 
-/* Desktop Styles */
+
 @media (min-width: 768px) {
     .cnes-layout {
         width: 90%;
@@ -248,37 +191,58 @@ body.bg-dark {
         padding: 0 10px;
     }
 
-    .section-header h1 {
-        font-size: 2rem;
-    }
-
-    .section-header h2 {
-        font-size: 1.3rem;
-    }
+    .section-header h1 { font-size: 2rem; }
+    .section-header h2 { font-size: 1.3rem; }
+    .section-header p { font-size: 1rem; }
 
     .admin-tabs {
         padding: 0 10px;
         overflow-x: visible;
+        margin-bottom: 2.5rem;
     }
 
     .tab-item {
         padding: 12px 24px;
-        font-size: 0.85rem;
+        min-height: auto;
     }
 
     .admin-table {
         min-width: 100%;
     }
 
-    .admin-table th, .admin-table td {
-        padding: 16px 20px;
-    }
-
     .admin-table th {
+        padding: 16px 20px;
         font-size: 0.85rem;
     }
 
-    /* Colonne widths pour la page users */
+    .admin-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid transparent;
+        vertical-align: middle;
+    }
+
+    .btn-action {
+        padding: 0 14px;
+        min-height: 44px;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+
+        white-space: nowrap;
+        width: auto;
+        min-width: max-content;
+        
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
     .admin-table.users-table th:nth-child(1) { width: 8%; }
     .admin-table.users-table th:nth-child(2) { width: 30%; }
     .admin-table.users-table th:nth-child(3) { width: 15%; }
@@ -286,15 +250,9 @@ body.bg-dark {
     .admin-table.users-table th:nth-child(5) { width: 12%; }
     .admin-table.users-table th:nth-child(6) { width: 20%; }
 
-    /* Colonne widths pour la page articles */
     .admin-table.articles-table th:nth-child(1) { width: 6%; }
     .admin-table.articles-table th:nth-child(2) { width: 40%; }
     .admin-table.articles-table th:nth-child(3) { width: 14%; }
     .admin-table.articles-table th:nth-child(4) { width: 25%; }
     .admin-table.articles-table th:nth-child(5) { width: 15%; }
-
-    .btn-action {
-        padding: 6px 12px;
-        min-height: auto;
-    }
 }

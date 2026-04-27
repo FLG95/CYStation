@@ -1,6 +1,7 @@
 package io.squid.CyStation.model;
 
 import io.squid.CyStation.enums.DeviceCategory;
+import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
@@ -11,16 +12,24 @@ import java.util.Map;
 @DiscriminatorValue("GENERATOR")
 public class Generator extends Device {
 
-    private int productionValue;
+    private int productionValue = 50;
 
-    public int getProductionValue(){return productionValue; }
-    public void setProductionValue(int productionValue){
+    public Generator(){
+        super(0);
+    }
+
+
+    public void setProduction(int productionValue){
         this.productionValue = productionValue;
     }
 
     @Override
     public boolean updateTelemetry() {
-        this.setProductionValue(80 + (int)(Math.random() * 20)); // entre 80 et 100
+        if (this.getStatus() == DeviceStatus.ONLINE) {
+            this.setProduction(80 + (int)(Math.random() * 20));
+        } else {
+            this.setProduction(0);
+        }
         return true;
     }
 
@@ -50,6 +59,15 @@ public class Generator extends Device {
         return Map.of(
                 "PRODUCTION_VALUE", (double) this.productionValue
         );
+    }
+
+    @Override
+    public int getProductionValue() {
+
+        if (this.getStatus() == DeviceStatus.ONLINE) {
+            return this.productionValue;
+        }
+        return 0;
     }
 
 }

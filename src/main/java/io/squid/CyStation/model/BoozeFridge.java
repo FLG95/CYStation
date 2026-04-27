@@ -15,6 +15,11 @@ public class BoozeFridge extends Device{
     private double purityLevel;
     private int fillLevel;
 
+
+    public BoozeFridge(){
+        super(10);
+    }
+
     public double getPurityLevel() { return purityLevel; }
     public void setPurityLevel(double purityLevel) { this.purityLevel = purityLevel; }
 

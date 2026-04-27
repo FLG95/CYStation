@@ -1,17 +1,28 @@
 
 
 function toggleDeviceAjax(deviceId) {
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
-    fetch('/mission/device/toggle/' + deviceId, {
+    fetch(`/mission/device/toggle/${deviceId}`, {
         method: 'POST',
-        headers: { [header]: token }
+        headers: {
+            [csrfHeader]: csrfToken
+        }
     })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();
+        .then(async response => {
+            if (!response.ok) {
+
+                const errorText = await response.text();
+                throw new Error(errorText);
             }
+            return response.text();
+        })
+        .then(status => {
+            console.log("Changement réussi : " + status);
+        })
+        .catch(error => {
+            alert(error.message);
         });
 }
 
@@ -179,6 +190,20 @@ function updateZoneAjax(zoneId, element, fieldName) {
             }
         })
         .catch(error => console.error('Erreur:', error));
+}
+
+
+function maintenanceDeviceAjax(deviceId) {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+    fetch(`/admin/device/maintenance/${deviceId}`, {
+        method: 'POST',
+        headers: { [header]: token }
+    })
+        .then(response => {
+            if (!response.ok) alert("Erreur lors du sabotage");
+        });
 }
 
 document.addEventListener('keydown', function(e) {

@@ -1,8 +1,10 @@
 package io.squid.CyStation.controller;
 
 import io.squid.CyStation.enums.DeviceCategory;
+import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.Device;
+import io.squid.CyStation.model.Generator;
 import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
@@ -15,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,19 +34,25 @@ public class AdminController {
     private UserService userService;
 
     @Autowired
-    ZoneRepository zoneRepository;
+    private ZoneRepository zoneRepository;
 
     @Autowired
-    DeviceService deviceService;
+    private DeviceService deviceService;
 
     @Autowired
-    ZoneService zoneService;
+    private ZoneService zoneService;
 
     @Autowired
     private DeviceRepository deviceRepository;
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private  SimpMessagingTemplate messagingTemplate;
+
+
+
 
     @GetMapping("/")
     public String listUsers(Model model) {
@@ -177,4 +186,24 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur");
         }
     }
+
+
+    @PostMapping("/device/maintenance/{id}")
+    @ResponseBody
+    public ResponseEntity<String> sabotageDevice(@PathVariable Long id) {
+        Device device = deviceRepository.findById(id).orElseThrow();
+
+        device.setStatus(DeviceStatus.MAINTENANCE);
+
+        if (device instanceof Generator) {
+            ((Generator) device).setProduction(0);
+        }
+
+        deviceRepository.save(device);
+        messagingTemplate.convertAndSend("/topic/device-status", device);
+        deviceService.notifyEnergyUpdate(device.getZone());
+
+        return ResponseEntity.ok("Module mit en maintenance avec succès");
+    }
+
 }

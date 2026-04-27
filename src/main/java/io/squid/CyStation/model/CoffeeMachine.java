@@ -12,8 +12,12 @@ import java.util.Map;
 @DiscriminatorValue("COFFEE")
 public class CoffeeMachine extends Device {
 
-    private int cupsServed;      // nombre de cafés servis
-    private int waterLevel;      // niveau d'eau en mL
+    private int cupsServed;
+    private int waterLevel;
+
+    public CoffeeMachine(){
+        super(10);
+    }
 
     public int getCupsServed() { return cupsServed; }
     public void setCupsServed(int cupsServed) { this.cupsServed = cupsServed; }

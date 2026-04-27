@@ -88,10 +88,11 @@
                             th:onclick="|toggleUserStatus(${user.id})|"
                             th:text="${user.enable ? 'Désactiver' : 'Activer'}">
                     </button>
-                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50</button>
-                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, -50)|">-50</button>
-                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer <i
-                            class="fas fa-trash"></i></button>
+                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50 XP</button>
+                    <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, -50)|">-50 XP</button>
+                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">
+                        Supprimer <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             </tr>
             </tbody>

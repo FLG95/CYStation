@@ -14,6 +14,11 @@ public class Radio extends Device{
 
     private int contact;
 
+
+    public Radio(){
+        super(10);
+    }
+
     public int getContact(){return contact; }
     public void setContact(int contact) {
         this.contact = contact;

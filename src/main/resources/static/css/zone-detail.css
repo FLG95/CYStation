@@ -44,7 +44,6 @@
     margin-bottom: 8px;
 }
 
-/* --- EDITABLE FIELDS --- */
 .header-with-actions {
     display: flex;
     flex-direction: column;
@@ -71,7 +70,6 @@
     color: var(--color-10);
 }
 
-/* --- GRID & CARDS (SAME AS ZONE-OVERVIEW) --- */
 .cnes-grid.news-grid {
     display: grid;
     gap: 20px;
@@ -81,14 +79,13 @@
 
 .infra-card {
     position: relative;
-    height: 250px; /* Same as zone-overview */
+    height: 250px;
     overflow: hidden;
     background-color: #000;
     border: 1px solid var(--color-3);
     border-radius: 8px;
 }
 
-/* --- REPAIR MODAL (GAME) --- */
 #gameModal {
     display: none;
     position: fixed;
@@ -134,7 +131,6 @@
     }
 }
 
-/* --- STATUS LED --- */
 .status-led {
     position: absolute;
     top: 12px;
@@ -144,6 +140,11 @@
     border-radius: 50%;
     z-index: 20;
 }
+
+
+
+
+
 
 .status-led.led-on { background: var(--led-green); box-shadow: 0 0 10px var(--led-green); animation: pulse-green 2s ease-in-out infinite; }
 .status-led.led-off { background: var(--led-red); }

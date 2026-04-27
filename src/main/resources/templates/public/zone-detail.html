@@ -16,7 +16,6 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/zone-detail.css}">
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/device-actions.js}" defer></script>
@@ -54,12 +53,30 @@
             <h2>Infrastructures de la Zone</h2>
         </div>
 
+        <div class="energy-monitor" th:id="'energy-zone-' + ${zone.id}">
+            <div class="energy-stats">
+        <span>Production:
+            <strong th:id="'prod-' + ${zone.id}"
+                    th:text="${zone.totalProduction}">0</strong> GW
+        </span>
+                <span>Consommation:
+            <strong th:id="'cons-' + ${zone.id}"
+                    th:text="${zone.totalConsumption}">0</strong> GW
+        </span>
+            </div>
+            <div class="energy-bar-container">
+                <div th:id="'bar-' + ${zone.id}"
+                     class="energy-bar-fill"
+                     th:style="'width: ' + ${zone.totalProduction > 0 ? (zone.totalConsumption / zone.totalProduction) * 100 : 0} + '%'">
+                </div>
+            </div>
+        </div>
+
         <div class="cnes-grid news-grid">
             <th:block th:each="device : ${zone.devices}">
                 <article class="infra-card" th:id="'device-card-' + ${device.id}"
                          style="position: relative; overflow: hidden; border-radius: 8px; min-height: 250px;">
 
-                    <!-- LED : verte si ONLINE, orange si MAINTENANCE, rouge sinon -->
                     <div class="status-led"
                          th:classappend="${device.status.name() == 'ONLINE' ? 'led-on' : (device.status.name() == 'MAINTENANCE' ? 'led-maintenance' : 'led-off')}"
                          th:id="'led-' + ${device.id}">
@@ -74,6 +91,17 @@
                                 th:style="${device.requestStatus?.name() == 'PENDING'} ? 'opacity:0.5; cursor:not-allowed;' : ''">
                             <span th:id="'text-btn-' + ${device.id}"
                                   th:text="${device.requestStatus?.name() == 'PENDING'} ? 'En attente' : 'Demander la suppression'">
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="btn-delete-request" th:id="'container-sabotage-' + ${device.id}"
+                         sec:authorize="hasRole('ADMIN')">
+                        <button type="button"
+                                th:id="'btn-sabotage-' + ${device.id}"
+                                th:onclick="|maintenanceDeviceAjax(${device.id})|">
+                             <span th:id="'text-maintenance-' + ${device.id}">
+                                 Mettre en maintenance
                             </span>
                         </button>
                     </div>
@@ -103,10 +131,10 @@
                                     th:id="'btn-' + ${device.id}"
                                     th:data-id="${device.id}"
                                     onclick="toggleDeviceAjax(this.getAttribute('data-id'))"
-                            th:if="${!#authorization.expression('hasRole(''PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}"
-                            th:class="${device.status?.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
-                            th:disabled="${device.status?.name() == 'MAINTENANCE'}"
-                            th:text="${device.status?.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
+                                    th:if="${!#authorization.expression('hasRole(''PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}"
+                                    th:class="${device.status?.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
+                                    th:disabled="${device.status?.name() == 'MAINTENANCE'}"
+                                    th:text="${device.status?.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
                             </button>
 
                             <th:block th:if="${device.status?.name() == 'MAINTENANCE'}">
@@ -117,8 +145,8 @@
                                         onclick="repairDeviceAjax(this.getAttribute('data-id'), this.getAttribute('data-cat'))"
                                         class="btn-repair"
 
-                                th:if="${!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}">
-                                Réparer
+                                        th:if="${!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}">
+                                    Réparer
                                 </button>
                             </th:block>
 
@@ -127,7 +155,7 @@
                                     th:data-id="${device.id}"
                                     onclick="showDeviceLogs(this.getAttribute('data-id'))"
                                     th:if="${!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}">
-                            Historique
+                                Historique
                             </button>
 
                         </div>
@@ -191,7 +219,8 @@
                 <span class="logs-modal-subtitle" id="modalSubtitle">Données de télémétrie et actions opérateur</span>
             </div>
             <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="logs-download-btn" onclick="generateLogReport()" title="Générer Rapport .txt">&#10515;</button>
+                <button class="logs-download-btn" onclick="generateLogReport()" title="Générer Rapport .txt">&#10515;
+                </button>
                 <button class="logs-close-btn" onclick="closeLogsModal()" aria-label="Fermer">&times;</button>
             </div>
         </div>
@@ -348,7 +377,7 @@
         if (currentOpenDeviceId) {
             const deviceId = currentOpenDeviceId;
             const card = document.getElementById('device-card-' + deviceId);
-            
+
             let name = "Inconnu";
             let type = "Inconnu";
             let status = "Inconnu";
@@ -362,14 +391,14 @@
             }
 
             reportText = `DEVICE #${deviceId}\n` +
-                         `ID: ${deviceId}\n` +
-                         `Name: ${name}\n` +
-                         `Type: ${type}\n` +
-                         `Status: ${status}\n` +
-                         `Room: ${room}\n\n` +
-                         `--- SUMMARY ---\n` +
-                         `Log entries analyzed: ${totalLines}\n` +
-                         `Repairs: ${repairs}\n\n`;
+                `ID: ${deviceId}\n` +
+                `Name: ${name}\n` +
+                `Type: ${type}\n` +
+                `Status: ${status}\n` +
+                `Room: ${room}\n\n` +
+                `--- SUMMARY ---\n` +
+                `Log entries analyzed: ${totalLines}\n` +
+                `Repairs: ${repairs}\n\n`;
 
             const metrics = {};
             lastLogsData.forEach(log => {
@@ -388,9 +417,9 @@
                     const max = Math.max(...values);
                     const avg = values.reduce((a, b) => a + b, 0) / values.length;
                     reportText += `[${key}]\n` +
-                                 `  Minimum: ${fmt(min)}\n` +
-                                 `  Maximum: ${fmt(max)}\n` +
-                                 `  Average: ${fmt(avg)}\n`;
+                        `  Minimum: ${fmt(min)}\n` +
+                        `  Maximum: ${fmt(max)}\n` +
+                        `  Average: ${fmt(avg)}\n`;
                 });
             } else {
                 reportText += `No telemetry metrics found in this period.\n`;
@@ -403,14 +432,14 @@
             reportText += `Repairs: ${repairs}\n`;
             reportText += "----------------------------\n\n";
             reportText += "HISTORIQUE DES ÉVÉNEMENTS :\n";
-            
+
             lastLogsData.forEach(log => {
                 const date = new Date(log.timestamp).toLocaleString('fr-FR');
                 reportText += `[${date}] ${log.eventType} | Opérateur: ${log.operatorName || 'SYSTEM'} | Metric: ${log.metricName || '-'} | Old: ${log.oldNumericValue ?? log.oldStringValue ?? '-'} | New: ${log.newNumericValue ?? log.newStringValue ?? '-'}\n`;
             });
         }
 
-        const blob = new Blob([reportText], { type: 'text/plain' });
+        const blob = new Blob([reportText], {type: 'text/plain'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

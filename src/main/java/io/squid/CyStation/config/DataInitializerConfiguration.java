@@ -160,6 +160,7 @@ class DataInitializerConfiguration {
             user.setExperience(exp);
             user.setBirthDate(birthDate);
             user.setGender(gender);
+            user.setEnable(true);
 
             repo.saveAndFlush(user);
             System.out.println("Utilisateur spatial créé : " + email);

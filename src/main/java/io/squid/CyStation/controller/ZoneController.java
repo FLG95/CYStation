@@ -159,12 +159,17 @@ public class ZoneController {
 
 
     @PostMapping("/mission/device/toggle/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'PASSENGER')")
     @ResponseBody
-    public DeviceStatus toggleDevice(@PathVariable Long id) {
-
-        return deviceService.toggleStatus(id);
+    public ResponseEntity<?> toggleDevice(@PathVariable Long id) {
+        try {
+            DeviceStatus status = deviceService.toggleStatus(id);
+            return ResponseEntity.ok(status);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+
 
     @PostMapping("/mission/device/repair/{id}")
     @PreAuthorize("isAuthenticated()")

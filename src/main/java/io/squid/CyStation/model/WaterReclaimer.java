@@ -15,6 +15,10 @@ public class WaterReclaimer extends Device{
     private double purityLevel;
     private int fillLevel;
 
+    public WaterReclaimer(){
+        super(10);
+    }
+
     public double getPurityLevel() { return purityLevel; }
     public void setPurityLevel(double purityLevel) { this.purityLevel = purityLevel; }
 
@@ -23,9 +27,9 @@ public class WaterReclaimer extends Device{
 
     @Override
     public boolean updateTelemetry() {
-        // Simule une pureté qui fluctue légèrement entre 95% et 100%
+
         this.setPurityLevel(95.0 + (Math.random() * 5.0));
-        // Simule un niveau de cuve aléatoire entre 0 et 1000 litres
+
         this.setFillLevel((int) (Math.random() * 1000));
         return true;
     }
