@@ -204,6 +204,26 @@
     font-size: 1.2rem;
 }
 
+.logs-download-btn {
+    background: var(--color-9);
+    border: none;
+    color: #000;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.logs-download-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
 .logs-nav {
     display: flex;
     gap: 5px;

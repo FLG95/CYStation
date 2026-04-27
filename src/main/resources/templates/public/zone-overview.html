@@ -80,7 +80,10 @@
                 <h2 id="modalTitle">Historique Global</h2>
                 <span class="logs-modal-subtitle" id="modalSubtitle">Vue globale de la station</span>
             </div>
-            <button class="logs-close-btn" onclick="closeLogsModal()" aria-label="Fermer">&times;</button>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="logs-download-btn" onclick="generateLogReport()" title="Générer Rapport .txt">&#10515;</button>
+                <button class="logs-close-btn" onclick="closeLogsModal()" aria-label="Fermer">&times;</button>
+            </div>
         </div>
 
         <div class="logs-nav">
@@ -126,6 +129,8 @@
 
     searchInput.addEventListener('keyup', filterZones);
 
+    let lastLogsData = [];
+
     function setActiveNav(btn) {
         document.querySelectorAll('.logs-nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -152,6 +157,7 @@
     }
 
     function updateLogsTable(logs, title, subtitle) {
+        lastLogsData = logs;
         document.getElementById('modalTitle').innerText    = title;
         document.getElementById('modalSubtitle').innerText = subtitle || '';
         const container = document.getElementById('logsContainer');
@@ -193,6 +199,61 @@
             '</thead>' +
             '<tbody>' + rows + '</tbody>' +
             '</table>';
+    }
+
+    function generateLogReport() {
+        if (!lastLogsData || lastLogsData.length === 0) {
+            alert("Aucune donnée à exporter.");
+            return;
+        }
+
+        const totalLines = lastLogsData.length;
+        const repairs = lastLogsData.filter(l => l.eventType === 'REPAIR').length;
+
+        let reportText = "RAPPORT GLOBAL DE LA STATION\n";
+        reportText += "Date: " + new Date().toLocaleString('fr-FR') + "\n";
+        reportText += `Log entries analyzed: ${totalLines}\n`;
+        reportText += `Repairs: ${repairs}\n`;
+        reportText += "----------------------------\n\n";
+
+        const metrics = {};
+        lastLogsData.forEach(log => {
+            if (log.eventType === 'TELEMETRY' && log.metricName && (log.newNumericValue !== null && log.newNumericValue !== undefined)) {
+                if (!metrics[log.metricName]) metrics[log.metricName] = [];
+                metrics[log.metricName].push(log.newNumericValue);
+            }
+        });
+
+        const metricKeys = Object.keys(metrics);
+        if (metricKeys.length > 0) {
+            const fmt = (n) => Number.isInteger(n) ? n : n.toFixed(2);
+            reportText += `RÉSUMÉ DES MÉTRIQUES :\n`;
+            metricKeys.forEach(key => {
+                const values = metrics[key];
+                const min = Math.min(...values);
+                const max = Math.max(...values);
+                const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                reportText += `[${key}] Min: ${fmt(min)} | Max: ${fmt(max)} | Avg: ${fmt(avg)}\n`;
+            });
+            reportText += "\n";
+        }
+
+        reportText += "HISTORIQUE DES ÉVÉNEMENTS :\n";
+        
+        lastLogsData.forEach(log => {
+            const date = new Date(log.timestamp).toLocaleString('fr-FR');
+            reportText += `[${date}] ${log.eventType} | Opérateur: ${log.operatorName || 'SYSTEM'} | Metric: ${log.metricName || '-'} | Old: ${log.oldNumericValue ?? log.oldStringValue ?? '-'} | New: ${log.newNumericValue ?? log.newStringValue ?? '-'}\n`;
+        });
+
+        const blob = new Blob([reportText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `report-global.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     function closeLogsModal() {
