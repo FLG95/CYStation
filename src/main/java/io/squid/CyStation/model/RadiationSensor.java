@@ -35,7 +35,7 @@ public class RadiationSensor extends Sensor{
 
     @Override
     public String getDeviceImage(){
-        return "https://cdn.shopify.com/s/files/1/0019/5952/files/CO2-Molecule-Image.jpg";
+        return "https://www.hamamatsu.com/content/dam/hamamatsu-photonics/sites/images/00_Application/08_Security/08%20Radiation%20detectors-th_xx,0.jpg";
     }
 
     @Override

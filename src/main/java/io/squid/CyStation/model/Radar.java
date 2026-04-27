@@ -37,7 +37,7 @@ public class Radar extends Sensor{
 
     @Override
     public String getDeviceImage(){
-        return "https://cdn.shopify.com/s/files/1/0019/5952/files/CO2-Molecule-Image.jpg";
+        return "https://europeanspaceflight.com/wp-content/uploads/2026/01/CNES-Awards-Loft-Orbital-Contract-for-French-Radar-Imaging-Demo.webp";
     }
 
     @Override
