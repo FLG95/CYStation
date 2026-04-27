@@ -38,6 +38,19 @@
             ＋ Initialiser une zone
         </button>
     </section>
+    <section class="section-header" style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2>Maintenance de la Base de Données</h2>
+            <p>Attention — Cette action effacera définitivement l'historique de télémétrie et d'état des machines.</p>
+        </div>
+        <form th:action="@{/admin/logs/clear}" method="post"
+              onsubmit="return confirm('Es-tu sûr de vouloir effacer l\'intégralité des logs ? Cette action est irréversible.');">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="btn-action btn-delete" style="padding: 12px 24px; font-size: 1rem;">
+                <i class="fas fa-trash"></i> Purger tous les logs
+            </button>
+        </form>
+    </section>
 
     <div class="admin-table-container">
         <table class="admin-table">
@@ -122,21 +135,6 @@
             </tbody>
         </table>
     </div>
-
-    <!-- Section Maintenance BDD (déplacée depuis admin users) -->
-    <section class="section-header" style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h2>Maintenance de la Base de Données</h2>
-            <p>Attention — Cette action effacera définitivement l'historique de télémétrie et d'état des machines.</p>
-        </div>
-        <form th:action="@{/admin/logs/clear}" method="post"
-              onsubmit="return confirm('Es-tu sûr de vouloir effacer l\'intégralité des logs ? Cette action est irréversible.');">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <button type="submit" class="btn-action btn-delete" style="padding: 12px 24px; font-size: 1rem;">
-                <i class="fas fa-trash"></i> Purger tous les logs
-            </button>
-        </form>
-    </section>
 
 </main>
 
