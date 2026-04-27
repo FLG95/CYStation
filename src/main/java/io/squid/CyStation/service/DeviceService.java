@@ -114,7 +114,7 @@ public class DeviceService {
         return device.getStatus();
     }
 
-    private void handleBlackout(Zone zone) {
+    public void handleBlackout(Zone zone) {
         double totalProd = zone.getTotalProduction();
 
         List<Device> activeDevices = zone.getDevices().stream()

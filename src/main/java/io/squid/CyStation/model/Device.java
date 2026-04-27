@@ -33,10 +33,7 @@ public abstract class Device {
 
 
     public Device() {
-    public Device(int consumption) {
 
-        this.consumption = consumption;
-        this.status = DeviceStatus.MAINTENANCE;
 
     }
 
