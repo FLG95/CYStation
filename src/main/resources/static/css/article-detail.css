@@ -1,46 +1,81 @@
 .article-hero {
-    height: 55vh;
-    min-height: 450px;
+    height: 40vh;
+    min-height: 300px;
     background-position: center;
     background-size: cover;
 }
 
 .article-text-section {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 15px;
     background-color: var(--color-2);
-    padding: 50px;
+    padding: 25px 20px;
     border: 1px solid var(--color-3);
-    margin-top: -60px;
+    margin-top: -30px;
     position: relative;
     z-index: 10;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .article-body {
-    font-size: 1.15rem;
-    line-height: 1.8;
+    font-size: 1.1rem;
+    line-height: 1.6;
     white-space: pre-wrap;
     color: var(--color-10);
-    margin-bottom: 40px;
-    text-align: justify;
+    margin-bottom: 30px;
+    text-align: left;
 }
 
 .article-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     border-top: 1px solid var(--color-4);
     padding-top: 25px;
+}
+
+.article-actions .cnes-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
 }
 
 .type-tag {
     text-transform: capitalize;
     background-color: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 4px 14px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.85rem;
     letter-spacing: 0.05em;
     margin-top: 6px;
     display: inline-block;
+}
+
+/* --- DESKTOP LAYOUT --- */
+@media (min-width: 768px) {
+    .article-hero {
+        height: 55vh;
+        min-height: 450px;
+    }
+
+    .article-text-section {
+        margin: 0 auto;
+        padding: 50px;
+        margin-top: -60px;
+    }
+
+    .article-body {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        text-align: justify;
+    }
+
+    .article-actions {
+        flex-wrap: nowrap;
+    }
 }

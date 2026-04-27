@@ -7,28 +7,29 @@
 /* --- SECTION PRÉSENTATION VAISSEAU --- */
 .ship-presentation {
     display: flex;
-    gap: 40px;
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
     margin-bottom: 30px;
 }
 
 .ship-presentation img {
-    width: 50%;
+    width: 100%;
     border-radius: 4px;
     border: 1px solid var(--color-3);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .ship-text p {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--color-10);
     opacity: 0.9;
-    line-height: 1.8;
+    line-height: 1.6;
 }
 
 /* --- CARTES DE STATISTIQUES (Basées sur .cnes-card) --- */
 .stat-card {
-    padding: 40px 20px;
+    padding: 30px 15px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -37,7 +38,7 @@
 
 .stat-card h3 {
     color: var(--color-7);
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin: 0;
     text-shadow: 0 0 15px rgba(70, 207, 179, 0.2);
 }
@@ -47,17 +48,36 @@
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 1px;
-    margin-top: 15px;
-    font-size: 0.9rem;
+    margin-top: 10px;
+    font-size: 0.85rem;
 }
 
-/* --- RESPONSIVITÉ --- */
-@media (max-width: 900px) {
+/* --- DESKTOP LAYOUT --- */
+@media (min-width: 768px) {
     .ship-presentation {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 40px;
     }
 
     .ship-presentation img {
-        width: 100%;
+        width: 50%;
+    }
+
+    .ship-text p {
+        font-size: 1.15rem;
+        line-height: 1.8;
+    }
+
+    .stat-card {
+        padding: 40px 20px;
+    }
+
+    .stat-card h3 {
+        font-size: 2.5rem;
+    }
+
+    .stat-card p {
+        font-size: 0.9rem;
+        margin-top: 15px;
     }
 }

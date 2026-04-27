@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CYStation - Accueil</title>
     <link rel="icon" type="image/png" th:href="@{/img/meatlogo.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -28,7 +29,7 @@
             <h1>CYStation</h1>
             <p>Suivez en temps réel la maintenance des systèmes et les recherches scientifiques menées à 400km
                 d'altitude.</p>
-            <div style="display: flex; gap: 10px;">
+            <div class="hero-actions" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                 <a th:href="@{/about}" class="cnes-btn">Découvrir la mission</a>
             </div>
         </div>

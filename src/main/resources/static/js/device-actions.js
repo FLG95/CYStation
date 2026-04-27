@@ -98,13 +98,23 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
         'RADIATION_SENSOR': '/mission/game/radiation',
         'WATER_RECLAIMER': '/mission/game/water',
         'CAFE': '/mission/game/water'
-
     };
 
     const gameUrl = games[deviceTypeCode] || '/mission/game/radio';
 
     modal.style.display = 'flex';
+    //document.body.style.overflow = 'hidden'; Ne jamais remettre cette ligne
     iframe.src = gameUrl + "?deviceId=" + deviceId;
+}
+
+function closeModal() {
+    const modal = document.getElementById('gameModal');
+    const iframe = document.getElementById('gameFrame');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    if (iframe) iframe.src = '';
+    document.body.style.overflow = '';
 }
 
 
@@ -180,7 +190,7 @@ document.addEventListener('keydown', function(e) {
 
 
 window.addEventListener('message', function(event) {
-    if (event.data.action === 'REPAIR_SUCCESS') {
+    if (event.data.type === 'MINIGAME_WIN') {
         const deviceId = event.data.deviceId;
 
         closeModal();
