@@ -5,6 +5,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Administration - Demandes de Suppression</title>
+    <link rel="icon" type="image/png" th:href="@{/img/meatlogo.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -19,8 +20,9 @@
 
     <nav class="admin-tabs">
         <a th:href="@{/admin/}" th:classappend="${activeTab == 'users'} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
-        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
-        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests' or activeTab == null} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
+        <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones' or activeTab == null} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/articles}" th:classappend="${activeTab == 'articles'} ? 'active' : ''" class="tab-item">Articles</a>
+        <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
 
     <section class="section-header">

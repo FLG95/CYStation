@@ -1,10 +1,12 @@
 package io.squid.CyStation.controller;
+
 import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.RequestStatus;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
+import io.squid.CyStation.service.ArticleService;
 import io.squid.CyStation.service.DeviceService;
 import io.squid.CyStation.service.UserService;
 import io.squid.CyStation.service.ZoneService;
@@ -18,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/admin")
@@ -36,13 +37,17 @@ public class AdminController {
 
     @Autowired
     ZoneService zoneService;
+
     @Autowired
     private DeviceRepository deviceRepository;
 
+    @Autowired
+    private ArticleService articleService;
 
     @GetMapping("/")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("activeTab", "users");
         return "admin/user";
     }
 
@@ -56,7 +61,6 @@ public class AdminController {
     @PostMapping("/users/add-exp")
     @ResponseBody
     public ResponseEntity<?> addExperience(@RequestParam Long id, @RequestParam int amount) {
-
         int newExp = userService.addExpAndLevelUp(id, amount);
         return ResponseEntity.ok(newExp);
     }
@@ -65,6 +69,7 @@ public class AdminController {
     public String showMissionPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
+        model.addAttribute("activeTab", "zones");
         return "admin/zone";
     }
 
@@ -72,7 +77,27 @@ public class AdminController {
     public String showUserPage(Model model) {
         model.addAttribute("zones", zoneRepository.findAll());
         model.addAttribute("deviceCategories", DeviceCategory.values());
+        model.addAttribute("activeTab", "users");
         return "admin/user";
+    }
+
+    @GetMapping("/articles")
+    public String showArticlesPage(Model model) {
+        model.addAttribute("articles", articleService.findAll());
+        model.addAttribute("activeTab", "articles");
+        return "admin/articles";
+    }
+
+    @DeleteMapping("/articles/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
+        try {
+            articleService.getArticleById(id);
+            articleService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/device/create")
@@ -90,42 +115,31 @@ public class AdminController {
     }
 
     @PostMapping("/mission/zone/create")
-    @PreAuthorize("hasRole('ADMIN')")
     public String createZone(@RequestParam String name,
                              @RequestParam String description,
-                             HttpServletRequest request) { // Ajout de la requête
+                             HttpServletRequest request) {
 
         if (zoneRepository.findZoneByName(name) != null) {
-
             String referer = request.getHeader("Referer");
             return "redirect:" + (referer != null ? referer : "/mission") + "?error";
-
         } else {
             Zone newZone = new Zone();
             newZone.setName(name);
             newZone.setDescription(description);
             zoneService.save(newZone);
-
             String referer = request.getHeader("Referer");
-
             return "redirect:" + (referer != null ? referer : "/mission");
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/request")
     public String showRequests(Model model) {
-
         List<Device> requests = deviceRepository.findByRequestStatus(RequestStatus.PENDING);
-
         model.addAttribute("pendingRequests", requests);
         model.addAttribute("activeTab", "requests");
-        return "admin/request"; // Assurez-vous que le nom correspond à votre fichier HTML
+        return "admin/request";
     }
 
-
-
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/request/process-deletion/{id}")
     @ResponseBody
     @Transactional
@@ -138,7 +152,6 @@ public class AdminController {
                 if (device.getZone() != null) {
                     device.getZone().getDevices().remove(device);
                 }
-
                 deviceService.deleteDevice(device.getId());
                 return ResponseEntity.ok().build();
             } else {
@@ -148,10 +161,7 @@ public class AdminController {
                 return ResponseEntity.ok().build();
             }
         } catch (Exception e) {
-
-            e.printStackTrace();
             return ResponseEntity.status(500).body("Erreur SQL : " + e.getMessage());
         }
     }
 }
-

@@ -55,3 +55,4 @@ public class Article {
         return Arrays.asList(types.split(","));
     }
 }
+

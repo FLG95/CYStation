@@ -5,12 +5,12 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Administration - Utilisateurs</title>
+    <link rel="icon" type="image/png" th:href="@{/img/meatlogo.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <script th:src="@{/js/admin/admin.js}" defer></script>
-
 </head>
 <body class="bg-dark">
 <div th:replace="~{public/header :: header}"></div>
@@ -20,15 +20,14 @@
     <nav class="admin-tabs">
         <a th:href="@{/admin/}" th:classappend="${activeTab == 'users' or activeTab == null} ? 'active' : ''" class="tab-item">Gestion Personnel</a>
         <a th:href="@{/admin/zone}" th:classappend="${activeTab == 'zones'} ? 'active' : ''" class="tab-item">Infrastructure & Modules</a>
+        <a th:href="@{/admin/articles}" th:classappend="${activeTab == 'articles'} ? 'active' : ''" class="tab-item">Articles</a>
         <a th:href="@{/admin/request}" th:classappend="${activeTab == 'requests'} ? 'active' : ''" class="tab-item">Demandes de Suppression</a>
     </nav>
-
 
     <section class="section-header">
         <h1>Gestion du Personnel</h1>
         <p>Liste des opérateurs et scientifiques de la station.</p>
     </section>
-
 
     <div class="admin-table-container">
         <table class="admin-table">
@@ -61,40 +60,27 @@
                 </td>
 
                 <td>
-                    <span th:id="'role-' + ${user.id}" class="role-badge" th:text="${user.role}">USER</span></td>
+                    <span th:id="'role-' + ${user.id}" class="role-badge" th:text="${user.role}">USER</span>
+                </td>
                 <td>
-                <span class="xp-value">
-                    <span th:id="'exp-' + ${user.id}" th:text="${user.experience}">100</span> XP
-                </span>
+                    <span class="xp-value">
+                        <span th:id="'exp-' + ${user.id}" th:text="${user.experience}">100</span> XP
+                    </span>
                 </td>
 
                 <td class="actions-cell">
                     <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, 50)|">+50</button>
                     <button class="btn-action btn-exp" th:onclick="|modifyExp(${user.id}, -50)|">-50</button>
-                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Suprimer<i
-                            class="fas fa-trash"></i></button>
+                    <button class="btn-action btn-delete" th:onclick="|deleteUser(${user.id})|">Supprimer <i class="fas fa-trash"></i></button>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <section class="section-header" style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h2>Maintenance de la Base de Données</h2>
-            <p>Attention — Cette action effacera définitivement l'historique de télémétrie et d'état des machines.</p>
-        </div>
-        <form th:action="@{/admin/logs/clear}" method="post"
-              onsubmit="return confirm('Es-tu sûr de vouloir effacer l\'intégralité des logs ? Cette action est irréversible.');">
-            <button type="submit" class="btn-action btn-delete" style="padding: 12px 24px; font-size: 1rem;">
-                <i class="fas fa-trash"></i> Purger tous les logs
-            </button>
-        </form>
-    </section>
+
 </main>
 
-
 <div th:replace="~{public/footer :: footer}"></div>
-
 
 </body>
 </html>

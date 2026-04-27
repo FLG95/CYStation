@@ -74,6 +74,14 @@ body.bg-dark {
     letter-spacing: 1.5px;
 }
 
+.section-header h2 {
+    color: var(--color-10);
+    margin: 0;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
 .section-header p {
     color: var(--color-6);
     margin-top: 0.5rem;
@@ -169,6 +177,14 @@ body.bg-dark {
     align-items: center;
 }
 
+/* Badges multiples pour les types d'articles */
+.types-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
 .btn-action {
     padding: 6px 12px;
     border-radius: 4px;
@@ -201,9 +217,17 @@ body.bg-dark {
     color: var(--color-1);
 }
 
-.admin-table th:nth-child(1) { width: 8%; }
-.admin-table th:nth-child(2) { width: 30%; }
-.admin-table th:nth-child(3) { width: 15%; }
-.admin-table th:nth-child(4) { width: 15%; }
-.admin-table th:nth-child(5) { width: 12%; }
-.admin-table th:nth-child(6) { width: 20%; }
+/* Colonne widths pour la page users */
+.admin-table.users-table th:nth-child(1) { width: 8%; }
+.admin-table.users-table th:nth-child(2) { width: 30%; }
+.admin-table.users-table th:nth-child(3) { width: 15%; }
+.admin-table.users-table th:nth-child(4) { width: 15%; }
+.admin-table.users-table th:nth-child(5) { width: 12%; }
+.admin-table.users-table th:nth-child(6) { width: 20%; }
+
+/* Colonne widths pour la page articles */
+.admin-table.articles-table th:nth-child(1) { width: 6%; }
+.admin-table.articles-table th:nth-child(2) { width: 40%; }
+.admin-table.articles-table th:nth-child(3) { width: 14%; }
+.admin-table.articles-table th:nth-child(4) { width: 25%; }
+.admin-table.articles-table th:nth-child(5) { width: 15%; }
