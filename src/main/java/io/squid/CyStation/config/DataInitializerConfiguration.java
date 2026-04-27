@@ -60,6 +60,15 @@ class DataInitializerConfiguration {
             Zone oxygenGeneratorRoom = createZoneIfNotFound(zoneRepository, "Salle du Générateur d'Oxygène",
                     "Génères l'oxygène requis à la survie de l'équipage", "https://cdna.artstation.com/p/assets/images/images/021/686/854/large/krista-hilge-render-1.jpg?1572574090");
 
+            Zone navigationRoom = createZoneIfNotFound(zoneRepository, "Salle de Navigation",
+                    "Gères la position et les moteurs de la station pour maintenir l'orbite", "https://alienseries.wordpress.com/wp-content/uploads/2012/10/cobb2.jpg");
+
+            Zone cafeteriaRoom = createZoneIfNotFound(zoneRepository, "Caféteria",
+                    "Permet de se restaurer dans la station", "https://files.idyllic.app/files/static/37615?width=640&optimizer=image");
+
+            Zone adminRoom = createZoneIfNotFound(zoneRepository, "Administration",
+                    "Gères les divers aspects administratif de la station", "https://images.stockcake.com/public/a/2/5/a257662f-f153-4457-a2c9-f667532b07ac_large/futuristic-control-room-stockcake.jpg");
+
             if (bioLab.getDevices() == null || bioLab.getDevices().isEmpty()) {
                 Device cafe = DeviceCategory.CAFE.createInstance();
                 Device radioactivity = DeviceCategory.RADIATION_SENSOR.createInstance();
@@ -67,6 +76,33 @@ class DataInitializerConfiguration {
                 radioactivity.setName("Radiation de l'échantillon");
                 deviceService.addDeviceToZone(cafe, bioLab.getId());
                 deviceService.addDeviceToZone(radioactivity, bioLab.getId());
+            }
+
+            if (adminRoom.getDevices() == null || adminRoom.getDevices().isEmpty()) {
+                Device cafe = DeviceCategory.CAFE.createInstance();
+                cafe.setName("Machine à Café");
+                deviceService.addDeviceToZone(cafe, adminRoom.getId());
+            }
+
+            if (cafeteriaRoom.getDevices() == null || cafeteriaRoom.getDevices().isEmpty()) {
+                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device booze = DeviceCategory.BOOZE.createInstance();
+                cafe.setName("Machine à Café");
+                booze.setName("Frigo à bière");
+                deviceService.addDeviceToZone(cafe, cafeteriaRoom.getId());
+                deviceService.addDeviceToZone(booze, cafeteriaRoom.getId());
+            }
+
+            if (navigationRoom.getDevices() == null || navigationRoom.getDevices().isEmpty()) {
+                Device cafe = DeviceCategory.CAFE.createInstance();
+                Device radio = DeviceCategory.RADIO.createInstance();
+                Device radar = DeviceCategory.RADAR.createInstance();
+                cafe.setName("Machine à Café");
+                radio.setName("Radio");
+                radar.setName("Radar");
+                deviceService.addDeviceToZone(cafe, navigationRoom.getId());
+                deviceService.addDeviceToZone(radio, navigationRoom.getId());
+                deviceService.addDeviceToZone(radar, navigationRoom.getId());
             }
 
             if (engineRoom.getDevices() == null || engineRoom.getDevices().isEmpty()) {
