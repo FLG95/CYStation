@@ -159,7 +159,7 @@ public class ZoneController {
 
 
     @PostMapping("/mission/device/toggle/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'PASSENGER')")
     @ResponseBody
     public DeviceStatus toggleDevice(@PathVariable Long id) {
 

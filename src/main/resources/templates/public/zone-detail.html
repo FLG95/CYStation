@@ -102,31 +102,33 @@
                                     th:id="'btn-' + ${device.id}"
                                     th:data-id="${device.id}"
                                     onclick="toggleDeviceAjax(this.getAttribute('data-id'))"
-                                    th:class="${device.status.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
-                                    th:disabled="${device.status.name() == 'MAINTENANCE'}"
-                                    th:text="${device.status.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
+                            th:if="${!#authorization.expression('hasRole(''PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}"
+                            th:class="${device.status?.name() == 'ONLINE' ? 'btn-toggle off' : 'btn-toggle on'}"
+                            th:disabled="${device.status?.name() == 'MAINTENANCE'}"
+                            th:text="${device.status?.name() == 'ONLINE' ? 'Éteindre' : 'Allumer'}">
                             </button>
 
                             <th:block th:if="${device.status?.name() == 'MAINTENANCE'}">
-
                                 <button type="button"
                                         th:id="'btn-repair-' + ${device.id}"
-                                        th:if="${device.status?.name() == 'MAINTENANCE' and
-                                        (!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine')}"
                                         th:data-id="${device.id}"
                                         th:data-cat="${device.deviceCategoryCode}"
                                         onclick="repairDeviceAjax(this.getAttribute('data-id'), this.getAttribute('data-cat'))"
-                                        class="btn-repair">
-                                    Réparer
-                                </button>
+                                        class="btn-repair"
 
+                                th:if="${!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}">
+                                Réparer
+                                </button>
                             </th:block>
 
                             <button type="button"
                                     class="btn-history"
-                                    th:onclick="|showDeviceLogs(${device.id})|">
-                                Historique
+                                    th:data-id="${device.id}"
+                                    onclick="showDeviceLogs(this.getAttribute('data-id'))"
+                                    th:if="${!#authorization.expression('hasAuthority(''ROLE_PASSENGER'')') or device.deviceTypeName == 'CoffeeMachine'}">
+                            Historique
                             </button>
+
                         </div>
                     </div>
                 </article>
