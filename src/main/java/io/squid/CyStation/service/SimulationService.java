@@ -63,7 +63,8 @@ public class SimulationService {
             } else {
 
                 for (Device device : zone.getDevices()) {
-                    if (device.getStatus() == DeviceStatus.ONLINE && Math.random() < 0.05) {
+                    if (device.getStatus() == DeviceStatus.ONLINE && Math.random() < 0.05 && !(device instanceof Generator)) {
+
                         device.setStatus(DeviceStatus.MAINTENANCE);
                         hasChanges = true;
                         messagingTemplate.convertAndSend("/topic/device-status", device);

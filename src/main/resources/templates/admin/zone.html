@@ -114,7 +114,7 @@
                                 th:onclick="'toggleDeviceAjax(' + ${device.id} + ')'"
                                 th:class="${device.status.name() == 'ONLINE' ? 'btn-action btn-off' : 'btn-action btn-on'}"
                                 th:disabled="${device.status.name() == 'MAINTENANCE'}"
-                                th:text="${device.status.name() == 'ONLINE' ? 'OFF' : 'ON'}">
+                                th:text="${device.status.name() == 'ONLINE' ? 'ÉTEINDRE' : 'ALLUMER'}">
                         </button>
 
                         <button type="button"

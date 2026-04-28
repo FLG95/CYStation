@@ -37,7 +37,7 @@
 
                 <div class="lcd-screen display-panel">
                     <div id="status-text">ÉTAT : FLUX INCONTRÔLÉ</div>
-                    <div class="coffee-progress">GOUTTES RÉCUPÉRÉES : <span id="drop-count">0</span> / <span id="drop-goal">10</span></div>
+                    <div class="coffee-progress">GOUTTES RÉCUPÉRÉES : <span id="drop-count">0</span> / <span id="drop-goal">5</span></div>
                 </div>
 
                 <canvas id="game-canvas"></canvas>
@@ -53,7 +53,7 @@
 </main>
 
 <script>
-    const GOAL = 10;
+    const GOAL = 5;
     const canvas    = document.getElementById('game-canvas');
     const ctx       = canvas.getContext('2d');
     const statusEl  = document.getElementById('status-text');
