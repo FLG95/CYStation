@@ -130,50 +130,6 @@ function closeModal() {
 
 
 
-function confirmRepairOnServer(deviceId) {
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-    fetch('/mission/device/repair/' + deviceId, {
-        method: 'POST',
-        headers: { [header]: token }
-    })
-        .then(response => {
-            if (!response.ok) throw new Error("Erreur serveur");
-            return response.json();
-        })
-        .then(deviceData => {
-
-            const repairBtn = document.getElementById('btn-repair-' + deviceId);
-            if (repairBtn) repairBtn.remove();
-
-            const btnMaint = document.getElementById('btn-maintenance-' + deviceId);
-            const spanMaint = document.getElementById('text-maintenance-' + deviceId);
-
-            if (btnMaint) {
-                btnMaint.disabled = false;
-                btnMaint.style.opacity = '1';
-                btnMaint.style.cursor = 'pointer';
-                if (spanMaint) spanMaint.textContent = 'Mettre en maintenance';
-            }
-
-            const toggleBtn = document.getElementById('btn-' + deviceId);
-            if (toggleBtn) {
-                toggleBtn.disabled = false;
-            }
-
-            const led = document.getElementById('led-' + deviceId);
-            if (led) {
-                led.classList.remove('led-maintenance');
-                led.classList.add('led-off');
-            }
-
-            console.log("Réparation terminée et interface mise à jour.");
-        })
-        .catch(err => console.error("Erreur lors du fetch de réparation :", err));
-}
-
-
 function updateZoneAjax(zoneId, element, fieldName) {
     const newValue = element.innerText.trim();
     const token = document.querySelector('meta[name="_csrf"]').content;
@@ -240,18 +196,6 @@ document.addEventListener('keydown', function(e) {
     if (e.target.classList.contains('editable-zone-name') && e.key === 'Enter') {
         e.preventDefault();
         e.target.blur();
-    }
-});
-
-
-
-window.addEventListener('message', function(event) {
-    if (event.data.type === 'MINIGAME_WIN') {
-        const deviceId = event.data.deviceId;
-
-        closeModal();
-
-        confirmRepairOnServer(deviceId);
     }
 });
 

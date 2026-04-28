@@ -60,7 +60,11 @@ function updateDeviceUI(device) {
         if (btn) {
             btn.disabled = true;
             btn.textContent = 'Allumer';
-            btn.className = 'btn-action';
+            if (btn.classList.contains('btn-toggle')) {
+                btn.className = 'btn-toggle on';
+            } else {
+                btn.className = 'btn-action';
+            }
         }
 
         if (maintBtn) {
@@ -77,12 +81,13 @@ function updateDeviceUI(device) {
     } else {
         if (btn) {
             btn.disabled = false;
+            const isToggle = btn.classList.contains('btn-toggle');
             if (statusName === 'ONLINE') {
                 btn.textContent = 'Éteindre';
-                btn.className = 'btn-action btn-off';
+                btn.className = isToggle ? 'btn-toggle off' : 'btn-action btn-off';
             } else {
                 btn.textContent = 'Allumer';
-                btn.className = 'btn-action btn-on';
+                btn.className = isToggle ? 'btn-toggle on' : 'btn-action btn-on';
             }
         }
 
