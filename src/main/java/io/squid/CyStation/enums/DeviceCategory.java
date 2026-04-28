@@ -5,12 +5,12 @@ import io.squid.CyStation.model.*;
 import java.util.function.Supplier;
 
 public enum DeviceCategory {
-    CO2_SENSOR("Capteur CO2", Co2Sensor::new),
     GENERATOR("Générateur", Generator::new),
-    RADAR("Radar Orbital", Radar::new),
-    RADIO("Relais Radio", Radio::new),
+    CO2_SENSOR("Capteur CO2", Co2Sensor::new),
     OXYGEN_SENSOR("Capteur Oxygène", OxygenSensor::new),
     RADIATION_SENSOR("Capteur de Radiation", RadiationSensor::new),
+    RADAR("Radar Orbital", Radar::new),
+    RADIO("Relais Radio", Radio::new),
     WATER_RECLAIMER("Recycleur d'eau", WaterReclaimer::new),
     COFFEE("Machine à café", CoffeeMachine::new),
     BOOZE("Frigo à bière", BoozeFridge::new);

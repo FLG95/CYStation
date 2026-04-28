@@ -145,7 +145,7 @@ public class ZoneController {
             newDevice.setName(name);
             newDevice.setStatus(DeviceStatus.ONLINE);
 
-            deviceService.addDeviceToZone(newDevice, zoneId);
+            deviceService.addDeviceToZone(newDevice, zoneId, DeviceStatus.MAINTENANCE);
 
         } catch (IllegalArgumentException e) {
             String referer = request.getHeader("Referer");

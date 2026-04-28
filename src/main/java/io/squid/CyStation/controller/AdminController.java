@@ -117,7 +117,7 @@ public class AdminController {
         try {
             Device newDevice = DeviceCategory.valueOf(deviceType.toUpperCase()).createInstance();
             newDevice.setName(name);
-            deviceService.addDeviceToZone(newDevice, zoneId);
+            deviceService.addDeviceToZone(newDevice, zoneId, DeviceStatus.MAINTENANCE);
         } catch (IllegalArgumentException e) {
             return "redirect:/admin/zone?error";
         }

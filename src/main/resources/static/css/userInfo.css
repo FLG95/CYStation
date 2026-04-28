@@ -26,7 +26,7 @@
 
 .profile-split-container {
     display: flex;
-    flex-direction: column-reverse; /* Form first on mobile */
+    flex-direction: column-reverse;
     width: 100%;
     max-width: 1100px;
     background: rgba(0, 9, 36, 0.85);
@@ -40,7 +40,7 @@
 }
 
 .profile-image-side {
-    height: 150px; /* Banner for mobile */
+    height: 150px;
     background: url('https://www.presse-citron.net/app/uploads/2019/10/apollo-11.jpg') no-repeat center center;
     background-size: cover;
     position: relative;
@@ -84,6 +84,29 @@
     flex-wrap: wrap;
 }
 
+.avatar-item {
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.avatar-item input:checked + .avatar-img-choice {
+    border-color: var(--color-7);
+    filter: grayscale(0%);
+    box-shadow: 0 0 15px var(--color-7);
+    transform: scale(1.1);
+}
+
+.avatar-img-choice {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    object-fit: cover;
+    transition: all 0.3s ease;
+    filter: grayscale(40%);
+}
+
 .avatar-img-choice {
     width: 60px;
     height: 60px;
@@ -94,7 +117,7 @@
 
 .user-details-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Single column for mobile */
+    grid-template-columns: 1fr;
     gap: 15px;
     margin-bottom: 20px;
 }
@@ -114,12 +137,12 @@
     border-radius: 6px;
     font-size: 1rem;
     width: 100%;
-    min-height: 44px; /* WCAG */
+    min-height: 44px;
 }
 
 .mt-4 {
     display: flex;
-    flex-direction: column; /* Stacked buttons on mobile */
+    flex-direction: column;
     gap: 10px;
 }
 
@@ -129,7 +152,7 @@
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 6px;
-    min-height: 44px; /* WCAG */
+    min-height: 44px;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -147,14 +170,13 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- DESKTOP LAYOUT --- */
 @media (min-width: 992px) {
     .profile-full-page { height: calc(100vh - 60px); padding: 40px; }
     
     .profile-split-container {
         flex-direction: row;
         height: 100%;
-        max-height: 750px;
+        max-height: 800px;
     }
 
     .profile-info-side {

@@ -69,76 +69,95 @@ class DataInitializerConfiguration {
             Zone adminRoom = createZoneIfNotFound(zoneRepository, "Administration",
                     "Gères les divers aspects administratif de la station", "https://images.stockcake.com/public/a/2/5/a257662f-f153-4457-a2c9-f667532b07ac_large/futuristic-control-room-stockcake.jpg");
 
+
             if (bioLab.getDevices() == null || bioLab.getDevices().isEmpty()) {
+                Device genenerator = DeviceCategory.GENERATOR.createInstance();
                 Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device radioactivity = DeviceCategory.RADIATION_SENSOR.createInstance();
                 cafe.setName("Machine à Café");
+                genenerator.setName("Générateur Principal");
                 radioactivity.setName("Radiation de l'échantillon");
-                deviceService.addDeviceToZone(cafe, bioLab.getId());
-                deviceService.addDeviceToZone(radioactivity, bioLab.getId());
+                deviceService.addDeviceToZone(genenerator, bioLab.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(cafe, bioLab.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(radioactivity, bioLab.getId(), DeviceStatus.OFFLINE);
             }
 
             if (adminRoom.getDevices() == null || adminRoom.getDevices().isEmpty()) {
+                Device genenerator = DeviceCategory.GENERATOR.createInstance();
                 Device cafe = DeviceCategory.COFFEE.createInstance();
                 cafe.setName("Machine à Café");
-                deviceService.addDeviceToZone(cafe, adminRoom.getId());
+                genenerator.setName("Générateur Principal");
+                deviceService.addDeviceToZone(genenerator, adminRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(cafe, adminRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (cafeteriaRoom.getDevices() == null || cafeteriaRoom.getDevices().isEmpty()) {
+                Device generator = DeviceCategory.GENERATOR.createInstance();
                 Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device booze = DeviceCategory.BOOZE.createInstance();
                 cafe.setName("Machine à Café");
                 booze.setName("Frigo à bière");
-                deviceService.addDeviceToZone(cafe, cafeteriaRoom.getId());
-                deviceService.addDeviceToZone(booze, cafeteriaRoom.getId());
+                generator.setName("Générateur Principal");
+                deviceService.addDeviceToZone(generator, cafeteriaRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(cafe, cafeteriaRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(booze, cafeteriaRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (navigationRoom.getDevices() == null || navigationRoom.getDevices().isEmpty()) {
+                Device generator = DeviceCategory.GENERATOR.createInstance();
                 Device cafe = DeviceCategory.COFFEE.createInstance();
                 Device radio = DeviceCategory.RADIO.createInstance();
                 Device radar = DeviceCategory.RADAR.createInstance();
                 cafe.setName("Machine à Café");
                 radio.setName("Radio");
                 radar.setName("Radar");
-                deviceService.addDeviceToZone(cafe, navigationRoom.getId());
-                deviceService.addDeviceToZone(radio, navigationRoom.getId());
-                deviceService.addDeviceToZone(radar, navigationRoom.getId());
+                generator.setName("Générateur Principal");
+                deviceService.addDeviceToZone(generator, navigationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(cafe, navigationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(radio, navigationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(radar, navigationRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (engineRoom.getDevices() == null || engineRoom.getDevices().isEmpty()) {
                 Device gen = DeviceCategory.GENERATOR.createInstance();
-                gen.setName("Moteur Principal");
-                deviceService.addDeviceToZone(gen, engineRoom.getId());
+                gen.setName("Générateur Principal");
+                deviceService.addDeviceToZone(gen, engineRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (reactorRoom.getDevices() == null || reactorRoom.getDevices().isEmpty()) {
-                Device reactor = DeviceCategory.GENERATOR.createInstance();
+                Device generator = DeviceCategory.GENERATOR.createInstance();
                 Device auxiliary_reactor = DeviceCategory.GENERATOR.createInstance();
-                reactor.setName("Réacteur Principal");
-                auxiliary_reactor.setName("Moteur Auxiliaire");
-                deviceService.addDeviceToZone(reactor, reactorRoom.getId());
-                deviceService.addDeviceToZone(auxiliary_reactor, reactorRoom.getId());
+                generator.setName("Générateur Principal");
+                auxiliary_reactor.setName("Générateur Auxiliaire");
+                deviceService.addDeviceToZone(generator, reactorRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(auxiliary_reactor, reactorRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (communicationRoom.getDevices() == null || communicationRoom.getDevices().isEmpty()) {
+                Device generator = DeviceCategory.GENERATOR.createInstance();
                 Device radio = DeviceCategory.RADIO.createInstance();
                 Device radar = DeviceCategory.RADAR.createInstance();
                 Device cafe = DeviceCategory.COFFEE.createInstance();
+                generator.setName("Générateur Principal");
                 radar.setName("Radar");
                 radio.setName("Radio Orbital");
                 cafe.setName("Machine à Café");
-                deviceService.addDeviceToZone(radio, communicationRoom.getId());
-                deviceService.addDeviceToZone(radar, communicationRoom.getId());
-                deviceService.addDeviceToZone(cafe, communicationRoom.getId());
+                deviceService.addDeviceToZone(generator, communicationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(radio, communicationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(radar, communicationRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(cafe, communicationRoom.getId(), DeviceStatus.OFFLINE);
             }
 
             if (oxygenGeneratorRoom.getDevices() == null || oxygenGeneratorRoom.getDevices().isEmpty()) {
+                Device generator = DeviceCategory.GENERATOR.createInstance();
                 Device oxygen_sensor = DeviceCategory.OXYGEN_SENSOR.createInstance();
                 Device co2_sensor = DeviceCategory.CO2_SENSOR.createInstance();
+                generator.setName("Générateur Principal");
                 oxygen_sensor.setName("Capteur d'Oxygène");
                 co2_sensor.setName("Capteur de CO2");
-                deviceService.addDeviceToZone(oxygen_sensor, oxygenGeneratorRoom.getId());
-                deviceService.addDeviceToZone(co2_sensor, oxygenGeneratorRoom.getId());
+                deviceService.addDeviceToZone(generator, oxygenGeneratorRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(oxygen_sensor, oxygenGeneratorRoom.getId(), DeviceStatus.OFFLINE);
+                deviceService.addDeviceToZone(co2_sensor, oxygenGeneratorRoom.getId(), DeviceStatus.OFFLINE);
             }
 
 

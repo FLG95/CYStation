@@ -16,7 +16,7 @@ public class CoffeeMachine extends Device {
     private int waterLevel;
 
     public CoffeeMachine(){
-        super(10);
+        super(5);
     }
 
     public int getCupsServed() { return cupsServed; }

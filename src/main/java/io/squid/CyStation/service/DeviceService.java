@@ -65,13 +65,15 @@ public class DeviceService {
     }
 
     @Transactional
-    public void addDeviceToZone(Device device, Long zoneId) {
+    public void addDeviceToZone(Device device, Long zoneId, DeviceStatus status) {
 
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new RuntimeException("Zone introuvable"));
 
         device.setZone(zone);
-        device.setStatus(DeviceStatus.MAINTENANCE);
+
+
+        device.setStatus(status);
 
         deviceRepository.save(device);
     }
