@@ -19,9 +19,7 @@ body.bg-dark {
     min-height: 100vh;
 }
 
-/* ──────────────────────────────────────────────
-   Layout
-────────────────────────────────────────────── */
+
 .cnes-layout {
     width: 95%;
     max-width: 1200px;
@@ -29,9 +27,7 @@ body.bg-dark {
     padding: 80px 0 2rem 0;
 }
 
-/* ──────────────────────────────────────────────
-   Tabs
-────────────────────────────────────────────── */
+
 .admin-tabs {
     display: flex;
     gap: 5px;
@@ -79,9 +75,7 @@ body.bg-dark {
     border-bottom: 2px solid var(--color-2);
 }
 
-/* ──────────────────────────────────────────────
-   Section header
-────────────────────────────────────────────── */
+
 .section-header {
     margin-bottom: 1.5rem;
     padding: 0 5px;
@@ -103,9 +97,7 @@ body.bg-dark {
     font-size: 0.9rem;
 }
 
-/* ──────────────────────────────────────────────
-   Empty state
-────────────────────────────────────────────── */
+
 .alert,
 .alert-info {
     background: var(--color-2);
@@ -117,9 +109,7 @@ body.bg-dark {
     letter-spacing: 0.5px;
 }
 
-/* ──────────────────────────────────────────────
-   Table
-────────────────────────────────────────────── */
+
 .table-responsive,
 .admin-table-container {
     background: var(--color-2);
@@ -162,9 +152,7 @@ body.bg-dark {
     background: transparent;
 }
 
-/* ──────────────────────────────────────────────
-   Badges
-────────────────────────────────────────────── */
+
 .badge,
 .device-type-badge {
     padding: 4px 10px;
@@ -201,9 +189,7 @@ body.bg-dark {
     border-color: var(--color-11) !important;
 }
 
-/* ──────────────────────────────────────────────
-   Boutons d'action
-────────────────────────────────────────────── */
+
 .btn-action,
 .btn.btn-sm {
     padding: 10px 14px;
@@ -262,9 +248,7 @@ body.bg-dark {
     justify-content: center;
 }
 
-/* ──────────────────────────────────────────────
-   Desktop Styles
-────────────────────────────────────────────── */
+
 @media (min-width: 768px) {
     .cnes-layout {
         width: 90%;

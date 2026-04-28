@@ -1,6 +1,5 @@
 package io.squid.CyStation.config;
 
-import ch.qos.logback.core.status.Status;
 import io.squid.CyStation.enums.DeviceCategory;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.Gender;
@@ -8,7 +7,6 @@ import io.squid.CyStation.enums.Role;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.User;
 import io.squid.CyStation.model.Zone;
-import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.UserRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import io.squid.CyStation.service.DeviceService;

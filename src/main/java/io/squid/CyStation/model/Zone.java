@@ -1,6 +1,5 @@
 package io.squid.CyStation.model;
 
-import io.squid.CyStation.enums.DeviceStatus;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

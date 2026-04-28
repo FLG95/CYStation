@@ -2,14 +2,11 @@ package io.squid.CyStation.repository;
 
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.RequestStatus;
-import io.squid.CyStation.model.Co2Sensor;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.Zone;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 

@@ -176,8 +176,7 @@ public class ZoneController {
     @ResponseBody
     public Device repairDevice(@PathVariable Long id) {
 
-        Device device = deviceService.repair(id);
-        return device;
+        return deviceService.repair(id);
     }
 
 

@@ -16,17 +16,18 @@ import java.util.Map;
 @Service
 public class SimulationService {
 
-    @Autowired
-    private ZoneRepository zoneRepository;
+    private final ZoneRepository zoneRepository;
+    private final DeviceRepository deviceRepository;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final DeviceLogService deviceLogService;
 
-    @Autowired
-    private DeviceRepository deviceRepository;
+    public SimulationService(ZoneRepository zoneRepository, DeviceRepository deviceRepository, SimpMessagingTemplate messagingTemplate, DeviceLogService deviceLogService) {
+        this.zoneRepository = zoneRepository;
+        this.deviceRepository = deviceRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.deviceLogService = deviceLogService;
+    }
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
-    private DeviceLogService deviceLogService;
 
     @Scheduled(initialDelay = 7000, fixedRate = 40000)
     @Transactional

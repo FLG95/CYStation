@@ -229,7 +229,7 @@
     border-color: var(--color-7);
 }
 
-/* --- DESKTOP LAYOUT --- */
+
 @media (min-width: 768px) {
     .space-bg {
         padding: 60px 20px;

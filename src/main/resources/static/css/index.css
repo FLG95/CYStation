@@ -1,4 +1,3 @@
-/* --- CONFIGURATION GLOBALE --- */
 .cnes-layout {
     font-family: 'Arial', sans-serif;
     background-color: var(--color-1);
@@ -6,17 +5,16 @@
     line-height: 1.6;
 }
 
-/* --- HERO BANNER --- */
 .cnes-hero {
     position: relative;
-    height: 50vh; /* Reduced for mobile */
+    height: 50vh;
     min-height: 350px;
     background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80');
     background-size: cover;
     background-position: center;
-    background-attachment: scroll; /* Attachment fixed is problematic on mobile */
+    background-attachment: scroll;
     display: flex;
-    align-items: center; /* Centered for mobile */
+    align-items: center;
     padding: 30px 5%;
 }
 
@@ -32,7 +30,7 @@
     position: relative;
     z-index: 2;
     max-width: 100%;
-    text-align: center; /* Centered for mobile */
+    text-align: center;
 }
 
 .cnes-hero-content .tag {
@@ -47,7 +45,7 @@
 }
 
 .cnes-hero-content h1 {
-    font-size: 2.2rem; /* Scaled down for mobile */
+    font-size: 2.2rem;
     color: #ffffff;
     margin: 0 0 15px 0;
     line-height: 1.2;
@@ -86,7 +84,6 @@
     color: var(--color-1);
 }
 
-/* --- SECTIONS --- */
 .cnes-section {
     padding: 40px 5%;
     max-width: 1400px;
@@ -112,11 +109,10 @@
     margin: 0;
 }
 
-/* --- GRILLES --- */
 .cnes-grid {
     display: grid;
     gap: 20px;
-    grid-template-columns: 1fr; /* Single column by default */
+    grid-template-columns: 1fr;
 }
 
 .cnes-card {
@@ -133,7 +129,7 @@
 .card-content h3 { color: #ffffff; margin: 0 0 10px 0; font-size: 1.2rem; }
 .card-content p { font-size: 0.95rem; opacity: 0.8; margin: 0; }
 
-/* --- CARTES INFRA --- */
+
 .infra-card {
     position: relative;
     height: 250px;
@@ -165,7 +161,6 @@
     padding-left: 12px;
 }
 
-/* --- DESKTOP LAYOUT --- */
 @media (min-width: 768px) {
     .cnes-hero {
         height: 65vh;

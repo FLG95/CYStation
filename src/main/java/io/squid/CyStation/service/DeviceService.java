@@ -4,18 +4,15 @@ import io.squid.CyStation.DTO.EnergyUpdateDTO;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.Generator;
-import io.squid.CyStation.model.User;
 import io.squid.CyStation.model.Zone;
 import io.squid.CyStation.repository.DeviceLogRepository;
 import io.squid.CyStation.repository.DeviceRepository;
 import io.squid.CyStation.repository.ZoneRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

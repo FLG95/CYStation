@@ -446,7 +446,6 @@ iframe {
     width: 100%;
 }
 
-/* Desktop Styles */
 @media (min-width: 768px) {
     .cnes-layout {
         width: 90%;

@@ -55,7 +55,6 @@
     display: inline-block;
 }
 
-/* --- DESKTOP LAYOUT --- */
 @media (min-width: 768px) {
     .article-hero {
         height: 55vh;

@@ -3,12 +3,11 @@
     --led-red: #ef4444;
 }
 
-/* --- HERO SECTION (MOBILE FIRST) --- */
 #hero-zone {
     text-align: center;
     align-items: center;
     justify-content: center;
-    height: 150px; /* Like login/register banner */
+    height: 150px;
     min-height: 150px;
     padding: 20px 5%;
     background-size: cover;
@@ -143,9 +142,6 @@
 
 
 
-
-
-
 .status-indicator {
     font-size: 0.85em;
     font-weight: bold;
@@ -174,7 +170,6 @@
     50%       { opacity: 0.2; }
 }
 
-/* --- DEVICE CONTROLS --- */
 .device-controls {
     display: flex;
     gap: 8px;
@@ -184,7 +179,7 @@
 
 .btn-toggle, .btn-repair, .btn-history {
     padding: 10px 14px;
-    min-height: 44px; /* WCAG */
+    min-height: 44px;
     border: none;
     border-radius: 4px;
     font-weight: bold;
@@ -202,7 +197,6 @@
 .btn-repair { background-color: #007bff; color: white; }
 .btn-history { background: rgba(108, 117, 125, 0.2); color: #adb5bd; border: 1px solid #495057; }
 
-/* --- ADD CARD --- */
 .add-card a {
     text-decoration: none;
     color: var(--color-9);
@@ -214,7 +208,6 @@
     padding: 20px;
 }
 
-/* --- MODALS (BASE) --- */
 .modal, .modal-overlay {
     display: none;
     position: fixed;
@@ -296,7 +289,6 @@
     cursor: pointer;
 }
 
-/* --- LOGS MODAL (IMPROVED FOR SCROLLING) --- */
 #logsModal {
     display: none;
     position: fixed;
@@ -478,7 +470,6 @@
     }
 }
 
-/* --- REPAIR POPUP (SweetAlert2 Custom) --- */
 .swal2-popup.full-screen-mobile {
     width: 100% !important;
     height: 100% !important;

@@ -22,7 +22,6 @@
             <span class="tag" th:text="${#temporals.format(article.date, 'dd/MM/yyyy HH:mm')}"></span>
             <h1 th:text="${article.title}"></h1>
             <p th:text="${article.subtitle}"></p>
-            <!-- Types multiples sous l'auteur -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
                 <span th:each="t : ${article.typeList}"
                       th:text="${t}"

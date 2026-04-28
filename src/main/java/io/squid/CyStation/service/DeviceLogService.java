@@ -3,7 +3,6 @@ package io.squid.CyStation.service;
 import io.squid.CyStation.model.Device;
 import io.squid.CyStation.model.DeviceLog;
 import io.squid.CyStation.repository.DeviceLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

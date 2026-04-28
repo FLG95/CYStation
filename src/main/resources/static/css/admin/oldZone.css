@@ -210,7 +210,6 @@ iframe {
     letter-spacing: 0.5px;
 }
 
-/* Desktop Styles */
 @media (min-width: 768px) {
     .modal-content {
         padding: 40px;

@@ -115,7 +115,6 @@ function repairDeviceAjax(deviceId, deviceTypeCode) {
     const gameUrl = games[deviceTypeCode] || '/mission/game/radio';
 
     modal.style.display = 'flex';
-    //document.body.style.overflow = 'hidden'; Ne jamais remettre cette ligne
     iframe.src = gameUrl + "?deviceId=" + deviceId;
 }
 

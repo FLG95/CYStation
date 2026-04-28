@@ -1,10 +1,9 @@
-/* --- article.css --- */
-/* On surcharge uniquement l'image du Hero défini dans index.css */
+
 #hero-about {
     background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
 }
 
-/* --- SECTION PRÉSENTATION VAISSEAU --- */
+
 .ship-presentation {
     display: flex;
     flex-direction: column;
@@ -27,7 +26,6 @@
     line-height: 1.6;
 }
 
-/* --- CARTES DE STATISTIQUES --- */
 .stat-card {
     padding: 30px 15px;
     text-align: center;
@@ -52,7 +50,6 @@
     font-size: 0.85rem;
 }
 
-/* --- DESKTOP LAYOUT --- */
 @media (min-width: 768px) {
     .ship-presentation {
         flex-direction: row;
