@@ -422,13 +422,17 @@
                         `  Average: ${fmt(avg)}\n`;
                 });
             } else {
-                reportText += `No telemetry metrics found in this period.\n`;
+                reportText += `HISTORIQUE DES ÉVÉNEMENTS :\n`;
             }
+
+            lastLogsData.forEach(log => {
+                const date = new Date(log.timestamp).toLocaleString('fr-FR');
+                reportText += `[${date}] ${log.eventType} | Opérateur: ${log.operatorName || 'SYSTEM'} | Metric: ${log.metricName || '-'} | Old: ${log.oldNumericValue ?? log.oldStringValue ?? '-'} | New: ${log.newNumericValue ?? log.newStringValue ?? '-'}\n`;
+            });
         } else {
             reportText = "RAPPORT GLOBAL DE LA STATION\n";
             reportText += "Date: " + new Date().toLocaleString('fr-FR') + "\n";
             reportText += `Log entries analyzed: ${totalLines}\n`;
-            reportText += `Status changes: ${statusChanges}\n`;
             reportText += `Repairs: ${repairs}\n`;
             reportText += "----------------------------\n\n";
             reportText += "HISTORIQUE DES ÉVÉNEMENTS :\n";

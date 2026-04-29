@@ -239,7 +239,7 @@
         }
 
         reportText += "HISTORIQUE DES ÉVÉNEMENTS :\n";
-        
+
         lastLogsData.forEach(log => {
             const date = new Date(log.timestamp).toLocaleString('fr-FR');
             reportText += `[${date}] ${log.eventType} | Opérateur: ${log.operatorName || 'SYSTEM'} | Metric: ${log.metricName || '-'} | Old: ${log.oldNumericValue ?? log.oldStringValue ?? '-'} | New: ${log.newNumericValue ?? log.newStringValue ?? '-'}\n`;
