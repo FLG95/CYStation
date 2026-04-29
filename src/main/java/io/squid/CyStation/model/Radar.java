@@ -48,9 +48,9 @@ public class Radar extends Sensor{
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "DETECTED", (double) this.detected
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("DETECTED", (double) this.detected);
+        return metrics;
     }
 
 }

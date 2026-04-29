@@ -53,9 +53,9 @@ public class Radio extends Device{
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "CONTACT", (double) this.contact
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("CONTACT", (double) this.contact);
+        return metrics;
     }
 
 }

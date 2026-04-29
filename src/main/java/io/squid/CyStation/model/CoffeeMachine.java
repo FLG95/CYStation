@@ -55,9 +55,9 @@ public class CoffeeMachine extends Device {
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "CUPS_SERVED", (double) this.cupsServed,
-                "WATER_LEVEL", (double) this.waterLevel
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("CUPS_SERVED", (double) this.cupsServed);
+        metrics.put("WATER_LEVEL", (double) this.waterLevel);
+        return metrics;
     }
 }

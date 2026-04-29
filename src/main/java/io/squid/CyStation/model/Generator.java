@@ -56,9 +56,7 @@ public class Generator extends Device {
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "PRODUCTION_VALUE", (double) this.productionValue
-        );
+        return super.getTelemetryMetrics();
     }
 
     @Override
