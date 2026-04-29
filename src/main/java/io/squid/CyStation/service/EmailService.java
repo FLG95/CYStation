@@ -20,9 +20,10 @@ public class EmailService {
                 "\uD835\uDDE0\uD835\uDDF2\uD835\uDDFA\uD835\uDDEF\uD835\uDDFF\uD835\uDDF2 \uD835\uDDF1'\uD835\uDDF2́\uD835\uDDFE\uD835\uDE02\uD835\uDDF6\uD835\uDDFD\uD835\uDDEE\uD835\uDDF4\uD835\uDDF2 : Accès aux équipements sans dangers pour la station.\n" +
                 "\uD835\uDDE6\uD835\uDDF0\uD835\uDDF6\uD835\uDDF2\uD835\uDDFB\uD835\uDE01\uD835\uDDF6\uD835\uDDF3\uD835\uDDF6\uD835\uDDFE\uD835\uDE02\uD835\uDDF2 : Accès aux outils de surveillance et des ressources vitales. Vous pouvez demander la suppression d'appareils.\n" +
                 "\uD835\uDDD4\uD835\uDDF1\uD835\uDDFA\uD835\uDDF6\uD835\uDDFB\uD835\uDDF6\uD835\uDE00\uD835\uDE01\uD835\uDDFF\uD835\uDDEE\uD835\uDE01\uD835\uDDF2\uD835\uDE02\uD835\uDDFF : Contrôle total. Supervision des paramètres critiques et accès au panel exclusif pour gérer l'équipqge.\n\n" +
+                "Veuillez cliquer sur le lien pour activer votre compte : " +
                 "Spatialement,\n" +
                 "CYStation ");
-        
+
 
 
         mailSender.send(message);
