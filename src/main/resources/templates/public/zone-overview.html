@@ -222,12 +222,12 @@
             if (log.eventType === 'TELEMETRY' && log.newNumericValue !== null) {
                 const dId = log.device?.id;
                 if (!dId) return;
-                
+
                 if (!deviceStates[dId]) {
-                    deviceStates[dId] = { 
-                        zone: log.device?.zoneName || "Inconnue", 
-                        prod: 0, 
-                        cons: 0 
+                    deviceStates[dId] = {
+                        zone: log.device?.zoneName || "Inconnue",
+                        prod: 0,
+                        cons: 0
                     };
                 }
 

@@ -16,40 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/zone-detail.css}">
 
-    <style>
-        .cnes-filter-control {
-            background: transparent;
-            border: 1px solid var(--color-9);
-            color: var(--color-9);
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: all 0.2s;
-            outline: none;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
 
-        .cnes-filter-control::placeholder {
-            color: var(--color-9);
-            opacity: 0.7;
-        }
-
-        .cnes-filter-control:hover,
-        .cnes-filter-control.active-filter {
-            background: var(--color-9);
-            color: black;
-        }
-
-        .cnes-filter-control:focus {
-            box-shadow: 0 0 10px var(--color-9);
-        }
-
-        select.cnes-filter-control option {
-            background: #111;
-            color: var(--color-9);
-        }
-    </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -65,20 +32,15 @@
     <section class="cnes-hero" id="hero-zone"
              th:style="|background-image: url('${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80'}')|">
         <div class="cnes-hero-content">
-            <div class="header-with-actions">
-                <h1 th:text="${zone.name}"
-                    contenteditable="true"
-                    class="editable-zone-name"
-                    th:onblur="|updateZoneAjax(${zone.id}, this, 'name')|">
-                </h1>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h1 th:text="${zone.name}" th:id="'zone-name-' + ${zone.id}" style="margin: 0;"></h1>
+                <span sec:authorize="hasRole('ADMIN')" class="edit-icon" th:onclick="'editZoneName(event, ' + ${zone.id} + ')'" title="Modifier le nom">&#9881;</span>
             </div>
 
-            <p th:text="${zone.description != null ? zone.description : 'Ajouter une description...'}"
-               contenteditable="true"
-               class="editable-zone-desc"
-               th:onblur="|updateZoneAjax(${zone.id}, this, 'description')|">
-            </p>
-
+            <div style="display: flex; align-items: flex-start; gap: 15px;">
+                <p class="zone-desc" th:text="${zone.description ?: 'Aucune description'}" th:id="'zone-desc-' + ${zone.id}"></p>
+                <span sec:authorize="hasAnyRole('ADMIN', 'SCIENTIST')" class="edit-icon" th:onclick="'editZoneDesc(event, ' + ${zone.id} + ')'" title="Modifier la description">&#9881;</span>
+            </div>
         </div>
     </section>
 
@@ -680,6 +642,52 @@
     }
 
     document.querySelectorAll('[id^="status-text-"]').forEach(observeStatusEl);
+
+        function editZoneName(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentName = document.getElementById('zone-name-' + id).innerText;
+        const newName = prompt("Nouveau nom de la zone :", currentName);
+        if (newName && newName !== currentName) {
+        updateZone(id, newName, null);
+    }
+    }
+
+        function editZoneDesc(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentDesc = document.getElementById('zone-desc-' + id).innerText;
+        const newDesc = prompt("Nouvelle description :", currentDesc === 'Aucune description' ? '' : currentDesc);
+        if (newDesc !== null && newDesc !== currentDesc) {
+        updateZone(id, null, newDesc);
+    }
+    }
+
+        function updateZone(id, name, desc) {
+        const formData = new URLSearchParams();
+        formData.append('id', id);
+        if (name) formData.append('name', name);
+        if (desc !== null) formData.append('description', desc);
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        fetch('/mission/zone/update', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        [csrfHeader]: csrfToken
+    },
+        body: formData.toString()
+    }).then(response => {
+        if(response.ok) {
+        window.location.reload();
+    } else {
+        alert("Erreur lors de la mise à jour");
+    }
+    });
+    }
+
 </script>
 
 </body>
