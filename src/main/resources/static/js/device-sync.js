@@ -20,6 +20,10 @@ function connectWebSocket() {
             const energyData = JSON.parse(response.body);
             updateEnergyUI(energyData);
         });
+        stompClient.subscribe('/topic/zone-energy', function (message) {
+            const energyData = JSON.parse(message.body);
+            updateEnergyUI(energyData);
+        });
     }, function(error) {
         console.log("Erreur WebSocket, tentative de reconnexion dans 5s...");
         setTimeout(connectWebSocket, 5000);
@@ -34,9 +38,9 @@ function updateDeviceUI(device) {
     const telemetrySpan = document.getElementById('telemetry-text-' + device.id);
     const maintBtn = document.getElementById('btn-maintenance-' + device.id);
     const maintSpan = document.getElementById('text-maintenance-' + device.id);
-
     const statusName = device.status.name || device.status;
     const displayLabel = device.status.displayValue || statusName;
+
 
     if (statusText) {
         statusText.textContent = displayLabel;
@@ -97,23 +101,48 @@ function updateDeviceUI(device) {
             maintBtn.style.cursor = 'pointer';
             if (maintSpan) maintSpan.textContent = 'Mettre en maintenance';
         }
-
         if (repairBtn) repairBtn.style.display = 'none';
     }
+
+
+
 }
 
 function updateEnergyUI(data) {
+
     const prodElem = document.getElementById('prod-' + data.zoneId);
     const consElem = document.getElementById('cons-' + data.zoneId);
     const barElem = document.getElementById('bar-' + data.zoneId);
 
+    /*
     if (prodElem) prodElem.textContent = data.production;
     if (consElem) consElem.textContent = data.consumption;
-
     if (barElem) {
         const percentage = data.production > 0 ? (data.consumption / data.production) * 100 : 0;
         barElem.style.width = Math.min(percentage, 100) + '%';
         barElem.style.backgroundColor = percentage > 100 ? '#ff1744' : (percentage > 85 ? '#ff9100' : '#00e5ff');
+    }*/
+
+    if (prodElem) prodElem.textContent = Math.round(data.production);
+    if (consElem) consElem.textContent = Math.round(data.consumption);
+
+    if (barElem) {
+
+        const percentage = data.production > 0 ? (data.consumption / data.production) * 100 : 0;
+
+        const displayWidth = Math.min(percentage, 100);
+        barElem.style.width = displayWidth + '%';
+
+        if (percentage > 100) {
+            barElem.style.backgroundColor = '#ff3e3e';
+            barElem.classList.add('pulse-red');
+        } else if (percentage > 85) {
+            barElem.style.backgroundColor = '#ffaa00';
+            barElem.classList.remove('pulse-red');
+        } else {
+            barElem.style.backgroundColor = '#00ff9d';
+            barElem.classList.remove('pulse-red');
+        }
     }
 }
 

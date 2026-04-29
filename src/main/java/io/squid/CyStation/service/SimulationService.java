@@ -1,5 +1,6 @@
 package io.squid.CyStation.service;
 
+import io.squid.CyStation.DTO.ZoneEnergyDTO;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.model.*;
 import io.squid.CyStation.repository.DeviceRepository;
@@ -10,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,8 @@ public class SimulationService {
 
                     totalConsumption += device.getConsumptionValue();
                 }
+
+
             }
 
 
@@ -59,6 +63,9 @@ public class SimulationService {
                         hasChanges = true;
                         messagingTemplate.convertAndSend("/topic/device-status", device);
                     }
+
+                    totalProduction = 0;
+                    totalConsumption = 0;
                 }
             } else {
 
@@ -71,6 +78,9 @@ public class SimulationService {
                     }
                 }
             }
+
+            messagingTemplate.convertAndSend("/topic/zone-energy",
+                    new ZoneEnergyDTO(zone.getId(), totalProduction, totalConsumption));
         }
 
         if (hasChanges) {
@@ -82,7 +92,6 @@ public class SimulationService {
     @Transactional
     public void actualiserTelemetrieMachines() {
         List<Device> devices = deviceRepository.findAll();
-        boolean dbNeedsUpdate = false;
 
         for (Device device : devices) {
             try {
@@ -104,8 +113,14 @@ public class SimulationService {
                                 deviceLogService.logTelemetry(device, metricName, oldVal, newVal);
                             }
                         }
-                        dbNeedsUpdate = true;
+
                         messagingTemplate.convertAndSend("/topic/device-telemetry", device);
+
+                        if (device.getZone() != null) {
+                            broadcastZoneEnergy(device.getZone());
+                        }
+
+
                     }
 
                 }
@@ -113,6 +128,19 @@ public class SimulationService {
                 System.err.println("Erreur de télémétrie sur l'appareil ID " + device.getId() + " — " + e.getMessage());
             }
         }
+    }
+
+    private void broadcastZoneEnergy(Zone zone) {
+        double totalProduction = zone.getDevices().stream()
+                .filter(d -> d instanceof Generator)
+                .mapToDouble(d -> ((Generator) d).getProductionValue()).sum();
+
+        double totalConsumption = zone.getDevices().stream()
+                .filter(d -> !(d instanceof Generator))
+                .mapToDouble(Device::getConsumptionValue).sum();
+
+        messagingTemplate.convertAndSend("/topic/zone-energy",
+                new ZoneEnergyDTO(zone.getId(), totalProduction, totalConsumption));
     }
 
 }

@@ -16,7 +16,7 @@ public class WaterReclaimer extends Device{
     private int fillLevel;
 
     public WaterReclaimer(){
-        super(10);
+        super(20);
     }
 
     public double getPurityLevel() { return purityLevel; }

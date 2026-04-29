@@ -55,14 +55,14 @@
 
         <div class="energy-monitor" th:id="'energy-zone-' + ${zone.id}">
             <div class="energy-stats">
-        <span>Production:
-            <strong th:id="'prod-' + ${zone.id}"
-                    th:text="${zone.totalProduction}">0</strong> GW
-        </span>
+                <span>Production:
+                    <strong th:id="'prod-' + ${zone.id}"
+                            th:text="${#numbers.formatDecimal(zone.totalProduction, 1, 0)}">0</strong> GW
+                </span>
                 <span>Consommation:
-            <strong th:id="'cons-' + ${zone.id}"
-                    th:text="${zone.totalConsumption}">0</strong> GW
-        </span>
+                    <strong th:id="'cons-' + ${zone.id}"
+                            th:text="${#numbers.formatDecimal(zone.totalConsumption, 1, 0)}">0</strong> GW
+                </span>
             </div>
             <div class="energy-bar-container">
                 <div th:id="'bar-' + ${zone.id}"
@@ -103,7 +103,7 @@
                                 th:onclick="|maintenanceDeviceAjax(${device.id})|"
                                 th:style="${device.status?.name() == 'MAINTENANCE'} ? 'opacity:0.5; cursor:not-allowed;' : ''">
                             <span th:id="'text-maintenance-' + ${device.id}"
-                                th:text="${device.status?.name() == 'MAINTENANCE'} ? 'Déjà en maintenance' : 'Mettre en maintenance'">
+                                  th:text="${device.status?.name() == 'MAINTENANCE'} ? 'Déjà en maintenance' : 'Mettre en maintenance'">
                             </span>
                         </button>
                     </div>
