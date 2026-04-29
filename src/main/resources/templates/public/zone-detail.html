@@ -49,8 +49,35 @@
     </section>
 
     <section class="cnes-section bg-dark-alt">
-        <div class="section-header">
+        <div class="section-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
             <h2>Infrastructures de la Zone</h2>
+
+            <div class="device-filters" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                <div class="search-container">
+                    <input type="text" id="deviceSearchInput" placeholder="Localiser un module...">
+                </div>
+
+                <button id="filterSensorBtn"
+                        onclick="toggleSensorFilter()"
+                        class="cnes-btn filter-btn"
+                        style="background: transparent; border: 1px solid var(--color-9); color: var(--color-9); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+                    Capteurs uniquement
+                </button>
+
+                <select id="statusFilterSelect"
+                        onchange="applyDeviceFilters()"
+                        style="background: transparent; border: 1px solid var(--color-9); color: var(--color-9); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+                    <option value="">Tous les statuts</option>
+                    <option value="ONLINE">En marche</option>
+                    <option value="OFFLINE">À l'arrêt</option>
+                    <option value="MAINTENANCE">Maintenance</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="noDeviceResult" class="empty-state" style="display:none; text-align:center; padding: 40px; color: var(--color-9);">
+            <div class="empty-icon">[!]</div>
+            <p>Aucun module ne correspond à votre recherche.</p>
         </div>
 
         <div class="energy-monitor" th:id="'energy-zone-' + ${zone.id}">
@@ -74,7 +101,10 @@
 
         <div class="cnes-grid news-grid">
             <th:block th:each="device : ${zone.devices}">
-                <article class="infra-card" th:id="'device-card-' + ${device.id}"
+                <article class="infra-card device-item" th:id="'device-card-' + ${device.id}"
+                         th:data-name="${device.name}"
+                         th:data-status="${device.status.name()}"
+                         th:data-is-sensor="${#strings.contains(device.deviceCategoryCode, 'SENSOR')}"
                          style="position: relative; overflow: hidden; border-radius: 8px; min-height: 250px;">
 
                     <div class="status-led"
@@ -247,11 +277,9 @@
 <div th:replace="~{public/footer :: footer}"></div>
 
 <script>
-    /* ---- CSRF ---- */
     const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
-    /* ---- Deletion ---- */
     function confirmDeletionRequest(deviceId) {
         if (confirm("Confirmer la demande ?\nL'administrateur devra valider la suppression de ce module.")) {
             sendDeletionRequest(deviceId);
@@ -442,12 +470,12 @@
                 if (log.eventType === 'TELEMETRY' && log.newNumericValue !== null) {
                     const dId = log.device?.id;
                     if (!dId) return;
-                    
+
                     if (!deviceStates[dId]) {
-                        deviceStates[dId] = { 
-                            zone: log.device?.zoneName || "Inconnue", 
-                            prod: 0, 
-                            cons: 0 
+                        deviceStates[dId] = {
+                            zone: log.device?.zoneName || "Inconnue",
+                            prod: 0,
+                            cons: 0
                         };
                     }
 
@@ -529,15 +557,110 @@
         currentOpenDeviceId = null;
     }
 
-    /* Fermer avec Échap */
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeLogsModal();
     });
 
-    /* Fermer en cliquant sur le fond */
     document.getElementById('logsModal').addEventListener('click', function (e) {
         if (e.target === this) closeLogsModal();
     });
+
+    /* ---- FILTRES DEVICES ---- */
+    let sensorFilterActive = false;
+
+    function toggleSensorFilter() {
+        sensorFilterActive = !sensorFilterActive;
+        const btn = document.getElementById('filterSensorBtn');
+        if (sensorFilterActive) {
+            btn.style.background = 'var(--color-9)';
+            btn.style.color      = 'black';
+        } else {
+            btn.style.background = 'transparent';
+            btn.style.color      = 'var(--color-9)';
+        }
+        applyDeviceFilters();
+    }
+
+    function applyDeviceFilters() {
+        const keyword      = (document.getElementById('deviceSearchInput').value || '').toLowerCase().trim();
+        const statusFilter = document.getElementById('statusFilterSelect').value;
+        const cards        = document.querySelectorAll('.device-item');
+        let visible        = 0;
+
+        cards.forEach(card => {
+            const name     = (card.dataset.name   || '').toLowerCase();
+            const status   = card.dataset.status  || '';
+            const isSensor = card.dataset.isSensor === 'true';
+
+            const matchesSearch = !keyword       || name.includes(keyword);
+            const matchesStatus = !statusFilter  || status === statusFilter;
+            const matchesSensor = !sensorFilterActive || isSensor;
+
+            if (matchesSearch && matchesStatus && matchesSensor) {
+                card.style.display = '';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const noResult = document.getElementById('noDeviceResult');
+        noResult.style.display = (visible === 0 && cards.length > 0) ? 'block' : 'none';
+    }
+
+    document.getElementById('deviceSearchInput').addEventListener('keyup', applyDeviceFilters);
+
+    /* ---- SYNC ASYNCHRONE DES FILTRES ---- */
+    // device-sync.js met à jour les classes de #status-text-{id} quand le statut change.
+    // On observe ces mutations pour mettre à jour data-status sur la carte et relancer le filtre.
+
+    const STATUS_CLASS_MAP = {
+        'ONLINE':      'ONLINE',
+        'OFFLINE':     'OFFLINE',
+        'MAINTENANCE': 'MAINTENANCE'
+    };
+
+    function extractStatusFromEl(el) {
+        for (const cls of Object.keys(STATUS_CLASS_MAP)) {
+            if (el.classList.contains(cls)) return STATUS_CLASS_MAP[cls];
+        }
+        return null;
+    }
+
+    function observeStatusEl(statusEl) {
+        const observer = new MutationObserver(() => {
+            const newStatus = extractStatusFromEl(statusEl);
+            if (!newStatus) return;
+
+            // Remonter à la carte .device-item
+            const card = statusEl.closest('.device-item');
+            if (!card) return;
+
+            const oldStatus = card.dataset.status;
+            if (oldStatus === newStatus) return;
+
+            // Mettre à jour le data-status
+            card.dataset.status = newStatus;
+
+            // Animation flash sur la carte pour signaler le changement
+            card.style.transition = 'box-shadow 0.3s ease';
+            card.style.boxShadow  = newStatus === 'ONLINE'
+                ? '0 0 18px 4px rgba(0, 229, 100, 0.55)'
+                : newStatus === 'OFFLINE'
+                    ? '0 0 18px 4px rgba(229, 50, 50, 0.55)'
+                    : '0 0 18px 4px rgba(255, 165, 0, 0.55)';
+
+            setTimeout(() => { card.style.boxShadow = ''; }, 1200);
+
+            // Relancer le filtre — la carte apparaît/disparaît selon le nouveau statut
+            applyDeviceFilters();
+        });
+
+        observer.observe(statusEl, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    // Brancher l'observer sur tous les status-text existants au chargement
+    document.querySelectorAll('[id^="status-text-"]').forEach(observeStatusEl);
 </script>
 
 </body>
