@@ -16,6 +16,41 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/zone-detail.css}">
 
+    <style>
+        .cnes-filter-control {
+            background: transparent;
+            border: 1px solid var(--color-9);
+            color: var(--color-9);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.2s;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .cnes-filter-control::placeholder {
+            color: var(--color-9);
+            opacity: 0.7;
+        }
+
+        .cnes-filter-control:hover,
+        .cnes-filter-control.active-filter {
+            background: var(--color-9);
+            color: black;
+        }
+
+        .cnes-filter-control:focus {
+            box-shadow: 0 0 10px var(--color-9);
+        }
+
+        select.cnes-filter-control option {
+            background: #111;
+            color: var(--color-9);
+        }
+    </style>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/device-actions.js}" defer></script>
@@ -30,7 +65,6 @@
     <section class="cnes-hero" id="hero-zone"
              th:style="|background-image: url('${zone.imageUrl != null && !zone.imageUrl.isEmpty() ? zone.imageUrl : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80'}')|">
         <div class="cnes-hero-content">
-            <span class="tag">Administration Secteur</span>
             <div class="header-with-actions">
                 <h1 th:text="${zone.name}"
                     contenteditable="true"
@@ -53,20 +87,19 @@
             <h2>Infrastructures de la Zone</h2>
 
             <div class="device-filters" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-                <div class="search-container">
-                    <input type="text" id="deviceSearchInput" placeholder="Localiser un module...">
-                </div>
+                <input type="text" id="deviceSearchInput" class="cnes-filter-control" placeholder="Localiser un module...">
 
                 <button id="filterSensorBtn"
                         onclick="toggleSensorFilter()"
-                        class="cnes-btn filter-btn"
-                        style="background: transparent; border: 1px solid var(--color-9); color: var(--color-9); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+                        class="cnes-filter-control"
+                        style="cursor: pointer;">
                     Capteurs uniquement
                 </button>
 
                 <select id="statusFilterSelect"
                         onchange="applyDeviceFilters()"
-                        style="background: transparent; border: 1px solid var(--color-9); color: var(--color-9); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+                        class="cnes-filter-control"
+                        style="cursor: pointer;">
                     <option value="">Tous les statuts</option>
                     <option value="ONLINE">En marche</option>
                     <option value="OFFLINE">À l'arrêt</option>
@@ -75,9 +108,8 @@
             </div>
         </div>
 
-        <div id="noDeviceResult" class="empty-state" style="display:none; text-align:center; padding: 40px; color: var(--color-9);">
-            <div class="empty-icon">[!]</div>
-            <p>Aucun module ne correspond à votre recherche.</p>
+        <div id="noDeviceResult" style="display:none; text-align:center; padding: 12px 20px; color: var(--color-9); background: rgba(0,0,0,0.4); border: 1px dashed var(--color-9); border-radius: 4px; margin-bottom: 20px;">
+            <span style="font-weight: bold; margin-right: 8px;">[!]</span> Aucun module ne correspond à votre recherche.
         </div>
 
         <div class="energy-monitor" th:id="'energy-zone-' + ${zone.id}">
@@ -153,7 +185,7 @@
                             <span th:id="'status-text-' + ${device.id}"
                                   th:class="'status-indicator ' + ${device.status.name()}"
                                   th:text="${device.status.displayValue}">
-</span>
+                            </span>
                         </div>
                         <h3 class="article-title" th:text="${device.name}"
                             style="color: white; margin: 0; font-size: 1.4rem;"></h3>
@@ -299,7 +331,6 @@
             .catch(() => alert("Erreur réseau."));
     }
 
-    /* ---- Logs Modal ---- */
     let currentOpenDeviceId = null;
     let lastLogsData = [];
 
@@ -349,7 +380,7 @@
         if (!logs || logs.length === 0) {
             container.innerHTML = `
                 <div class="logs-empty">
-                    <div class="logs-empty-icon">⚠</div>
+                    <div class="logs-empty-icon">&#9888;</div>
                     <p>Aucune donnée enregistrée pour cette sélection.</p>
                 </div>`;
             return;
@@ -565,18 +596,15 @@
         if (e.target === this) closeLogsModal();
     });
 
-    /* ---- FILTRES DEVICES ---- */
     let sensorFilterActive = false;
 
     function toggleSensorFilter() {
         sensorFilterActive = !sensorFilterActive;
         const btn = document.getElementById('filterSensorBtn');
         if (sensorFilterActive) {
-            btn.style.background = 'var(--color-9)';
-            btn.style.color      = 'black';
+            btn.classList.add('active-filter');
         } else {
-            btn.style.background = 'transparent';
-            btn.style.color      = 'var(--color-9)';
+            btn.classList.remove('active-filter');
         }
         applyDeviceFilters();
     }
@@ -610,10 +638,6 @@
 
     document.getElementById('deviceSearchInput').addEventListener('keyup', applyDeviceFilters);
 
-    /* ---- SYNC ASYNCHRONE DES FILTRES ---- */
-    // device-sync.js met à jour les classes de #status-text-{id} quand le statut change.
-    // On observe ces mutations pour mettre à jour data-status sur la carte et relancer le filtre.
-
     const STATUS_CLASS_MAP = {
         'ONLINE':      'ONLINE',
         'OFFLINE':     'OFFLINE',
@@ -632,17 +656,14 @@
             const newStatus = extractStatusFromEl(statusEl);
             if (!newStatus) return;
 
-            // Remonter à la carte .device-item
             const card = statusEl.closest('.device-item');
             if (!card) return;
 
             const oldStatus = card.dataset.status;
             if (oldStatus === newStatus) return;
 
-            // Mettre à jour le data-status
             card.dataset.status = newStatus;
 
-            // Animation flash sur la carte pour signaler le changement
             card.style.transition = 'box-shadow 0.3s ease';
             card.style.boxShadow  = newStatus === 'ONLINE'
                 ? '0 0 18px 4px rgba(0, 229, 100, 0.55)'
@@ -652,14 +673,12 @@
 
             setTimeout(() => { card.style.boxShadow = ''; }, 1200);
 
-            // Relancer le filtre — la carte apparaît/disparaît selon le nouveau statut
             applyDeviceFilters();
         });
 
         observer.observe(statusEl, { attributes: true, attributeFilter: ['class'] });
     }
 
-    // Brancher l'observer sur tous les status-text existants au chargement
     document.querySelectorAll('[id^="status-text-"]').forEach(observeStatusEl);
 </script>
 
