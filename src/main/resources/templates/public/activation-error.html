@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Erreur d'activation — CYStation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0f1e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: #111827;
+            border: 1px solid #3f1e1e;
+            border-radius: 12px;
+            padding: 48px 56px;
+            text-align: center;
+            max-width: 480px;
+            box-shadow: 0 0 40px rgba(255, 50, 50, 0.1);
+        }
+        .icon { font-size: 56px; margin-bottom: 20px; }
+        h1 { color: #ff4444; font-size: 1.8rem; margin-bottom: 16px; }
+        p { color: #9ca3af; line-height: 1.6; margin-bottom: 28px; }
+        a {
+            display: inline-block;
+            background: #ff4444;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        a:hover { background: #cc0000; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="icon">❌</div>
+    <h1>Lien invalide</h1>
+    <p th:text="${message}">Ce lien d'activation est invalide ou a déjà été utilisé.</p>
+    <a href="/register">Retour à l'inscription</a>
+</div>
+</body>
+</html>

@@ -22,6 +22,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String activationToken;
     private boolean enable = false;
 
     private String profilePicture = "default-avatar.png";
@@ -112,6 +113,13 @@ public class User {
     }
 
 
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
+    }
 
     public String getProfilePicture() {
         return profilePicture != null ? profilePicture : "default-avatar.png";

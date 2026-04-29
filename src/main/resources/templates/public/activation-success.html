@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Compte activé — CYStation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0f1e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 48px 56px;
+            text-align: center;
+            max-width: 480px;
+            box-shadow: 0 0 40px rgba(0, 150, 255, 0.1);
+        }
+        .icon { font-size: 56px; margin-bottom: 20px; }
+        h1 { color: #00bfff; font-size: 1.8rem; margin-bottom: 16px; }
+        p { color: #9ca3af; line-height: 1.6; margin-bottom: 28px; }
+        a {
+            display: inline-block;
+            background: #00bfff;
+            color: #0a0f1e;
+            text-decoration: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        a:hover { background: #0099cc; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="icon">✅</div>
+    <h1>Compte activé !</h1>
+    <p th:text="${message}">Votre compte a bien été activé. Vous pouvez maintenant vous connecter.</p>
+    <a href="/login">Se connecter</a>
+</div>
+</body>
+</html>

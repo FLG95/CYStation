@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,53 +28,55 @@ public class UserService {
                        EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-
         this.emailService = emailService;
     }
 
-
     public void save(User user) {
-
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_PASSENGER);
+        user.setEnable(false);
         userRepository.save(user);
-        emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName());
+    }
+
+    @Transactional
+    public boolean activateAccount(String token) {
+        Optional<User> optUser = userRepository.findByActivationToken(token);
+
+        if (optUser.isEmpty()) {
+            return false;
+        }
+
+        User user = optUser.get();
+        user.setEnable(true);
+        user.setActivationToken(null);
+        userRepository.save(user);
+
+        return true;
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-
     @Transactional
     public void deleteAccount(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
-
-        if (user != null) {
-            userRepository.delete(user);
-        }
+        userRepository.delete(user);
     }
-
 
     @Transactional
     public void updateUserProfile(String email, User userForm) {
-
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
 
-
         user.setFirstName(userForm.getFirstName());
         user.setLastName(userForm.getLastName());
-
         user.setGender(userForm.getGender());
         user.setBirthDate(userForm.getBirthDate());
-
         user.setProfilePicture(userForm.getProfilePicture());
 
         userRepository.save(user);
-
     }
 
     @Transactional
@@ -92,14 +96,11 @@ public class UserService {
 
         userRepository.save(user);
         refreshUserRole(user);
-
     }
-
 
     public void resetExp(User user) {
         user.setExperience(0);
         user.setRole(Role.ROLE_PASSENGER);
-
         userRepository.save(user);
         refreshUserRole(user);
     }
@@ -107,7 +108,6 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
 
     public User findById(Long id) {
         return userRepository.findById(id)
@@ -122,7 +122,6 @@ public class UserService {
     }
 
     public void refreshUserRole(User user) {
-
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
@@ -133,8 +132,6 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
-
-
 
     @Transactional
     public int addExpAndLevelUp(Long id, int amount) {
@@ -157,17 +154,21 @@ public class UserService {
         return user.getExperience();
     }
 
-    public boolean toggleUserStatus(Long id) {
+    public String toggleUserStatus(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        user.setEnable(!user.isEnable());
-        userRepository.save(user);
-        return user.isEnable();
+        if (!user.isEnable()) {
+            String token = UUID.randomUUID().toString();
+            user.setActivationToken(token);
+            userRepository.save(user);
+            emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName(), token);
+            return "MAIL_SENT";
+        } else {
+            user.setEnable(false);
+            user.setActivationToken(null);
+            userRepository.save(user);
+            return "DISABLED";
+        }
     }
-
 }
-
-
-
-

@@ -22,6 +22,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.List;
 
@@ -180,8 +182,10 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<?> toggleStatus(@PathVariable Long id) {
         try {
-            boolean newState = userService.toggleUserStatus(id);
-            return ResponseEntity.ok(newState);
+            String action = userService.toggleUserStatus(id);
+            Map<String, Object> response = new HashMap<>();
+            response.put("action", action);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur");
         }

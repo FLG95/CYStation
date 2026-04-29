@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -24,7 +25,7 @@ public class SecurityConfig {
                         .frameOptions((frameOptions) -> frameOptions.sameOrigin())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**").permitAll()
+                        .requestMatchers("/", "/home", "/articles", "/register", "/login", "/css/**", "/js/**", "/img/**", "/images/**", "/about", "/article/**", "/activate").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
