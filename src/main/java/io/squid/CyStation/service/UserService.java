@@ -19,11 +19,15 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
+        this.emailService = emailService;
     }
 
 
@@ -33,6 +37,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_PASSENGER);
         userRepository.save(user);
+        emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName());
     }
 
     public List<User> getAllUsers() {
