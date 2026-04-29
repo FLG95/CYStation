@@ -48,9 +48,9 @@ public class OxygenSensor extends Sensor{
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "O2_PERCENTAGE", (double) this.o2Percentage
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("O2_PERCENTAGE", (double) this.o2Percentage);
+        return metrics;
     }
 
 }

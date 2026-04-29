@@ -95,34 +95,39 @@ public class SimulationService {
 
         for (Device device : devices) {
             try {
-                if (device.getStatus() == DeviceStatus.ONLINE) {
+                // On récupère les métriques avant toute mise à jour
+                Map<String, Double> oldMetrics = device.getTelemetryMetrics();
 
-                    Map<String, Double> oldMetrics = device.getTelemetryMetrics();
+                boolean isOnline = device.getStatus() == DeviceStatus.ONLINE;
+                boolean isUpdated = false;
 
-                    boolean isUpdated = device.updateTelemetry();
+                if (isOnline) {
+                    isUpdated = device.updateTelemetry();
+                }
 
+                // On récupère les métriques après mise à jour potentielle
+                Map<String, Double> newMetrics = device.getTelemetryMetrics();
 
-                    if (isUpdated) {
-                        Map<String, Double> newMetrics = device.getTelemetryMetrics();
+                // On compare et on log
+                for (String metricName : newMetrics.keySet()) {
+                    Double oldVal = oldMetrics.get(metricName);
+                    Double newVal = newMetrics.get(metricName);
 
-                        for (String metricName : newMetrics.keySet()) {
-                            Double oldVal = oldMetrics.get(metricName);
-                            Double newVal = newMetrics.get(metricName);
+                    // Pour les métriques d'énergie, on force le log si l'appareil est ONLINE
+                    // pour s'assurer qu'elles apparaissent dans les rapports (valeurs souvent fixes)
+                    boolean isEnergyMetric = "CONSUMPTION_VALUE".equals(metricName) || "PRODUCTION_VALUE".equals(metricName);
 
-                            if (oldVal == null || !oldVal.equals(newVal)) {
-                                deviceLogService.logTelemetry(device, metricName, oldVal, newVal);
-                            }
-                        }
-
-                        messagingTemplate.convertAndSend("/topic/device-telemetry", device);
-
-                        if (device.getZone() != null) {
-                            broadcastZoneEnergy(device.getZone());
-                        }
-
-
+                    if (oldVal == null || !oldVal.equals(newVal) || (isEnergyMetric && isOnline)) {
+                        deviceLogService.logTelemetry(device, metricName, oldVal, newVal);
                     }
+                }
 
+                if (isOnline && isUpdated) {
+                    messagingTemplate.convertAndSend("/topic/device-telemetry", device);
+
+                    if (device.getZone() != null) {
+                        broadcastZoneEnergy(device.getZone());
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Erreur de télémétrie sur l'appareil ID " + device.getId() + " — " + e.getMessage());

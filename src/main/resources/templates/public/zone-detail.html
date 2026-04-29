@@ -435,6 +435,76 @@
             reportText += `Log entries analyzed: ${totalLines}\n`;
             reportText += `Repairs: ${repairs}\n`;
             reportText += "----------------------------\n\n";
+
+            const deviceStates = {};
+
+            lastLogsData.forEach(log => {
+                if (log.eventType === 'TELEMETRY' && log.newNumericValue !== null) {
+                    const dId = log.device?.id;
+                    if (!dId) return;
+                    
+                    if (!deviceStates[dId]) {
+                        deviceStates[dId] = { 
+                            zone: log.device?.zoneName || "Inconnue", 
+                            prod: 0, 
+                            cons: 0 
+                        };
+                    }
+
+                    if (log.metricName === 'PRODUCTION_VALUE' && deviceStates[dId].prod === 0) {
+                        deviceStates[dId].prod = log.newNumericValue;
+                    }
+                    if (log.metricName === 'CONSUMPTION_VALUE' && deviceStates[dId].cons === 0) {
+                        deviceStates[dId].cons = log.newNumericValue;
+                    }
+                }
+            });
+
+            const zoneTotals = {};
+            let totalGlobalProd = 0;
+            let totalGlobalCons = 0;
+
+            Object.values(deviceStates).forEach(state => {
+                if (!zoneTotals[state.zone]) zoneTotals[state.zone] = { prod: 0, cons: 0 };
+                zoneTotals[state.zone].prod += state.prod;
+                zoneTotals[state.zone].cons += state.cons;
+                totalGlobalProd += state.prod;
+                totalGlobalCons += state.cons;
+            });
+
+            const zoneNames = Object.keys(zoneTotals).sort();
+            if (zoneNames.length > 0) {
+                reportText += "BILAN ÉNERGÉTIQUE :\n";
+                zoneNames.forEach(zName => {
+                    const stats = zoneTotals[zName];
+                    reportText += `   - ${zName}: Prod ${stats.prod.toFixed(2)} GW | Cons ${stats.cons.toFixed(2)} GW\n`;
+                });
+                reportText += `Production Totale: ${totalGlobalProd.toFixed(2)} GW\n`;
+                reportText += `Consommation Totale: ${totalGlobalCons.toFixed(2)} GW\n`;
+                reportText += "----------------------------\n\n";
+            }
+
+            const metrics = {};
+            lastLogsData.forEach(log => {
+                if (log.eventType === 'TELEMETRY' && log.metricName && (log.newNumericValue !== null && log.newNumericValue !== undefined)) {
+                    if (!metrics[log.metricName]) metrics[log.metricName] = [];
+                    metrics[log.metricName].push(log.newNumericValue);
+                }
+            });
+
+            const metricKeys = Object.keys(metrics);
+            if (metricKeys.length > 0) {
+                reportText += `RÉSUMÉ DES MÉTRIQUES :\n`;
+                metricKeys.forEach(key => {
+                    const values = metrics[key];
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                    reportText += `[${key}] Min: ${fmt(min)} | Max: ${fmt(max)} | Avg: ${fmt(avg)}\n`;
+                });
+                reportText += "\n";
+            }
+
             reportText += "HISTORIQUE DES ÉVÉNEMENTS :\n";
 
             lastLogsData.forEach(log => {

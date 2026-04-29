@@ -57,10 +57,10 @@ public class WaterReclaimer extends Device{
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "PURITY_LEVEL", (double) this.purityLevel,
-                "FILL_OUTPUT", (double) this.fillLevel
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("PURITY_LEVEL", this.purityLevel);
+        metrics.put("FILL_OUTPUT", (double) this.fillLevel);
+        return metrics;
     }
 
 }

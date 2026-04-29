@@ -48,7 +48,9 @@ public class Co2Sensor extends Sensor {
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of("CO2_PPM", (double) this.ppmLevel);
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("CO2_PPM", (double) this.ppmLevel);
+        return metrics;
     }
 
 

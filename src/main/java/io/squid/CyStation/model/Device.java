@@ -1,10 +1,12 @@
 package io.squid.CyStation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.squid.CyStation.enums.DeviceStatus;
 import io.squid.CyStation.enums.RequestStatus;
 import jakarta.persistence.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -21,6 +23,11 @@ public abstract class Device {
     @JoinColumn(name = "zone_id")
     @JsonIgnore
     private Zone zone;
+
+    @JsonProperty("zoneName")
+    public String getZoneName() {
+        return zone != null ? zone.getName() : "Inconnue";
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "request_status")
@@ -106,7 +113,12 @@ public abstract class Device {
         this.requestedBy = requestedBy;
     }
     @Transient
-    public abstract Map<String, Double> getTelemetryMetrics();
+    public Map<String, Double> getTelemetryMetrics() {
+        Map<String, Double> metrics = new HashMap<>();
+        metrics.put("CONSUMPTION_VALUE", (double) getConsumptionValue());
+        metrics.put("PRODUCTION_VALUE", (double) getProductionValue());
+        return metrics;
+    }
 
     public boolean isRepairableByPassager() {
         return this instanceof CoffeeMachine;

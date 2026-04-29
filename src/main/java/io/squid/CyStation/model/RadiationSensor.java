@@ -46,9 +46,9 @@ public class RadiationSensor extends Sensor{
     @Transient
     @Override
     public Map<String, Double> getTelemetryMetrics() {
-        return Map.of(
-                "MSV_LEVEL", (double) this.mSvLevel
-        );
+        Map<String, Double> metrics = super.getTelemetryMetrics();
+        metrics.put("MSV_LEVEL", (double) this.mSvLevel);
+        return metrics;
     }
 
 }
