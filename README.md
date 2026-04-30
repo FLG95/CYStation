@@ -3,7 +3,7 @@
 <h1>CYStation</h1>
 
 <p>
-  <strong>Application web de gestion de stations — Projet ING1 · CY Cergy Paris Université</strong>
+  <strong>Application web de gestion de stations — Projet ING1
 </p>
 
 <p>
