@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>🚉 CYStation</h1>
+<h1>CYStation</h1>
 
 <p>
   <strong>Application web de gestion de stations — Projet ING1 · CY Cergy Paris Université</strong>
@@ -17,28 +17,6 @@
 </p>
 
 </div>
-
----
-
-## 📋 Table des matières
-
-- [À propos](#-à-propos)
-- [Stack technique](#-stack-technique)
-- [Prérequis](#-prérequis)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Lancer l'application](#-lancer-lapplication)
-- [Documentation API](#-documentation-api)
-- [Structure du projet](#-structure-du-projet)
-- [Équipe](#-équipe)
-
----
-
-## 🎯 À propos
-
-**CYStation** est une application web développée dans le cadre du cours de **Développement Web** en ING1 (2025-2026) à [CY Cergy Paris Université](https://www.cyu.fr/).
-
-Le projet propose une interface complète de gestion de stations, avec authentification sécurisée, communication en temps réel et une API REST documentée.
 
 ---
 
@@ -117,44 +95,3 @@ L'application sera disponible sur **[http://localhost:8080](http://localhost:808
 
 ---
 
-## 📖 Documentation API
-
-Une documentation interactive Swagger UI est générée automatiquement via SpringDoc OpenAPI.
-
-Accédez-y à l'adresse :
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
----
-
-## 🗂 Structure du projet
-
-```
-CYStation/
-├── src/
-│   ├── main/
-│   │   ├── java/com/example/        # Code source Java
-│   │   └── resources/
-│   │       ├── templates/           # Vues Thymeleaf (HTML)
-│   │       ├── static/              # Assets (CSS, JS, images)
-│   │       └── application.properties
-│   └── test/                        # Tests unitaires & intégration
-├── gradle/wrapper/
-├── build.gradle
-├── settings.gradle
-└── README.md
-```
-
----
-
-## 👥 Équipe
-
-Projet réalisé par des étudiants en ING1 à **CY Cergy Paris Université** — année 2025-2026.
-
----
-
-<div align="center">
-  <sub>Fait avec ☕ et beaucoup de Gradle — CY Cergy Paris Université · ING1 Dev Web 2025-2026</sub>
-</div>
