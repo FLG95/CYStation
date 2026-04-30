@@ -94,4 +94,33 @@ gradlew.bat bootRun
 L'application sera disponible sur **[http://localhost:8080](http://localhost:8080)**
 
 ---
-
+## Comptes de test
+ 
+Des comptes préconfigurés sont disponibles pour tester l'application :
+ 
+| Rôle | Email | Mot de passe |
+|---|---|---|
+| 👑 Administrateur | admin@cystation.fr | `1234` |
+| 👤 Utilisateur | Senku.Ichigami@cystation.fr | `1234` |
+| 👤 Utilisateur | Jean.Dupond@cystation.fr | `1234` |
+ 
+---
+## Processus d'inscription
+ 
+La création d'un compte suit un processus en **deux étapes** :
+ 
+```
+1.   L'utilisateur soumet sa demande d'inscription
+        ↓
+2.   Un administrateur examine et accepte le compte
+        ↓
+3.   Un email de confirmation est envoyé à l'utilisateur
+        ↓
+4.   L'utilisateur clique sur le lien pour activer son compte
+        ↓
+5.   Accès accordé à l'application
+```
+ 
+> ⚠️ **Sans validation admin ET sans clic sur le lien de confirmation, le compte reste inactif.**
+ 
+---
