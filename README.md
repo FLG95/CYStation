@@ -94,7 +94,7 @@ gradlew.bat bootRun
 L'application sera disponible sur **[http://localhost:8080](http://localhost:8080)**
 
 ---
-## Comptes de test
+## 🔐 Comptes de test
  
 Des comptes préconfigurés sont disponibles pour tester l'application :
  
@@ -105,7 +105,7 @@ Des comptes préconfigurés sont disponibles pour tester l'application :
 | 👤 Utilisateur | Jean.Dupond@cystation.fr | `1234` |
  
 ---
-## Processus d'inscription
+## 🔄 Processus d'inscription
  
 La création d'un compte suit un processus en **deux étapes** :
  
